@@ -1,0 +1,31 @@
+name: Deploy to S3
+
+on:
+  push:
+    branches:
+      - main  # or master, depending on your default branch name
+    paths:
+      - 'HTML/**'  # Only trigger on changes to HTML directory
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Sync content directory to S3
+        run: |
+          aws s3 sync HTML/content/ s3://nepal-web/ --delete
+
+      - name: Copy index.html to S3
+        run: |
+          aws s3 cp HTML/src/index.html s3://nepal-web/
