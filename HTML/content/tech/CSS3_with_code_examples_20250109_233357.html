@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CSS3 Guide</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    section {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+<header>
+<h1>CSS3 Guide</h1>
+</header>
+<main>
+<section id="section1">
+<h2>CSS3 Selectors</h2>
+<div class="english-content">
+<p>CSS3 introduced several new selectors that make it easier to target specific elements on a web page. Here are a few examples:</p>
+<pre>
+/* Attribute Selector */
+input[type="text"] {
+  border: 1px solid #ccc;
+}
+
+/* Child Selector */
+ul &gt; li {
+  list-style-type: none;
+}
+
+/* Sibling Selector */
+h2 + p {
+  font-style: italic;
+}
+        </pre>
+</div>
+<div class="nepali-content"><p>CSS3 ले धेरै नयाँ चयनकर्ताहरू प्रस्तुत गर्‍यो जसले वेब पृष्ठमा विशिष्ट तत्वहरूलाई लक्षित गर्न सजिलो बनाउँछ। यहाँ केही उदाहरणहरू छन्: /* विशेषता चयनकर्ता */
+इनपुट[प्रकार="टेक्स्ट"] {
+बोर्डर: १px ठोस #ccc;
+}
+
+/* बाल चयनकर्ता */
+ul &gt; li {
+सूची-शैली-प्रकार: कुनै पनि होइन;
+}
+
+/* भाइबहिनी चयनकर्ता */
+h2 + p {
+फन्ट-शैली: इटालिक;
+}</p></div>
+</section>
+<section id="section2">
+<h2>CSS3 Transitions and Animations</h2>
+<div class="english-content">
+<p>CSS3 introduced transitions and animations, which allow you to create smooth and visually appealing effects on web elements.</p>
+<pre>
+/* Transition */
+.box {
+  transition: all 0.3s ease;
+}
+
+.box:hover {
+  transform: scale(1.1);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.fade {
+  animation: fadeIn 1s ease;
+}
+        </pre>
+</div>
+<div class="nepali-content"><p>CSS3 ले ट्रान्जिसन र एनिमेसनहरू प्रस्तुत गर्‍यो, जसले तपाईंलाई वेब तत्वहरूमा सहज र दृश्यात्मक रूपमा आकर्षक प्रभावहरू सिर्जना गर्न अनुमति दिन्छ। /* ट्रान्जिसन */
+.box {
+ट्रान्जिसन: सबै ०.३ सेकेन्ड सहज;
+}
+
+.box:hover {
+रूपान्तरण: स्केल(१.१);
+}
+
+/* एनिमेसन */
+@keyframes fadeIn {
+०% { अस्पष्टता: ०; }
+१००% { अस्पष्टता: १; }
+}
+
+.fade {
+एनिमेसन: १ सेकेन्ड सहज;
+}</p></div>
+</section>
+<section id="section3">
+<h2>CSS3 Flexbox and Grid</h2>
+<div class="english-content">
+<p>CSS3 introduced Flexbox and Grid layouts, which provide powerful and flexible ways to create responsive and adaptive layouts.</p>
+<pre>
+/* Flexbox */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+        </pre>
+</div>
+<div class="nepali-content"><p>CSS3 ले फ्लेक्सबक्स र ग्रिड लेआउटहरू प्रस्तुत गर्‍यो, जसले उत्तरदायी र अनुकूली लेआउटहरू सिर्जना गर्न शक्तिशाली र लचिलो तरिकाहरू प्रदान गर्दछ। /* फ्लेक्सबक्स */
+.कन्टेनर {
+प्रदर्शन: फ्लेक्स;
+
+justify-सामग्री: स्पेस-बीच;
+
+align-items: center;
+}
+
+/* ग्रिड */
+.ग्रिड {
+प्रदर्शन: ग्रिड;
+
+ग्रिड-टेम्प्लेट-स्तम्भहरू: repeat(3, 1fr);
+ग्रिड-ग्याप: 20px;
+}</p></div>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Introduction to Python Programming | पाइथन प्रोग्रामिङ परिचय</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Introduction to Python Programming<br>पाइथन प्रोग्रामिङ परिचय</h1>
+
+        <div class="section">
+            <h2>Variables and Data Types | भेरिएबल्स र डाटा टाइप्स</h2>
+            <p>
+                Variables are containers for storing data values. Python has no command for declaring variables - a variable is created when you first assign a value to it.
+            </p>
+            <p>
+                भेरिएबल्स डाटा भण्डारण गर्ने कन्टेनरहरू हुन्। पाइथनमा भेरिएबल घोषणा गर्ने कुनै कमाण्ड छैन - तपाईंले पहिलो पटक मान प्रदान गर्दा भेरिएबल सिर्जना हुन्छ।
+            </p>
+            <pre>
+# String (स्ट्रिङ)
+name = "Ram"
+print(name)  # Output: Ram
+
+# Integer (पूर्णांक)
+age = 25
+print(age)  # Output: 25
+
+# Float (दशमलव)
+height = 5.9
+print(height)  # Output: 5.9
+
+# Boolean (बुलियन)
+is_student = True
+print(is_student)  # Output: True</pre>
+        </div>
+
+        <div class="section">
+            <h2>Functions | फङ्क्सनहरू</h2>
+            <p>
+                Functions are blocks of reusable code that perform a specific task. They help organize code and make it more maintainable.
+            </p>
+            <p>
+                फङ्क्सनहरू विशिष्ट कार्य गर्ने पुन: प्रयोग गर्न सकिने कोड ब्लकहरू हुन्। तिनीहरूले कोडलाई व्यवस्थित र बढी मर्मतयोग्य बनाउन मद्दत गर्छन्।
+            </p>
+            <pre>
+def greet(name):
+    return f"Hello, {name}!"
+
+# Function call (फङ्क्सन कल)
+message = greet("Sita")
+print(message)  # Output: Hello, Sita!
+
+def calculate_area(length, width):
+    return length * width
+
+# Calculate rectangle area (आयतको क्षेत्रफल)
+area = calculate_area(5, 3)
+print(area)  # Output: 15</pre>
+        </div>
+
+        <div class="section">
+            <h2>Lists | लिस्टहरू</h2>
+            <p>
+                Lists are ordered collections of items. They can contain elements of different types and are mutable (can be changed).
+            </p>
+            <p>
+                लिस्टहरू वस्तुहरूको क्रमबद्ध संग्रह हुन्। तिनीहरूले विभिन्न प्रकारका तत्वहरू समावेश गर्न सक्छन् र परिवर्तनयोग्य छन्।
+            </p>
+            <pre>
+# Creating a list (लिस्ट सिर्जना)
+fruits = ["Apple", "Banana", "Orange"]
+numbers = [1, 2, 3, 4, 5]
+
+# Accessing elements (तत्वहरू पहुँच)
+print(fruits[0])  # Output: Apple
+
+# Adding elements (तत्वहरू थप्ने)
+fruits.append("Mango")
+print(fruits)  # Output: ['Apple', 'Banana', 'Orange', 'Mango']
+
+# List operations (लिस्ट अपरेसनहरू)
+print(len(fruits))  # Output: 4
+print("Banana" in fruits)  # Output: True</pre>
+        </div>
+
+        <div class="section">
+            <h2>Dictionaries | डिक्शनरीहरू</h2>
+            <p>
+                Dictionaries are unordered collections of key-value pairs. They are useful for storing and retrieving data using unique keys.
+            </p>
+            <p>
+                डिक्शनरीहरू की-भ्यालु जोडीहरूको अक्रमबद्ध संग्रह हुन्। तिनीहरू विशिष्ट कीहरू प्रयोग गरेर डाटा भण्डारण र पुनर्प्राप्ति गर्न उपयोगी छन्।
+            </p>
+            <pre>
+# Creating a dictionary (डिक्शनरी सिर्जना)
+person = {
+    "name": "Hari",
+    "age": 30,
+    "city": "Kathmandu"
+}
+
+# Accessing values (मानहरू पहुँच)
+print(person["name"])  # Output: Hari
+
+# Adding/updating items (आइटमहरू थप्ने/अपडेट)
+person["occupation"] = "Teacher"
+print(person)  # Output: {'name': 'Hari', 'age': 30, 'city': 'Kathmandu', 'occupation': 'Teacher'}
+
+# Dictionary methods (डिक्शनरी मेथडहरू)
+print(person.keys())  # Output: dict_keys(['name', 'age', 'city', 'occupation'])
+print(person.values())  # Output: dict_values(['Hari', 30, 'Kathmandu', 'Teacher'])</pre>
+        </div>
+
+        <div class="section">
+            <h2>Importing Libraries | लाइब्रेरीहरू आयात</h2>
+            <p>
+                Python has a rich ecosystem of libraries that extend its functionality. You can import these libraries to use their features.
+            </p>
+            <p>
+                पाइथनमा लाइब्रेरीहरूको समृद्ध इकोसिस्टम छ जसले यसको कार्यक्षमता विस्तार गर्छ। तपाईंले तिनीहरूको सुविधाहरू प्रयोग गर्न यी लाइब्रेरीहरू आयात गर्न सक्नुहुन्छ।
+            </p>
+            <pre>
+# Standard library imports (स्ट्यान्डर्ड लाइब्रेरी आयात)
+import random
+import math
+
+# Using imported functions (आयात गरिएका फङ्क्सनहरू प्रयोग)
+random_number = random.randint(1, 10)
+print(random_number)  # Output: Random number between 1 and 10
+
+square_root = math.sqrt(16)
+print(square_root)  # Output: 4.0
+
+# Third-party library example (थर्ड-पार्टी लाइब्रेरी उदाहरण)
+# First install using: pip install numpy
+import numpy as np
+
+array = np.array([1, 2, 3, 4, 5])
+print(array.mean())  # Output: 3.0</pre>
+        </div>
+    </div>
+</body>
+</html>

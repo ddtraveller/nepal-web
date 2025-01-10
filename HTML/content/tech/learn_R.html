@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to R and RStudio - R र RStudio को परिचय</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f6f8fa;
+            color: #24292e;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .english { color: #24292e; }
+        .nepali { color: #2c5282; }
+        .code-block {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fff8c5;
+            padding: 16px;
+            border-left: 4px solid #f9c513;
+            margin: 16px 0;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .step {
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 4px solid #e1e4e8;
+        }
+        .output {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #e1e4e8;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="english">Introduction to R and RStudio</span><br>
+            <span class="nepali">R र RStudio को परिचय</span>
+        </h1>
+
+        <div class="section">
+            <h2>
+                <span class="english">What is R?</span><br>
+                <span class="nepali">R के हो?</span>
+            </h2>
+            <p class="english">R is a programming language and software environment for statistical computing, data analysis, and graphical visualization.</p>
+            <p class="nepali">R एक प्रोग्रामिङ भाषा र सफ्टवेयर वातावरण हो जसलाई तथ्यांक विश्लेषण, सांख्यिकीय गणना, र ग्राफिकल भिजुअलाइजेसनको लागि प्रयोग गरिन्छ।</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Installation Guide</span><br>
+                <span class="nepali">इन्स्टलेसन गाइड</span>
+            </h2>
+
+            <h3>
+                <span class="english">Step 1: Install R</span><br>
+                <span class="nepali">पहिलो चरण: R इन्स्टल गर्ने</span>
+            </h3>
+            <div class="step">
+                <p class="english">1. Visit <a href="https://cran.r-project.org/">CRAN (Comprehensive R Archive Network)</a><br>
+                2. Choose your operating system<br>
+                3. Download the latest version of R<br>
+                4. Run the installer and follow the prompts</p>
+                <p class="nepali">१. <a href="https://cran.r-project.org/">CRAN (Comprehensive R Archive Network)</a> मा जानुहोस्<br>
+                २. आफ्नो अपरेटिङ सिस्टम छान्नुहोस्<br>
+                ३. R को नवीनतम संस्करण डाउनलोड गर्नुहोस्<br>
+                ४. इन्स्टलर चलाउनुहोस् र निर्देशनहरू पालना गर्नुहोस्</p>
+            </div>
+
+            <h3>
+                <span class="english">Step 2: Install RStudio</span><br>
+                <span class="nepali">दोस्रो चरण: RStudio इन्स्टल गर्ने</span>
+            </h3>
+            <div class="step">
+                <p class="english">1. Visit <a href="https://posit.co/downloads/">RStudio Download Page</a><br>
+                2. Download RStudio Desktop (Free Version)<br>
+                3. Run the installer and follow the prompts</p>
+                <p class="nepali">१. <a href="https://posit.co/downloads/">RStudio डाउनलोड पेज</a> मा जानुहोस्<br>
+                २. RStudio Desktop (निःशुल्क संस्करण) डाउनलोड गर्नुहोस्<br>
+                ३. इन्स्टलर चलाउनुहोस् र निर्देशनहरू पालना गर्नुहोस्</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">RStudio Interface</span><br>
+                <span class="nepali">RStudio इन्टरफेस</span>
+            </h2>
+            <p class="english">RStudio has four main panels:<br>
+            1. Source Editor (top-left): Write your R code<br>
+            2. Console (bottom-left): See results and run commands<br>
+            3. Environment/History (top-right): Track variables and commands<br>
+            4. Files/Plots/Packages/Help (bottom-right): View outputs and documentation</p>
+            <p class="nepali">RStudio मा चार मुख्य प्यानलहरू छन्:<br>
+            १. सोर्स एडिटर (माथि-बायाँ): R कोड लेख्ने<br>
+            २. कन्सोल (तल-बायाँ): नतिजाहरू हेर्ने र कमाण्डहरू चलाउने<br>
+            ३. इन्भाइरोनमेन्ट/हिस्टोरी (माथि-दायाँ): भेरिएबलहरू र कमाण्डहरू ट्र्याक गर्ने<br>
+            ४. फाइलहरू/प्लटहरू/प्याकेजहरू/मद्दत (तल-दायाँ): आउटपुट र डकुमेन्टेसन हेर्ने</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Creating Your First Chart</span><br>
+                <span class="nepali">तपाईंको पहिलो चार्ट बनाउँदै</span>
+            </h2>
+
+            <div class="step">
+                <h3>
+                    <span class="english">Step 1: Create Sample Data</span><br>
+                    <span class="nepali">पहिलो चरण: नमूना डाटा सिर्जना गर्ने</span>
+                </h3>
+                <div class="code-block">
+# Create sample data
+months <- c("Jan", "Feb", "Mar", "Apr", "May")
+sales <- c(150, 200, 175, 225, 250)
+
+# Create a data frame
+data <- data.frame(Month = months, Sales = sales)</div>
+            </div>
+
+            <div class="step">
+                <h3>
+                    <span class="english">Step 2: Create a Bar Chart</span><br>
+                    <span class="nepali">दोस्रो चरण: बार चार्ट बनाउने</span>
+                </h3>
+                <div class="code-block">
+# Create a basic bar plot
+barplot(data$Sales, 
+        names.arg = data$Month,
+        main = "Monthly Sales",
+        xlab = "Month",
+        ylab = "Sales",
+        col = "skyblue",
+        border = "black")</div>
+            </div>
+
+            <div class="step">
+                <h3>
+                    <span class="english">Step 3: Enhanced Visualization with ggplot2</span><br>
+                    <span class="nepali">तेस्रो चरण: ggplot2 सँग उन्नत भिजुअलाइजेसन</span>
+                </h3>
+                <div class="code-block">
+# Install and load ggplot2
+install.packages("ggplot2")
+library(ggplot2)
+
+# Create an enhanced plot
+ggplot(data, aes(x = Month, y = Sales)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  theme_minimal() +
+  labs(title = "Monthly Sales",
+       x = "Month",
+       y = "Sales") +
+  theme(plot.title = element_text(hjust = 0.5))</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Tips for Better Charts</span><br>
+                <span class="nepali">राम्रो चार्टहरूको लागि सुझावहरू</span>
+            </h2>
+            <p class="english">
+                • Use meaningful titles and labels<br>
+                • Choose appropriate colors<br>
+                • Consider your audience when selecting chart types<br>
+                • Add legends when necessary<br>
+                • Keep designs clean and simple
+            </p>
+            <p class="nepali">
+                • अर्थपूर्ण शीर्षक र लेबलहरू प्रयोग गर्नुहोस्<br>
+                • उपयुक्त रङहरू छान्नुहोस्<br>
+                • चार्ट प्रकारहरू छान्दा आफ्नो दर्शकहरूलाई ध्यानमा राख्नुहोस्<br>
+                • आवश्यक हुँदा लेजेन्डहरू थप्नुहोस्<br>
+                • डिजाइनहरू सफा र सरल राख्नुहोस्
+            </p>
+        </div>
+
+        <div class="note">
+            <p class="english">Remember to save your plots using either the Export button in RStudio or the ggsave() function when using ggplot2.</p>
+            <p class="nepali">ggplot2 प्रयोग गर्दा आफ्ना प्लटहरू RStudio को Export बटन वा ggsave() फंक्सन प्रयोग गरेर सेभ गर्न नबिर्सनुहोस्।</p>
+        </div>
+    </div>
+</body>
+</html>

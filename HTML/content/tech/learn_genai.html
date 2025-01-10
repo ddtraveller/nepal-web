@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI Guide - English and Nepali</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2563eb;
+        }
+        .nepali {
+            background-color: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generative AI and Claude: A Comprehensive Guide</h1>
+    
+    <div class="nepali">
+        <h1>जेनेरेटिभ एआई र क्लाउड: एक विस्तृत गाइड</h1>
+    </div>
+
+    <h2>Introduction to Generative AI</h2>
+    <p>Generative AI refers to artificial intelligence systems that can create new content, including text, images, code, and more. These systems are trained on vast amounts of data and can generate human-like outputs based on input prompts.</p>
+
+    <div class="nepali">
+        <h2>जेनेरेटिभ एआई को परिचय</h2>
+        <p>जेनेरेटिभ एआई भनेको कृत्रिम बुद्धिमत्ता प्रणालीहरू हुन् जसले नयाँ सामग्री सिर्जना गर्न सक्छन्, जसमा पाठ, चित्रहरू, कोड र अधिक समावेश छन्। यी प्रणालीहरू ठूलो मात्रामा डाटामा प्रशिक्षित छन् र इनपुट प्रम्प्टहरूको आधारमा मानव-जस्तै आउटपुट उत्पन्न गर्न सक्छन्।</p>
+    </div>
+
+    <h2>Using Claude.ai in Browser</h2>
+    <p>Claude can be accessed directly through the browser at claude.ai. After signing up, you can:</p>
+    <ul>
+        <li>Start conversations with natural language queries</li>
+        <li>Upload and analyze documents</li>
+        <li>Get help with coding, writing, and analysis</li>
+    </ul>
+
+    <div class="nepali">
+        <h2>ब्राउजरमा Claude.ai प्रयोग गर्ने</h2>
+        <p>Claude लाई claude.ai मा सिधै पहुँच गर्न सकिन्छ। साइन अप गरेपछि, तपाईं:</p>
+        <ul>
+            <li>प्राकृतिक भाषा प्रश्नहरूसँग कुराकानी सुरु गर्न सक्नुहुन्छ</li>
+            <li>कागजातहरू अपलोड र विश्लेषण गर्न सक्नुहुन्छ</li>
+            <li>कोडिङ, लेखन र विश्लेषणमा मद्दत प्राप्त गर्न सक्नुहुन्छ</li>
+        </ul>
+    </div>
+
+    <h2>Using Claude with Python</h2>
+    <p>Here's how to use Claude through the Anthropic API in Python:</p>
+    <pre>
+from anthropic import Anthropic
+import os
+
+# Initialize the client
+anthropic = Anthropic(api_key='your-api-key')
+
+# Create a message
+message = anthropic.messages.create(
+    model="claude-3-opus-20240229",
+    max_tokens=1000,
+    messages=[{
+        "role": "user",
+        "content": "Write a function to calculate the Fibonacci sequence"
+    }]
+)
+
+# Print the response
+print(message.content)
+    </pre>
+
+    <div class="nepali">
+        <h2>Python सँग Claude प्रयोग गर्ने</h2>
+        <p>Python मा Anthropic API मार्फत Claude कसरी प्रयोग गर्ने यहाँ छ:</p>
+    </div>
+
+    <h2>Using Google Vertex AI</h2>
+    <h3>Browser-based Interface</h3>
+    <p>Google Vertex AI provides a user-friendly web interface accessible through the Google Cloud Console:</p>
+    <ol>
+        <li>Navigate to console.cloud.google.com and select Vertex AI</li>
+        <li>Access Language Models under the "Machine Learning" menu</li>
+        <li>Choose "Test & Use" to access the playground interface</li>
+        <li>Select your desired model (e.g., PaLM 2, Claude, or other available models)</li>
+        <li>Configure parameters like:
+            <ul>
+                <li>Temperature (0.0 - 1.0)</li>
+                <li>Token limit</li>
+                <li>Top-k</li>
+                <li>Top-p</li>
+            </ul>
+        </li>
+    </ol>
+    <p>The playground interface allows you to:</p>
+    <ul>
+        <li>Test prompts interactively</li>
+        <li>Save and load prompt templates</li>
+        <li>View token usage and costs</li>
+        <li>Export conversations</li>
+    </ul>
+
+    <div class="nepali">
+        <h3>ब्राउजर-आधारित इन्टरफेस</h3>
+        <p>Google Vertex AI ले Google Cloud Console मार्फत प्रयोगकर्ता-मैत्री वेब इन्टरफेस प्रदान गर्दछ:</p>
+        <ol>
+            <li>console.cloud.google.com मा जानुहोस् र Vertex AI चयन गर्नुहोस्</li>
+            <li>"Machine Learning" मेनु अन्तर्गत Language Models मा पहुँच गर्नुहोस्</li>
+            <li>playground इन्टरफेसमा पहुँच गर्न "Test & Use" चयन गर्नुहोस्</li>
+            <li>तपाईंको इच्छित मोडेल चयन गर्नुहोस् (जस्तै PaLM 2, Claude, वा अन्य उपलब्ध मोडेलहरू)</li>
+        </ol>
+    </div>
+
+    <h3>Using Claude in Vertex AI with Python</h3>
+    <p>Google Vertex AI provides integration with various LLMs, including Claude. Here's how to use it:</p>
+    <pre>
+from google.cloud import aiplatform
+from vertexai.language_models import TextGenerationModel
+
+# Initialize Vertex AI
+aiplatform.init(project='your-project-id')
+
+# Load the model
+model = TextGenerationModel.from_pretrained("text-bison@001")
+
+# Generate text
+response = model.predict(
+    """Write a function to sort an array in Python""",
+    temperature=0.2,
+    max_output_tokens=1024
+)
+print(response.text)
+    </pre>
+
+    <div class="nepali">
+        <h2>Google Vertex AI मा Claude प्रयोग गर्ने</h2>
+        <p>Google Vertex AI ले Claude सहित विभिन्न LLM हरूसँग एकीकरण प्रदान गर्दछ।</p>
+    </div>
+
+    <h2>Using LangChain with Claude</h2>
+    <p>LangChain is a framework for developing applications powered by language models. Here's an example using Claude with LangChain:</p>
+    <pre>
+from langchain_anthropic import ChatAnthropic
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
+
+# Initialize the Claude chat model
+chat = ChatAnthropic(
+    anthropic_api_key="your-api-key",
+    model_name="claude-3-opus-20240229"
+)
+
+# Create a conversation chain with memory
+conversation = ConversationChain(
+    llm=chat,
+    memory=ConversationBufferMemory()
+)
+
+# Start a conversation
+response = conversation.run("What are the key principles of machine learning?")
+print(response)
+
+# Continue the conversation with context
+follow_up = conversation.run("Can you provide examples of supervised learning?")
+print(follow_up)
+    </pre>
+
+    <div class="nepali">
+        <h2>Claude सँग LangChain प्रयोग गर्ने</h2>
+        <p>LangChain भाषा मोडेलहरूद्वारा संचालित अनुप्रयोगहरू विकास गर्नको लागि एक फ्रेमवर्क हो।</p>
+    </div>
+
+    <h2>Best Practices</h2>
+    <ul>
+        <li>Always handle API errors and rate limits appropriately</li>
+        <li>Use appropriate temperature settings based on your use case</li>
+        <li>Implement proper security measures for API keys</li>
+        <li>Consider costs and token usage in your applications</li>
+    </ul>
+
+    <div class="nepali">
+        <h2>उत्तम अभ्यासहरू</h2>
+        <ul>
+            <li>सधैं API त्रुटिहरू र दर सीमाहरू उचित रूपमा ह्यान्डल गर्नुहोस्</li>
+            <li>तपाईंको प्रयोग केसको आधारमा उपयुक्त तापमान सेटिङहरू प्रयोग गर्नुहोस्</li>
+            <li>API कीहरूको लागि उचित सुरक्षा उपायहरू कार्यान्वयन गर्नुहोस्</li>
+            <li>तपाईंको अनुप्रयोगहरूमा लागत र टोकन प्रयोगको विचार गर्नुहोस्</li>
+        </ul>
+    </div>
+</body>
+</html>

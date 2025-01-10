@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Engineering and LLM Parameters Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #334155;
+        }
+        h1, h2, h3 {
+            color: #2563eb;
+            margin-top: 1.5em;
+        }
+        .parameter-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .example {
+            background-color: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .tip {
+            background-color: #ecfdf5;
+            border: 1px solid #6ee7b7;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .parameter-range {
+            color: #6366f1;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prompt Engineering and LLM Parameters</h1>
+    <h1 style="color: #334155">प्रम्प्ट इन्जिनियरिङ र एलएलएम प्यारामिटरहरू</h1>
+    
+    <section>
+        <h2>Introduction to Prompt Engineering</h2>
+        <p>Prompt engineering is the art and science of designing effective inputs for language models to obtain desired outputs. Good prompt engineering can significantly improve the quality, relevance, and accuracy of LLM responses.</p>
+        
+        <div class="tip">
+            <strong>Key Principle:</strong> The quality of the output is directly proportional to the quality of the input prompt.
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>प्रम्प्ट इन्जिनियरिङको परिचय</h2>
+            <p>प्रम्प्ट इन्जिनियरिङ भाषा मोडेलहरूको लागि इच्छित आउटपुट प्राप्त गर्न प्रभावकारी इनपुट डिजाइन गर्ने कला र विज्ञान हो। राम्रो प्रम्प्ट इन्जिनियरिङले एलएलएम प्रतिक्रियाहरूको गुणस्तर, सान्दर्भिकता र सटीकता उल्लेखनीय रूपमा सुधार गर्न सक्छ।</p>
+            
+            <div class="tip">
+                <strong>मुख्य सिद्धान्त:</strong> आउटपुटको गुणस्तर इनपुट प्रम्प्टको गुणस्तरसँग प्रत्यक्ष समानुपातिक हुन्छ।
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Core LLM Parameters</h2>
+        
+        <div class="parameter-card">
+            <h3>Temperature</h3>
+            <p><span class="parameter-range">Range: 0.0 to 1.0</span></p>
+            <p>Controls the randomness in the model's responses. Lower values make the output more deterministic and focused, while higher values make it more creative and diverse.</p>
+            <div class="example">
+                <strong>Use cases:</strong>
+                <ul>
+                    <li>0.0 - 0.3: Factual responses, coding, technical writing</li>
+                    <li>0.4 - 0.7: Balanced creativity and coherence</li>
+                    <li>0.8 - 1.0: Creative writing, brainstorming, poetry</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="parameter-card">
+            <h3>Top-k Sampling</h3>
+            <p><span class="parameter-range">Range: 1 to vocabulary size</span></p>
+            <p>Limits the cumulative probability distribution to the k most likely next tokens. Helps prevent the generation of low-probability or nonsensical tokens.</p>
+            <div class="example">
+                <strong>Example settings:</strong>
+                <ul>
+                    <li>k=50: More focused and conservative outputs</li>
+                    <li>k=100: Balanced diversity</li>
+                    <li>k=500: More varied outputs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="parameter-card">
+            <h3>Top-p (Nucleus) Sampling</h3>
+            <p><span class="parameter-range">Range: 0.0 to 1.0</span></p>
+            <p>Considers the smallest set of tokens whose cumulative probability exceeds the probability p. Also known as nucleus sampling.</p>
+            <div class="example">
+                <strong>Recommended values:</strong>
+                <ul>
+                    <li>0.1 - 0.3: Very focused, deterministic outputs</li>
+                    <li>0.4 - 0.7: Balanced outputs</li>
+                    <li>0.8 - 1.0: More diverse and creative outputs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>मुख्य एलएलएम प्यारामिटरहरू</h2>
+            
+            <div class="parameter-card">
+                <h3>तापमान (Temperature)</h3>
+                <p><span class="parameter-range">सीमा: 0.0 देखि 1.0</span></p>
+                <p>मोडेलको प्रतिक्रियाहरूमा यादृच्छिकता नियन्त्रण गर्दछ। कम मानहरूले आउटपुटलाई बढी निश्चित र केन्द्रित बनाउँछ, जबकि उच्च मानहरूले यसलाई बढी सिर्जनात्मक र विविध बनाउँछ।</p>
+            </div>
+
+            <div class="parameter-card">
+                <h3>टप-के सैम्पलिङ (Top-k)</h3>
+                <p><span class="parameter-range">सीमा: 1 देखि शब्दावली आकार</span></p>
+                <p>सबैभन्दा सम्भावित अर्को टोकनहरूको क मा संचयी सम्भावना वितरण सीमित गर्दछ।</p>
+            </div>
+
+            <div class="parameter-card">
+                <h3>टप-पी सैम्पलिङ (Top-p)</h3>
+                <p><span class="parameter-range">सीमा: 0.0 देखि 1.0</span></p>
+                <p>टोकनहरूको सबैभन्दा सानो सेट विचार गर्दछ जसको संचयी सम्भावना सम्भावना p भन्दा बढी हुन्छ।</p>
+            </div>
+        </div>
+
+        <div class="parameter-card">
+            <h3>Max Tokens</h3>
+            <p>Limits the length of the generated response. Important for controlling costs and ensuring concise outputs.</p>
+            <div class="tip">
+                <strong>Tip:</strong> Set this value based on your expected output length, but include some buffer for unexpected verbosity.
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Prompt Engineering Techniques</h2>
+        
+        <h3>1. Zero-shot Prompting</h3>
+        <p>Asking the model to perform a task without any examples.</p>
+        <div class="example">
+            <strong>Example:</strong>
+            <pre>Classify the following text as positive or negative:
+"This product exceeded my expectations!"</pre>
+        </div>
+
+        <h3>2. Few-shot Prompting</h3>
+        <p>Providing a few examples before the actual task.</p>
+        <div class="example">
+            <strong>Example:</strong>
+            <pre>Classify the sentiment (positive/negative):
+
+Text: "This movie was terrible"
+Sentiment: negative
+
+Text: "Great service!"
+Sentiment: positive
+
+Text: "The food was cold"
+Sentiment: [wait for model response]</pre>
+        </div>
+
+        <h3>3. Chain-of-Thought Prompting</h3>
+        <p>Encouraging the model to break down complex problems into steps.</p>
+        <div class="example">
+            <strong>Example:</strong>
+            <pre>Let's solve this step by step:
+1) First, understand the problem
+2) Break it down into components
+3) Solve each component
+4) Combine the solutions</pre>
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>प्रम्प्ट इन्जिनियरिङ प्रविधिहरू</h2>
+            
+            <h3>१. जिरो-शट प्रम्प्टिङ</h3>
+            <p>कुनै उदाहरण बिना मोडेललाई कार्य सम्पादन गर्न भन्ने।</p>
+
+            <h3>२. फ्यू-शट प्रम्प्टिङ</h3>
+            <p>वास्तविक कार्य अघि केही उदाहरणहरू प्रदान गर्ने।</p>
+
+            <h3>३. चेन-अफ-थट प्रम्प्टिङ</h3>
+            <p>जटिल समस्याहरूलाई चरणहरूमा विभाजन गर्न मोडेललाई प्रोत्साहित गर्ने।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Best Practices</h2>
+        <div class="tip">
+            <ul>
+                <li>Be specific and clear in your instructions</li>
+                <li>Provide context and constraints</li>
+                <li>Use appropriate formatting and structure</li>
+                <li>Start with zero-shot, then add examples if needed</li>
+                <li>Iterate and refine based on results</li>
+            </ul>
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>उत्तम अभ्यासहरू</h2>
+            <div class="tip">
+                <ul>
+                    <li>निर्देशनहरूमा विशिष्ट र स्पष्ट हुनुहोस्</li>
+                    <li>सन्दर्भ र सीमाहरू प्रदान गर्नुहोस्</li>
+                    <li>उपयुक्त ढाँचा र संरचना प्रयोग गर्नुहोस्</li>
+                    <li>जिरो-शटबाट सुरु गर्नुहोस्, त्यसपछि आवश्यक परेमा उदाहरणहरू थप्नुहोस्</li>
+                    <li>नतिजाहरूको आधारमा परिमार्जन गर्नुहोस्</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Parameter Combinations</h2>
+        <p>Different tasks require different parameter combinations:</p>
+        
+        <div class="parameter-card">
+            <h3>Creative Writing</h3>
+            <ul>
+                <li>Temperature: 0.8</li>
+                <li>Top-p: 0.9</li>
+                <li>Top-k: 100</li>
+            </ul>
+        </div>
+
+        <div class="parameter-card">
+            <h3>Technical Writing</h3>
+            <ul>
+                <li>Temperature: 0.2</li>
+                <li>Top-p: 0.1</li>
+                <li>Top-k: 40</li>
+            </ul>
+        </div>
+
+        <div class="parameter-card">
+            <h3>Balanced Conversation</h3>
+            <ul>
+                <li>Temperature: 0.5</li>
+                <li>Top-p: 0.5</li>
+                <li>Top-k: 50</li>
+            </ul>
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>प्यारामिटर संयोजनहरू</h2>
+            <p>विभिन्न कार्यहरूको लागि विभिन्न प्यारामिटर संयोजनहरू आवश्यक पर्छ:</p>
+            
+            <div class="parameter-card">
+                <h3>सिर्जनात्मक लेखन</h3>
+                <ul>
+                    <li>तापमान: 0.8</li>
+                    <li>टप-पी: 0.9</li>
+                    <li>टप-के: 100</li>
+                </ul>
+            </div>
+
+            <div class="parameter-card">
+                <h3>प्राविधिक लेखन</h3>
+                <ul>
+                    <li>तापमान: 0.2</li>
+                    <li>टप-पी: 0.1</li>
+                    <li>टप-के: 40</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Common Pitfalls</h2>
+        <ul>
+            <li>Using overly high temperature for factual tasks</li>
+            <li>Not providing enough context</li>
+            <li>Inconsistent formatting in few-shot examples</li>
+            <li>Unclear or ambiguous instructions</li>
+            <li>Not setting appropriate max tokens</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Advanced Techniques</h2>
+        
+        <h3>System Messages</h3>
+        <p>Using system messages to set context and behavior:</p>
+        <div class="example">
+            <pre>System: You are a helpful assistant that specializes in technical documentation.
+User: Explain how a binary search works.</pre>
+        </div>
+
+        <h3>Format Specification</h3>
+        <p>Explicitly defining the desired output format:</p>
+        <div class="example">
+            <pre>Generate a response in the following JSON format:
+{
+    "title": string,
+    "points": array of strings,
+    "summary": string
+}</pre>
+        </div>
+
+        <div class="nepali" style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h2>उन्नत प्रविधिहरू</h2>
+            
+            <h3>सिस्टम सन्देशहरू</h3>
+            <p>सन्दर्भ र व्यवहार सेट गर्न सिस्टम सन्देशहरू प्रयोग गर्ने:</p>
+
+            <h3>ढाँचा विशिष्टता</h3>
+            <p>इच्छित आउटपुट ढाँचा स्पष्ट रूपमा परिभाषित गर्ने।</p>
+        </div>
+    </section>
+</body>
+</html>

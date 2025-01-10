@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Command Line Guide - लिनक्स कमाण्ड लाइन गाइड</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .command {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .nepali {
+            color: #444;
+            margin-top: 10px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Introduction to Linux Command Line and Bash</h1>
+        <h1 class="nepali">लिनक्स कमाण्ड लाइन र बास परिचय</h1>
+
+        <h2>What is the Command Line?</h2>
+        <p>The command line is a text interface for interacting with your computer's operating system.</p>
+        <p class="nepali">कमाण्ड लाइन तपाईंको कम्प्युटरको अपरेटिङ सिस्टमसँग अन्तरक्रिया गर्न प्रयोग गरिने टेक्स्ट इन्टरफेस हो।</p>
+
+        <h2>Essential Commands - आवश्यक कमाण्डहरू</h2>
+
+        <div class="command">
+            <h3>1. pwd (Print Working Directory)</h3>
+            <code>pwd</code>
+            <p>Shows your current directory location</p>
+            <p class="nepali">तपाईंको हालको डाइरेक्टरी स्थान देखाउँछ</p>
+        </div>
+
+        <div class="command">
+            <h3>2. ls (List)</h3>
+            <code>ls</code>
+            <code>ls -l</code>
+            <code>ls -a</code>
+            <p>Lists files and directories in the current location. Use -l for detailed view and -a to show hidden files.</p>
+            <p class="nepali">हालको स्थानमा भएका फाइल र डाइरेक्टरीहरू देखाउँछ। विस्तृत जानकारीको लागि -l र लुकेका फाइलहरू हेर्न -a प्रयोग गर्नुहोस्।</p>
+        </div>
+
+        <div class="command">
+            <h3>3. cd (Change Directory)</h3>
+            <code>cd directory_name</code>
+            <code>cd ..</code>
+            <code>cd ~</code>
+            <p>Navigate between directories. Use .. to go up one level, ~ to go to home directory.</p>
+            <p class="nepali">डाइरेक्टरीहरू बीच यात्रा गर्न। एक तह माथि जान .. र होम डाइरेक्टरीमा जान ~ प्रयोग गर्नुहोस्।</p>
+        </div>
+
+        <div class="command">
+            <h3>4. mkdir (Make Directory)</h3>
+            <code>mkdir directory_name</code>
+            <p>Creates a new directory</p>
+            <p class="nepali">नयाँ डाइरेक्टरी सिर्जना गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>5. rm (Remove)</h3>
+            <code>rm filename</code>
+            <code>rm -r directory_name</code>
+            <p>Deletes files or directories (-r for recursive deletion of directories)</p>
+            <p class="nepali">फाइल वा डाइरेक्टरीहरू मेटाउँछ (डाइरेक्टरीहरू मेटाउन -r प्रयोग गर्नुहोस्)</p>
+        </div>
+
+        <div class="command">
+            <h3>6. cp (Copy)</h3>
+            <code>cp source destination</code>
+            <p>Copies files or directories from source to destination</p>
+            <p class="nepali">फाइल वा डाइरेक्टरीहरूलाई स्रोतबाट गन्तव्यमा प्रतिलिपि गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>7. mv (Move)</h3>
+            <code>mv source destination</code>
+            <p>Moves or renames files and directories</p>
+            <p class="nepali">फाइल र डाइरेक्टरीहरूलाई सार्छ वा पुनःनामाकरण गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>8. cat (Concatenate)</h3>
+            <code>cat filename</code>
+            <p>Displays file content</p>
+            <p class="nepali">फाइलको सामग्री प्रदर्शन गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>9. grep (Global Regular Expression Print)</h3>
+            <code>grep "pattern" filename</code>
+            <p>Searches for patterns in files</p>
+            <p class="nepali">फाइलहरूमा प्याटर्नहरू खोज्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>10. chmod (Change Mode)</h3>
+            <code>chmod permissions filename</code>
+            <p>Changes file permissions</p>
+            <p class="nepali">फाइल अनुमतिहरू परिवर्तन गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>11. sudo (Super User Do)</h3>
+            <code>sudo command</code>
+            <p>Executes commands with administrative privileges</p>
+            <p class="nepali">प्रशासनिक विशेषाधिकारहरूसँग कमाण्डहरू कार्यान्वयन गर्छ</p>
+        </div>
+
+        <div class="command">
+            <h3>12. man (Manual)</h3>
+            <code>man command</code>
+            <p>Shows the manual page for a command</p>
+            <p class="nepali">कमाण्डको म्यानुअल पृष्ठ देखाउँछ</p>
+        </div>
+
+        <h2>Package Managers - प्याकेज म्यानेजरहरू</h2>
+
+        <h3>Ubuntu (apt)</h3>
+        <p>Ubuntu uses the Advanced Package Tool (apt) for managing software packages.</p>
+        <p class="nepali">Ubuntu ले सफ्टवेयर प्याकेजहरू व्यवस्थापन गर्न Advanced Package Tool (apt) प्रयोग गर्छ।</p>
+        
+        <div class="command">
+            <code>sudo apt update</code>
+            <code>sudo apt upgrade</code>
+            <code>sudo apt install package_name</code>
+            <code>sudo apt remove package_name</code>
+        </div>
+
+        <h3>CentOS (yum)</h3>
+        <p>CentOS uses the Yellowdog Updater Modified (YUM) for package management.</p>
+        <p class="nepali">CentOS ले प्याकेज व्यवस्थापनको लागि Yellowdog Updater Modified (YUM) प्रयोग गर्छ।</p>
+        
+        <div class="command">
+            <code>sudo yum update</code>
+            <code>sudo yum upgrade</code>
+            <code>sudo yum install package_name</code>
+            <code>sudo yum remove package_name</code>
+        </div>
+
+        <h2>Distribution Differences - वितरण भिन्नताहरू</h2>
+        <p>Ubuntu is based on Debian and uses .deb packages, while CentOS is based on Red Hat Enterprise Linux (RHEL) and uses .rpm packages. Ubuntu is known for its user-friendly interface and extensive community support, making it popular for desktop users. CentOS is preferred in server environments for its stability and long-term support.</p>
+        <p class="nepali">Ubuntu डेबियनमा आधारित छ र .deb प्याकेजहरू प्रयोग गर्छ, जबकि CentOS रेड ह्याट एन्टरप्राइज लिनक्स (RHEL) मा आधारित छ र .rpm प्याकेजहरू प्रयोग गर्छ। Ubuntu आफ्नो प्रयोगकर्ता-मैत्री इन्टरफेस र व्यापक समुदाय समर्थनको लागि प्रसिद्ध छ, जसले गर्दा यो डेस्कटप प्रयोगकर्ताहरूको लागि लोकप्रिय छ। CentOS आफ्नो स्थिरता र दीर्घकालीन समर्थनको लागि सर्वर वातावरणमा रुचाइन्छ।</p>
+    </div>
+</body>
+</html>

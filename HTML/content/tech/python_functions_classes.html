@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Python Functions and Classes</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .nepali-content {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            margin-top: 10px;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            font-family: Consolas, monospace;
+        }
+    
+            .main-illustration {
+                margin: 30px auto;
+                text-align: center;
+                padding: 20px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .main-illustration svg {
+                max-width: 90%;
+                height: auto;
+                margin: auto;
+            }
+            section {
+                margin: 40px 20px;
+                padding: 30px;
+                background-color: #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border-radius: 8px;
+            }
+            h2 {
+                color: #2c3e50;
+                border-bottom: 2px solid #eee;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+            .english-content, .nepali-content {
+                margin: 20px 0;
+                line-height: 1.6;
+            }
+            .nepali-content {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 6px;
+                border-left: 4px solid #007bff;
+            }
+            p {
+                margin: 15px 0;
+            }
+            </style>
+</head>
+<body>
+<div class="container">
+<h1>Python Functions and Classes</h1>
+<div class="english-content" id="introduction">
+<h2>Introduction</h2>
+<p>In Python, functions and classes are fundamental building blocks that allow you to organize and modularize your code. Functions are reusable pieces of code that perform specific tasks, while classes are blueprints for creating objects, which encapsulate data and behavior.</p>
+<p>By using functions and classes, you can write cleaner, more maintainable, and more efficient code. Functions help you avoid code duplication and promote code reusability, while classes allow you to create complex data structures and implement object-oriented programming (OOP) principles.</p>
+</div>
+<div class="nepali-content"><p>पाइथनमा, प्रकार्यहरू र कक्षाहरू आधारभूत निर्माण ब्लकहरू हुन् जसले तपाईंलाई आफ्नो कोड व्यवस्थित र मोड्युलराइज गर्न अनुमति दिन्छ। प्रकार्यहरू कोडको पुन: प्रयोज्य टुक्राहरू हुन् जसले विशिष्ट कार्यहरू गर्दछ, जबकि कक्षाहरू वस्तुहरू सिर्जना गर्नका लागि ब्लुप्रिन्टहरू हुन्, जसले डेटा र व्यवहारलाई समेट्छ।</p>
+<p> प्रकार्यहरू र कक्षाहरू प्रयोग गरेर, तपाईं सफा, थप मर्मत योग्य, र थप प्रभावकारी कोड लेख्न सक्नुहुन्छ। प्रकार्यहरूले तपाईंलाई कोड दोहोर्याउनबाट बच्न र कोड पुन: प्रयोज्यता प्रवर्द्धन गर्न मद्दत गर्दछ, जबकि कक्षाहरूले तपाईंलाई जटिल डेटा संरचनाहरू सिर्जना गर्न र वस्तु-उन्मुख प्रोग्रामिङ (OOP) सिद्धान्तहरू लागू गर्न अनुमति दिन्छ।</p></div>
+<div class="english-content" id="functions">
+<h2>Functions</h2>
+<p>Functions in Python are defined using the <code>def</code> keyword, followed by the function name, parentheses for arguments, and a colon. The function body is indented and can contain any valid Python code.</p>
+<p>Here's a simple example of a function that adds two numbers:</p>
+<code>
+def add_numbers(a, b):
+    result = a + b
+    return result
+
+sum = add_numbers(3, 5)
+print(sum)  # Output: 8
+            </code>
+<p>Functions can accept arguments (inputs) and return values (outputs). They can also be called from other parts of your code, making them highly reusable.</p>
+</div>
+<div class="nepali-content"><p> प्रकार्यहरूले तर्कहरू (इनपुटहरू) र फिर्ता मानहरू (आउटपुटहरू) स्वीकार गर्न सक्छन्। तिनीहरूलाई तपाईंको कोडको अन्य भागहरूबाट पनि कल गर्न सकिन्छ, तिनीहरूलाई अत्यधिक पुन: प्रयोज्य बनाउन।</p></div>
+<div class="english-content" id="classes">
+<h2>Classes</h2>
+<p>Classes in Python are defined using the <code>class</code> keyword, followed by the class name. The class body is indented and can contain attributes (variables) and methods (functions).</p>
+<p>Here's an example of a simple class representing a Rectangle:</p>
+<code>
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+rect = Rectangle(4, 6)
+print("Area:", rect.area())      # Output: Area: 24
+print("Perimeter:", rect.perimeter())  # Output: Perimeter: 20
+            </code>
+<p>Classes allow you to create objects, which can have their own data (attributes) and behavior (methods). This promotes code organization, encapsulation, and code reuse through inheritance and polymorphism.</p>
+</div>
+<div class="nepali-content"><p>वर्गहरूले तपाईंलाई वस्तुहरू सिर्जना गर्न अनुमति दिन्छ, जसको आफ्नै डेटा (विशेषताहरू) र व्यवहार (विधिहरू) हुन सक्छन्। यसले विरासत र पोलिमोर्फिज्म मार्फत कोड संगठन, एन्क्याप्सुलेशन, र कोड पुन: प्रयोगलाई बढावा दिन्छ।</p></div>
+<div class="english-content" id="best-practices">
+<h2>Best Practices</h2>
+<p>When working with functions and classes in Python, it's important to follow best practices to ensure your code is clean, readable, and maintainable.</p>
+<p>For functions:
+                <ul>
+<li>Use descriptive and meaningful names for functions.</li>
+<li>Keep functions small and focused on a single task.</li>
+<li>Use docstrings to document the purpose, arguments, and return values of your functions.</li>
+<li>Follow the DRY (Don't Repeat Yourself) principle to avoid code duplication.</li>
+</ul>
+</p>
+<p>For classes:
+                <ul>
+<li>Follow the single responsibility principle: each class should have a single, well-defined responsibility.</li>
+<li>Encapsulate data and behavior within classes using access modifiers (public, protected, private).</li>
+<li>Inherit from base classes to promote code reuse and polymorphism.</li>
+<li>Use class and instance methods appropriately.</li>
+</ul>
+</p>
+</div>
+<div class="nepali-content"><p>पाइथनमा प्रकार्यहरू र कक्षाहरूसँग काम गर्दा, तपाईंको कोड सफा, पढ्न योग्य र मर्मतयोग्य छ भनी सुनिश्चित गर्न उत्तम अभ्यासहरू पालना गर्नु महत्त्वपूर्ण छ।</p>
+<p>कार्यहरूका लागि:
+                <ul>
+<li>कार्यहरूका लागि वर्णनात्मक र अर्थपूर्ण नामहरू प्रयोग गर्नुहोस्।</li>
+<li>कार्यहरूलाई सानो राख्नुहोस् र एउटै कार्यमा केन्द्रित गर्नुहोस्।</li>
+<li>तपाईँका कार्यहरूको उद्देश्य, तर्क, र फिर्ता मानहरू कागजात गर्न docstrings प्रयोग गर्नुहोस्।</li>
+<li>कोडको नक्कलबाट बच्नको लागि DRY (आफैलाई नदोहोर्याउनुहोस्) सिद्धान्तको पालना गर्नुहोस्।</li>
+</ul>
+</p>
+<p> कक्षाहरूका लागि:
+                <ul>
+<li>एकल जिम्मेवारी सिद्धान्तको पालना गर्नुहोस्: प्रत्येक वर्गको एकल, राम्रोसँग परिभाषित जिम्मेवारी हुनुपर्छ।</li>
+<li>पहुँच परिमार्जकहरू (सार्वजनिक, सुरक्षित, निजी) प्रयोग गरी कक्षाहरू भित्र डेटा र व्यवहारलाई समेट्नुहोस्।</li>
+<li>कोड पुन:प्रयोग र बहुरूपता प्रवर्द्धन गर्न आधार वर्गहरूबाट इनहेरिट गर्नुहोस्।</li>
+<li>वर्ग र उदाहरण विधिहरू उचित रूपमा प्रयोग गर्नुहोस्।</li>
+</ul>
+</p></div>
+<div class="english-content" id="use-cases">
+<h2>Common Use Cases</h2>
+<p>Functions and classes have numerous use cases in Python programming. Here are some common examples:</p>
+<p>Functions:
+                <ul>
+<li>Data processing and manipulation (e.g., filtering, sorting, transforming data)</li>
+<li>Mathematical calculations and operations</li>
+<li>File I/O operations (reading, writing, and processing files)</li>
+<li>Web scraping and data extraction</li>
+<li>User input validation and sanitization</li>
+</ul>
+</p>
+<p>Classes:
+                <ul>
+<li>Creating data structures (e.g., linked lists, trees, graphs)</li>
+<li>Building graphical user interfaces (GUIs) with frameworks like Tkinter or PyQt</li>
+<li>Implementing design patterns (e.g., Singleton, Factory, Observer)</li>
+<li>Creating APIs and web applications with frameworks like Flask or Django</li>
+<li>Developing games and multimedia applications</li>
+</ul>
+</p>
+</div>
+<div class="nepali-content"><p>पाइथन प्रोग्रामिङमा फंक्शन र क्लासहरूको प्रयोगका धेरै केसहरू छन्। यहाँ केहि सामान्य उदाहरणहरू छन्:</p>
+<p>कार्यहरू:
+                <ul>
+<li>डेटा प्रशोधन र हेरफेर (जस्तै, फिल्टरिङ, क्रमबद्ध, डेटा रूपान्तरण)</li>
+<li>गणितीय गणना र सञ्चालनहरू</li>
+<li>फाइल I/O सञ्चालनहरू (फाइलहरू पढ्ने, लेख्ने र प्रशोधन गर्ने)</li>
+<li>वेब स्क्र्यापिङ र डेटा निकासी</li>
+<li>प्रयोगकर्ता इनपुट प्रमाणीकरण र सेनिटाइजेशन</li>
+</ul>
+</p>
+<p> कक्षाहरू:
+                <ul>
+<li>डेटा संरचनाहरू सिर्जना गर्दै (जस्तै, लिङ्क गरिएको सूचीहरू, रूखहरू, ग्राफहरू)</li>
+<li> Tkinter वा PyQt जस्ता फ्रेमवर्कहरूसँग ग्राफिकल प्रयोगकर्ता इन्टरफेसहरू (GUIs) निर्माण गर्दै</li>
+<li>डिजाईन ढाँचाहरू कार्यान्वयन गर्दै (जस्तै, सिंगलटन, कारखाना, पर्यवेक्षक)</li>
+<li> Flask वा Django जस्ता फ्रेमवर्कहरूसँग API र वेब अनुप्रयोगहरू सिर्जना गर्दै</li>
+<li>खेल र मल्टिमिडिया अनुप्रयोगहरू विकास गर्दै</li>
+</ul>
+</p></div>
+<div class="english-content" id="tips-and-tricks">
+<h2>Tips and Tricks</h2>
+<p>Here are some tips and tricks to help you effectively use functions and classes in Python:</p>
+<p>Functions:
+                <ul>
+<li>Use default argument values to make your functions more flexible.</li>
+<li>Leverage Python's built-in functions and modules to avoid reinventing the wheel.</li>
+<li>Use lambda functions (anonymous functions) for simple, one-line operations.</li>
+<li>Utilize function decorators to add functionality to existing functions.</li>
+</ul>
+</p>
+<p>Classes:
+                <ul>
+<li>Use class and static methods for utility functions that don't require instance data.</li>
+<li>Implement the __str__ and __repr__ methods for better object representation.</li>
+<li>Utilize Python's built-in data types and collections as attributes or composition within classes.</li>
+<li>Leverage Python's magic methods (e.g., __init__, __add__, __iter__) to customize object behavior.</li>
+</ul>
+</p>
+</div>
+<div class="nepali-content"><p>पाइथनमा कार्यहरू र कक्षाहरू प्रभावकारी रूपमा प्रयोग गर्न मद्दत गर्न यहाँ केही सुझावहरू र युक्तिहरू छन्:</p>
+<p>कार्यहरू:
+                <ul>
+<li>तपाईँका कार्यहरूलाई थप लचिलो बनाउन पूर्वनिर्धारित तर्क मानहरू प्रयोग गर्नुहोस्।</li>
+<li>पाङ्ग्रालाई पुन: आविष्कार गर्नबाट बच्नको लागि पाइथनको निर्मित प्रकार्यहरू र मोड्युलहरू प्रयोग गर्नुहोस्।</li>
+<li>सरल, एक-लाइन अपरेसनहरूको लागि lambda प्रकार्यहरू (अज्ञात कार्यहरू) प्रयोग गर्नुहोस्।</li>
+<li>अवस्थित कार्यहरूमा कार्यक्षमता थप्न प्रकार्य डेकोरेटरहरू प्रयोग गर्नुहोस्।</li>
+</ul>
+</p>
+<p> कक्षाहरू:
+                <ul>
+<li>उपयोगिता प्रकार्यहरूको लागि वर्ग र स्थिर विधिहरू प्रयोग गर्नुहोस् जसलाई उदाहरण डेटा आवश्यक पर्दैन।</li>
+<li> राम्रो वस्तु प्रतिनिधित्वको लागि __str__ र __repr__ विधिहरू लागू गर्नुहोस्।</li>
+<li>पायथनको अन्तर्निहित डाटा प्रकारहरू र वर्गहरूमा विशेषताहरू वा संरचनाको रूपमा सङ्कलनहरू प्रयोग गर्नुहोस्।</li>
+<li>वस्तुको व्यवहारलाई अनुकूलित गर्न पाइथनको जादुई विधिहरू (जस्तै, __init__, __add__, __iter__) प्रयोग गर्नुहोस्।</li>
+</ul>
+</p></div>
+<div class="english-content" id="pitfalls">
+<h2>Common Pitfalls and How to Avoid Them</h2>
+<p>While using functions and classes in Python, there are some common pitfalls to watch out for:</p>
+<p>Functions:
+                <ul>
+<li><strong>Side effects:</strong> Avoid modifying variables or data outside the function's scope, as it can lead to unexpected behavior.</li>
+<li><strong>Mutable default arguments:</strong> Using mutable objects (e.g., lists, dictionaries) as default arguments can lead to unexpected behavior. Instead, use None as the default and initialize the mutable object within the function.</li>
+<li><strong>Excessive nesting:</strong> Deeply nested functions can make your code harder to read and maintain. Try to keep functions flat and modular.</li>
+</ul>
+</p>
+<p>Classes:
+                <ul>
+<li><strong>Tight coupling:</strong> Avoid tight coupling between classes by favoring composition over inheritance and adhering to the principle of least knowledge.</li>
+<li><strong>Attribute shadowing:</strong> Be careful when using the same name for an instance attribute and a method or class attribute, as it can lead to unexpected behavior.</li>
+<li><strong>Misuse of inheritance:</strong> Inheritance should be used for an "is-a" relationship, not for code reuse or implementation sharing. Favor composition over inheritance in cases where an "has-a" relationship is more appropriate.</li>
+</ul>
+</p>
+</div>
+<div class="nepali-content"><p>पाइथनमा प्रकार्यहरू र कक्षाहरू प्रयोग गर्दा, त्यहाँ केही सामान्य गल्तीहरू छन् जसलाई ध्यान दिनुपर्छ:</p>
+<p>कार्यहरू:
+                <ul>
+<li><strong>साइड इफेक्ट:</strong> प्रकार्यको दायरा बाहिरको चर वा डेटा परिमार्जन गर्नबाट जोगिनुहोस्, किनकि यसले अनपेक्षित व्यवहार निम्त्याउन सक्छ।</li>
+<li><strong>परिवर्तनीय पूर्वनिर्धारित तर्कहरू:</strong> पूर्वनिर्धारित तर्कहरूको रूपमा परिवर्तनीय वस्तुहरू (जस्तै, सूचीहरू, शब्दकोशहरू) प्रयोग गर्दा अनपेक्षित व्यवहार हुन सक्छ। यसको सट्टा, None लाई पूर्वनिर्धारित रूपमा प्रयोग गर्नुहोस् र प्रकार्य भित्र परिवर्तनीय वस्तु प्रारम्भ गर्नुहोस्।</li>
+<li><strong>अत्यधिक नेस्टिङ:</strong> गहिरो नेस्टेड प्रकार्यहरूले तपाइँको कोड पढ्न र मर्मत गर्न गाह्रो बनाउन सक्छ। कार्यहरू समतल र मोड्युलर राख्न प्रयास गर्नुहोस्।</li>
+</ul>
+</p>
+<p> कक्षाहरू:
+                <ul>
+<li><strong>टाइट युग्मन:</strong> विरासतमा रचनालाई पक्षमा राखेर र न्यूनतम ज्ञानको सिद्धान्तलाई पछ्याएर कक्षाहरू बीच कडा युग्मनबाट जोगिनुहोस्।</li>
+<li><strong>विशेषता छायाँ:</strong> उदाहरण विशेषता र विधि वा वर्ग विशेषताको लागि एउटै नाम प्रयोग गर्दा सावधान रहनुहोस्, किनकि यसले अनपेक्षित व्यवहार निम्त्याउन सक्छ।</li>
+<li><strong>विरासतको दुरुपयोग:</strong> इनहेरिटेन्सलाई "is-a" सम्बन्धका लागि प्रयोग गरिनुपर्छ, कोड पुन: प्रयोग वा कार्यान्वयन साझेदारीको लागि होइन। "ह्यास-ए" सम्बन्ध बढी उपयुक्त हुने अवस्थामा विरासतमा रचनालाई प्राथमिकता दिनुहोस्।</li>
+</ul>
+</p></div>
+</div>
+</body>
+</html>

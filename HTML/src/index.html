@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Web - File Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        #fileList {
+            list-style: none;
+            padding: 0;
+        }
+        .file-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            transition: background-color 0.2s;
+        }
+        .file-item:hover {
+            background-color: #e9ecef;
+        }
+        .file-link {
+            text-decoration: none;
+            color: #007bff;
+            display: block;
+        }
+        .file-link:hover {
+            color: #0056b3;
+        }
+        .file-meta {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f8d7da;
+            border-radius: 4px;
+        }
+        .folder {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Nepal Web - File Browser</h1>
+        <div id="breadcrumb" class="breadcrumb">
+            <a href="#" onclick="listFiles(''); return false;">Home</a>
+        </div>
+        <div id="fileList">
+            <div class="loading">Loading files...</div>
+        </div>
+    </div>
+
+    <script>
+        const bucketName = 'nepal-web';
+        const bucketRegion = 'us-west-2';
+        let currentPrefix = '';
+
+        // Format file size
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Format last modified date
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Update breadcrumb navigation
+        function updateBreadcrumb(prefix) {
+            const parts = prefix.split('/').filter(part => part);
+            let html = '<a href="#" onclick="listFiles(\'\'); return false;">Home</a>';
+            let currentPath = '';
+
+            parts.forEach((part, index) => {
+                currentPath += part + '/';
+                html += ` / <a href="#" onclick="listFiles('${currentPath}'); return false;">${part}</a>`;
+            });
+
+            document.getElementById('breadcrumb').innerHTML = html;
+        }
+
+        // List files in the bucket
+        function listFiles(prefix = '') {
+            currentPrefix = prefix;
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '<div class="loading">Loading files...</div>';
+            updateBreadcrumb(prefix);
+
+            // Removed delimiter to get all files
+            const url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xhr.responseText, 'text/xml');
+                        displayFiles(xmlDoc);
+                    } else {
+                        fileList.innerHTML = `<div class="error">Error loading files: ${xhr.status}</div>`;
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        // Process entries and organize them by folder
+        function processEntries(xmlDoc) {
+            const entries = new Map(); // Map to store folders and their contents
+            
+            // Process all Contents
+            const contents = xmlDoc.getElementsByTagName('Contents');
+            for (let i = 0; i < contents.length; i++) {
+                const key = contents[i].getElementsByTagName('Key')[0].textContent;
+                
+                // Skip index.html at root
+                if (key === 'index.html') continue;
+                
+                // Skip if it's exactly the current prefix
+                if (key === currentPrefix) continue;
+
+                // Skip if it doesn't start with the current prefix
+                if (currentPrefix && !key.startsWith(currentPrefix)) continue;
+
+                const relativePath = key.substring(currentPrefix.length);
+                if (!relativePath) continue;
+
+                const parts = relativePath.split('/');
+                const isFolder = parts.length > 1;
+
+                if (isFolder) {
+                    // This is a file in a subfolder
+                    const folderName = parts[0];
+                    if (!entries.has(folderName)) {
+                        entries.set(folderName, {
+                            type: 'folder',
+                            name: folderName,
+                            prefix: currentPrefix + folderName + '/',
+                            contents: []
+                        });
+                    }
+                } else {
+                    // This is a file in the current directory
+                    const size = contents[i].getElementsByTagName('Size')[0].textContent;
+                    const lastModified = contents[i].getElementsByTagName('LastModified')[0].textContent;
+                    entries.set(relativePath, {
+                        type: 'file',
+                        name: relativePath,
+                        key: key,
+                        size: parseInt(size),
+                        lastModified: lastModified
+                    });
+                }
+            }
+
+            // Convert map to array and sort
+            return Array.from(entries.values()).sort((a, b) => {
+                if (a.type === b.type) {
+                    return a.name.localeCompare(b.name);
+                }
+                return a.type === 'folder' ? -1 : 1;
+            });
+        }
+
+        // Display files from XML response
+        function displayFiles(xmlDoc) {
+            const fileList = document.getElementById('fileList');
+            const entries = processEntries(xmlDoc);
+            
+            if (entries.length === 0) {
+                fileList.innerHTML = '<div class="loading">No files found</div>';
+                return;
+            }
+
+            let html = '';
+            
+            // Generate HTML for all entries
+            entries.forEach(entry => {
+                if (entry.type === 'folder') {
+                    html += `
+                        <div class="file-item">
+                            <a href="#" class="file-link folder" onclick="listFiles('${entry.prefix}'); return false;">
+                                📁 ${entry.name}/
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    const fileUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${encodeURIComponent(entry.key)}`;
+                    html += `
+                        <div class="file-item">
+                            <a href="${fileUrl}" class="file-link" target="_blank">
+                                📄 ${entry.name}
+                            </a>
+                            <div class="file-meta">
+                                Size: ${formatBytes(entry.size)} | 
+                                Last modified: ${formatDate(entry.lastModified)}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            fileList.innerHTML = html;
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            listFiles();
+        });
+    </script>
+</body>
+</html>

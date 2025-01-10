@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Tutorial - जेक्वेरी ट्युटोरियल</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .demo-box {
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .nepali {
+            color: #444;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        #fadeBox {
+            width: 100px;
+            height: 100px;
+            background-color: #28a745;
+            margin: 10px 0;
+        }
+        #slideBox {
+            width: 200px;
+            height: 50px;
+            background-color: #dc3545;
+            margin: 10px 0;
+            display: none;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: block;
+            margin: 10px 0;
+        }
+        #animateBox {
+            width: 50px;
+            height: 50px;
+            background-color: #ffc107;
+            position: relative;
+            margin: 20px 0;
+        }
+        .success-message {
+            color: #28a745;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>jQuery Tutorial</h1>
+        <h1 class="nepali">जेक्वेरी ट्युटोरियल</h1>
+
+        <p>jQuery is a fast, lightweight JavaScript library designed to simplify HTML DOM tree traversal and manipulation.</p>
+        <p class="nepali">जेक्वेरी एक छिटो, हल्का जाभास्क्रिप्ट लाइब्रेरी हो जसलाई HTML DOM ट्री ट्राभर्सल र म्यानिपुलेसनलाई सरल बनाउन डिजाइन गरिएको छ।</p>
+
+        <h2>1. DOM Manipulation - DOM म्यानिपुलेसन</h2>
+        <div class="demo-box">
+            <button id="changeTextBtn">Change Text</button>
+            <p id="changeMe">Click the button to change this text</p>
+            <p class="nepali" id="changeMeNepali">यो पाठ परिवर्तन गर्न बटन क्लिक गर्नुहोस्</p>
+            <code>
+                $("#changeTextBtn").click(function() {
+                    $("#changeMe").text("Text changed with jQuery!");
+                    $("#changeMeNepali").text("जेक्वेरीसँग पाठ परिवर्तन गरियो!");
+                });
+            </code>
+        </div>
+
+        <h2>2. Effects - इफेक्टहरू</h2>
+        <div class="demo-box">
+            <h3>Fade Effect - फेड इफेक्ट</h3>
+            <button id="fadeToggleBtn">Fade Toggle</button>
+            <div id="fadeBox"></div>
+            <code>
+                $("#fadeToggleBtn").click(function() {
+                    $("#fadeBox").fadeToggle();
+                });
+            </code>
+
+            <h3>Slide Effect - स्लाइड इफेक्ट</h3>
+            <button id="slideToggleBtn">Slide Toggle</button>
+            <div id="slideBox"></div>
+            <code>
+                $("#slideToggleBtn").click(function() {
+                    $("#slideBox").slideToggle();
+                });
+            </code>
+        </div>
+
+        <h2>3. Event Handling - इभेन्ट ह्यान्डलिंग</h2>
+        <div class="demo-box">
+            <button id="hoverBtn">Hover Me</button>
+            <p id="hoverText" class="success-message">Mouse is over the button!</p>
+            <p id="hoverTextNepali" class="success-message nepali">माउस बटनमाथि छ!</p>
+            <code>
+                $("#hoverBtn").hover(
+                    function() {
+                        $(".success-message").show();
+                    },
+                    function() {
+                        $(".success-message").hide();
+                    }
+                );
+            </code>
+        </div>
+
+        <h2>4. Animation - एनिमेसन</h2>
+        <div class="demo-box">
+            <button id="animateBtn">Animate</button>
+            <div id="animateBox"></div>
+            <code>
+                $("#animateBtn").click(function() {
+                    $("#animateBox").animate({
+                        left: '+=200',
+                        width: '+=50',
+                        height: '+=50'
+                    }, 1000).animate({
+                        left: '-=200',
+                        width: '-=50',
+                        height: '-=50'
+                    }, 1000);
+                });
+            </code>
+        </div>
+
+        <h2>5. Class Manipulation - क्लास म्यानिपुलेसन</h2>
+        <div class="demo-box">
+            <button id="highlightBtn">Toggle Highlight</button>
+            <p id="highlightText">This text can be highlighted</p>
+            <p id="highlightTextNepali" class="nepali">यो पाठ हाइलाइट गर्न सकिन्छ</p>
+            <code>
+                $("#highlightBtn").click(function() {
+                    $("#highlightText, #highlightTextNepali").toggleClass("highlight");
+                });
+            </code>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Change Text Demo
+            $("#changeTextBtn").click(function() {
+                $("#changeMe").text("Text changed with jQuery!");
+                $("#changeMeNepali").text("जेक्वेरीसँग पाठ परिवर्तन गरियो!");
+            });
+
+            // Fade Toggle Demo
+            $("#fadeToggleBtn").click(function() {
+                $("#fadeBox").fadeToggle();
+            });
+
+            // Slide Toggle Demo
+            $("#slideToggleBtn").click(function() {
+                $("#slideBox").slideToggle();
+            });
+
+            // Hover Demo
+            $("#hoverBtn").hover(
+                function() {
+                    $(".success-message").show();
+                },
+                function() {
+                    $(".success-message").hide();
+                }
+            );
+
+            // Animation Demo
+            $("#animateBtn").click(function() {
+                $("#animateBox").animate({
+                    left: '+=200',
+                    width: '+=50',
+                    height: '+=50'
+                }, 1000).animate({
+                    left: '-=200',
+                    width: '-=50',
+                    height: '-=50'
+                }, 1000);
+            });
+
+            // Highlight Demo
+            $("#highlightBtn").click(function() {
+                $("#highlightText, #highlightTextNepali").toggleClass("highlight");
+            });
+        });
+    </script>
+</body>
+</html>

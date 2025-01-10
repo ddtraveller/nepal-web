@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to JavaScript - जाभास्क्रिप्ट परिचय</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f6f8fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .english { color: #24292e; }
+        .nepali { color: #2c5282; }
+        .code-block {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            white-space: pre;
+        }
+        .demo {
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            margin: 20px 0;
+            padding: 20px;
+            background: #ffffff;
+        }
+        .note {
+            background: #fff8c5;
+            padding: 16px;
+            border-left: 4px solid #f9c513;
+            margin: 16px 0;
+        }
+        .demo button {
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        .demo button:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="english">Introduction to JavaScript</span><br>
+            <span class="nepali">जाभास्क्रिप्ट परिचय</span>
+        </h1>
+
+        <div class="section">
+            <h2>
+                <span class="english">What is JavaScript?</span><br>
+                <span class="nepali">जाभास्क्रिप्ट के हो?</span>
+            </h2>
+            <p class="english">JavaScript is a programming language that makes web pages interactive. It can respond to user actions, modify HTML content, and change styles dynamically.</p>
+            <p class="nepali">जाभास्क्रिप्ट एक प्रोग्रामिङ भाषा हो जसले वेब पेजहरूलाई इन्टरएक्टिभ बनाउँछ। यसले प्रयोगकर्ता कार्यहरूको प्रतिक्रिया गर्न, HTML सामग्री परिमार्जन गर्न र शैलीहरू गतिशील रूपमा परिवर्तन गर्न सक्छ।</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Basic HTML Page</span><br>
+                <span class="nepali">आधारभूत HTML पेज</span>
+            </h2>
+            <p class="english">Let's start with a simple HTML page:</p>
+            <p class="nepali">एउटा सरल HTML पेजबाट सुरु गरौं:</p>
+            
+            <div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;JavaScript Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to JavaScript Demo&lt;/h1&gt;
+    &lt;button id="alertButton"&gt;Click for Alert&lt;/button&gt;
+    &lt;button id="colorButton"&gt;Change Background&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Adding JavaScript</span><br>
+                <span class="nepali">जाभास्क्रिप्ट थप्दै</span>
+            </h2>
+
+            <h3>
+                <span class="english">Method 1: Internal JavaScript</span><br>
+                <span class="nepali">विधि १: आन्तरिक जाभास्क्रिप्ट</span>
+            </h3>
+            <p class="english">Add JavaScript inside the HTML file using the &lt;script&gt; tag:</p>
+            <p class="nepali">&lt;script&gt; ट्याग प्रयोग गरेर HTML फाइल भित्र जाभास्क्रिप्ट थप्नुहोस्:</p>
+
+            <div class="code-block">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;JavaScript Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to JavaScript Demo&lt;/h1&gt;
+    &lt;button id="alertButton"&gt;Click for Alert&lt;/button&gt;
+    &lt;button id="colorButton"&gt;Change Background&lt;/button&gt;
+
+    &lt;script&gt;
+        // Add click event to alert button
+        document.getElementById('alertButton').onclick = function() {
+            alert('Hello! You clicked the button!');
+        };
+
+        // Add click event to color button
+        document.getElementById('colorButton').onclick = function() {
+            document.body.style.backgroundColor = 
+                '#' + Math.floor(Math.random()*16777215).toString(16);
+        };
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+            <h3>
+                <span class="english">Method 2: External JavaScript</span><br>
+                <span class="nepali">विधि २: बाह्य जाभास्क्रिप्ट</span>
+            </h3>
+            <p class="english">Create a separate file named script.js:</p>
+            <p class="nepali">script.js नामको छुट्टै फाइल सिर्जना गर्नुहोस्:</p>
+
+            <div class="code-block">// script.js
+document.getElementById('alertButton').onclick = function() {
+    alert('Hello! You clicked the button!');
+};
+
+document.getElementById('colorButton').onclick = function() {
+    document.body.style.backgroundColor = 
+        '#' + Math.floor(Math.random()*16777215).toString(16);
+};</div>
+
+            <p class="english">Then link it in your HTML file:</p>
+            <p class="nepali">त्यसपछि यसलाई तपाईंको HTML फाइलमा लिंक गर्नुहोस्:</p>
+
+            <div class="code-block">&lt;script src="script.js"&gt;&lt;/script&gt;</div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Live Demo</span><br>
+                <span class="nepali">लाइभ डेमो</span>
+            </h2>
+            <div class="demo">
+                <button id="demoAlertButton">Click for Alert</button>
+                <button id="demoColorButton">Change Background</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Code Explanation</span><br>
+                <span class="nepali">कोड व्याख्या</span>
+            </h2>
+            <p class="english">
+                • document.getElementById(): Finds an HTML element by its ID<br>
+                • onclick: Triggers when element is clicked<br>
+                • alert(): Shows a popup message<br>
+                • style.backgroundColor: Changes background color<br>
+                • Math.random(): Generates random number for color
+            </p>
+            <p class="nepali">
+                • document.getElementById(): ID द्वारा HTML तत्व फेला पार्छ<br>
+                • onclick: तत्व क्लिक गर्दा ट्रिगर हुन्छ<br>
+                • alert(): पपअप सन्देश देखाउँछ<br>
+                • style.backgroundColor: पृष्ठभूमि रङ परिवर्तन गर्छ<br>
+                • Math.random(): रङको लागि र्यान्डम नम्बर जनरेट गर्छ
+            </p>
+        </div>
+
+        <script>
+            document.getElementById('demoAlertButton').onclick = function() {
+                alert('Hello! You clicked the button!');
+            };
+            document.getElementById('demoColorButton').onclick = function() {
+                document.body.style.backgroundColor = 
+                    '#' + Math.floor(Math.random()*16777215).toString(16);
+            };
+        </script>
+    </div>
+</body>
+</html>

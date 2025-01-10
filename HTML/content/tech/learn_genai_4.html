@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Guide: Training Nepali Language Models</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #334155;
+        }
+        h1, h2, h3 {
+            color: #2563eb;
+            margin-top: 1.5em;
+        }
+        .nepali {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .step-card {
+            background-color: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .example {
+            background-color: #ecfdf5;
+            border: 1px solid #6ee7b7;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .result {
+            background-color: #fffbeb;
+            border: 1px solid #fbbf24;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .tip {
+            background-color: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Training Models for Nepali Language Processing</h1>
+    <div class="nepali">
+        <h1>नेपाली भाषा प्रशोधनका लागि मोडेल तालिम</h1>
+    </div>
+
+    <section>
+        <h2>Part 1: Introduction to Model Training</h2>
+        <!-- Content from the previous guide about basic concepts -->
+        <p>Machine learning models are computational systems that learn patterns from data to perform specific tasks. Training a model is the process of teaching it to recognize these patterns using example data. For language models specifically, the training process involves exposing the model to large amounts of text so it can learn the structure, grammar, and patterns of the language.</p>
+
+        <div class="nepali">
+            <p>मेशिन लर्निङ मोडेलहरू कम्प्युटेशनल प्रणालीहरू हुन् जसले विशिष्ट कार्यहरू गर्न डाटाबाट प्याटर्नहरू सिक्छन्। मोडेल तालिम भनेको उदाहरण डाटा प्रयोग गरेर यी प्याटर्नहरू पहिचान गर्न सिकाउने प्रक्रिया हो।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Part 2: Google Colab Setup</h2>
+        <!-- Content from previous guide about Colab -->
+        <div class="step-card">
+            <h3>Setting Up Your Environment</h3>
+            <pre>
+!pip install transformers datasets sentencepiece torch nepali_tokenizer indic-nlp-library
+!pip install sacremoses
+            </pre>
+            <p>These installations provide the essential libraries for Nepali language processing.</p>
+        </div>
+
+        <div class="nepali">
+            <h2>गुगल कोलाब सेटअप</h2>
+            <p>यी स्थापनाहरूले नेपाली भाषा प्रशोधनको लागि आवश्यक लाइब्रेरीहरू प्रदान गर्दछन्।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Part 3: Basic Model Training</h2>
+        <div class="step-card">
+            <h3>Data Preparation</h3>
+            <p>Data preparation is a critical phase that significantly impacts model performance. The process involves several sophisticated steps:</p>
+
+            <h4>Text Preprocessing</h4>
+            <ul>
+                <li>Unicode Normalization:
+                    <ul>
+                        <li>Converting all text to consistent Unicode representation</li>
+                        <li>Handling different forms of Devanagari characters</li>
+                        <li>Normalizing combined characters and diacritics</li>
+                    </ul>
+                </li>
+                <li>Text Cleaning:
+                    <ul>
+                        <li>Removing irrelevant characters and symbols</li>
+                        <li>Standardizing punctuation and formatting</li>
+                        <li>Handling special cases in Nepali text</li>
+                    </ul>
+                </li>
+                <li>Tokenization Strategy:
+                    <ul>
+                        <li>Subword tokenization for morphologically rich Nepali</li>
+                        <li>Handling compound words and conjunct characters</li>
+                        <li>Special token handling for domain-specific terms</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4>Dataset Structure</h4>
+            <ul>
+                <li>Organization:
+                    <ul>
+                        <li>Proper sequence length determination</li>
+                        <li>Efficient batch construction</li>
+                        <li>Memory-optimized data storage</li>
+                    </ul>
+                </li>
+                <li>Quality Control:
+                    <ul>
+                        <li>Data validation checks</li>
+                        <li>Error detection and correction</li>
+                        <li>Consistency verification</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nepali">
+                <h3>डाटा तयारी</h3>
+                <p>डाटा तयारी एक महत्त्वपूर्ण चरण हो जसले मोडेल प्रदर्शनमा उल्लेखनीय प्रभाव पार्दछ। यस प्रक्रियामा धेरै परिष्कृत चरणहरू समावेश छन्:</p>
+
+                <h4>पाठ पूर्व-प्रशोधन</h4>
+                <ul>
+                    <li>युनिकोड सामान्यीकरण:
+                        <ul>
+                            <li>सबै पाठलाई एकरूप युनिकोड प्रतिनिधित्वमा रूपान्तरण</li>
+                            <li>देवनागरी अक्षरहरूका विभिन्न रूपहरूको ह्यान्डलिङ</li>
+                            <li>संयुक्त अक्षरहरू र मात्राहरूको सामान्यीकरण</li>
+                        </ul>
+                    </li>
+                    <li>पाठ सफाई:
+                        <ul>
+                            <li>अनावश्यक अक्षर र प्रतीकहरू हटाउने</li>
+                            <li>विराम चिह्न र ढाँचा मानकीकरण</li>
+                            <li>नेपाली पाठमा विशेष मामलाहरूको ह्यान्डलिङ</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h4>Implementation Details</h4>
+            <pre>
+import pandas as pd
+from datasets import Dataset
+import torch
+from transformers import AutoTokenizer
+
+# Advanced text preprocessing
+def preprocess_nepali_text(text):
+    """
+    Comprehensive preprocessing for Nepali text
+    """
+    # Unicode normalization
+    text = unicodedata.normalize('NFKC', text)
+    
+    # Handle Devanagari specific cases
+    text = handle_devanagari_chars(text)
+    
+    # Clean and standardize text
+    text = standardize_text(text)
+    
+    return text
+
+# Custom dataset creation with validation
+def create_validated_dataset(df):
+    """
+    Create dataset with validation checks
+    """
+    # Validate data
+    assert all(df['text'].apply(lambda x: isinstance(x, str))), "All entries must be text"
+    assert all(df['text'].apply(len) > 0), "No empty strings allowed"
+    
+    # Create dataset with validation
+    try:
+        dataset = Dataset.from_pandas(df)
+        print("Dataset validation successful")
+        return dataset
+    except Exception as e:
+        print(f"Dataset creation failed: {e}")
+        return None
+
+# Advanced tokenization with error handling
+def advanced_tokenize_function(examples):
+    """
+    Advanced tokenization with special handling for Nepali
+    """
+    try:
+        return tokenizer(
+            examples["text"],
+            padding="max_length",
+            truncation=True,
+            max_length=128,
+            return_attention_mask=True,
+            return_token_type_ids=True
+        )
+    except Exception as e:
+        print(f"Tokenization error: {e}")
+        return None
+
+# Initialize tokenizer with special tokens
+tokenizer = AutoTokenizer.from_pretrained(
+    "ai4bharat/IndicBERT-v1",
+    do_lower_case=False,
+    use_fast=True,
+    additional_special_tokens=["<nep>", "</nep>"]
+)
+            </pre>
+
+# Load data
+df = pd.read_csv('nepali_text.csv')
+
+# Create dataset
+dataset = Dataset.from_pandas(df)
+
+# Initialize tokenizer
+tokenizer = AutoTokenizer.from_pretrained("ai4bharat/IndicBERT-v1")
+
+# Tokenize function
+def tokenize_function(examples):
+    return tokenizer(
+        examples["text"],
+        padding="max_length",
+        truncation=True,
+        max_length=128
+    )
+
+# Process dataset
+tokenized_dataset = dataset.map(
+    tokenize_function,
+    batched=True
+)
+            </pre>
+        </div>
+
+        <div class="nepali">
+            <h2>आधारभूत मोडेल तालिम</h2>
+            <p>मोडेल तालिमको पहिलो चरण तपाईंको डाटा उपयुक्त रूपमा तयार गर्नु हो। यसमा समावेश छ:</p>
+            <ul>
+                <li>डाटा लोड गर्ने</li>
+                <li>डाटासेट सिर्जना गर्ने</li>
+                <li>टोकनाइजर प्रारम्भ गर्ने</li>
+                <li>डाटा प्रशोधन गर्ने</li>
+            </ul>
+        </div>
+
+        <div class="step-card">
+            <h3>Model Training Configuration</h3>
+            <p>The model training configuration sets up the core parameters and structure for training. This includes:</p>
+            <ul>
+                <li>Initializing the base model (IndicBERT) that's pre-trained for Indic languages</li>
+                <li>Setting training arguments like number of epochs, batch sizes, and learning rates</li>
+                <li>Configuring the training environment with proper logging and output directories</li>
+                <li>Setting up the trainer with the model, arguments, and dataset</li>
+            </ul>
+
+            <div class="nepali">
+                <p>मोडेल तालिम कन्फिगरेसनले तालिमको लागि मुख्य प्यारामिटरहरू र संरचना सेट गर्दछ। यसमा समावेश छन्:</p>
+                <ul>
+                    <li>भारतीय भाषाहरूको लागि पूर्व-प्रशिक्षित आधार मोडेल (IndicBERT) प्रारम्भ गर्ने</li>
+                    <li>एपोक संख्या, ब्याच साइज, र लर्निङ दर जस्ता तालिम तर्कहरू सेट गर्ने</li>
+                    <li>उचित लगिङ र आउटपुट डाइरेक्टरीहरूसँग तालिम वातावरण कन्फिगर गर्ने</li>
+                    <li>मोडेल, तर्कहरू, र डाटासेटसँग ट्रेनर सेटअप गर्ने</li>
+                </ul>
+            </div>
+            <pre>
+from transformers import AutoModelForMaskedLM, TrainingArguments, Trainer
+
+# Initialize model
+model = AutoModelForMaskedLM.from_pretrained("ai4bharat/IndicBERT-v1")
+
+# Define training arguments
+training_args = TrainingArguments(
+    output_dir="./nepali_lm",
+    num_train_epochs=3,
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    warmup_steps=500,
+    weight_decay=0.01,
+    logging_dir='./logs',
+)
+
+# Initialize trainer
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_dataset,
+)
+
+# Start training
+trainer.train()
+            </pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Part 4: Case Study - Training on Buddhist Texts</h2>
+        <p>Training a model on Buddhist texts presents unique challenges and opportunities. Buddhist texts contain specialized vocabulary, complex philosophical concepts, and often mix Sanskrit, Pali, and Nepali terms. This case study demonstrates how to handle these specific requirements.</p>
+
+        <div class="nepali">
+            <p>बौद्ध पाठहरूमा मोडेल तालिम गर्दा विशिष्ट चुनौतीहरू र अवसरहरू प्रस्तुत हुन्छन्। बौद्ध पाठहरूमा विशेष शब्दावली, जटिल दार्शनिक अवधारणाहरू, र प्रायः संस्कृत, पाली र नेपाली शब्दहरूको मिश्रण हुन्छ। यो केस स्टडीले यी विशिष्ट आवश्यकताहरू कसरी सम्हाल्ने भन्ने देखाउँछ।</p>
+        </div>
+
+        <div class="step-card">
+            <h3>Preparing Buddhist Texts</h3>
+            <p>The preparation of Buddhist texts requires special consideration for several factors:</p>
+            <ul>
+                <li>Multilingual Elements:
+                    <ul>
+                        <li>Handling Sanskrit terms and their Nepali translations</li>
+                        <li>Managing Pali canonical references</li>
+                        <li>Preserving technical Buddhist terminology</li>
+                        <li>Maintaining consistency in transliteration</li>
+                    </ul>
+                </li>
+                <li>Structural Elements:
+                    <ul>
+                        <li>Preserving hierarchical text organization</li>
+                        <li>Handling verse numbers and references</li>
+                        <li>Managing commentary sections</li>
+                        <li>Linking related concepts and terms</li>
+                    </ul>
+                </li>
+                <li>Content Organization:
+                    <ul>
+                        <li>Categorizing texts by tradition and topic</li>
+                        <li>Maintaining source references</li>
+                        <li>Creating parallel text alignments</li>
+                        <li>Building concept hierarchies</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nepali">
+                <p>बौद्ध पाठहरूको तयारीमा धेरै कारकहरूको लागि विशेष विचार आवश्यक छ:</p>
+                <ul>
+                    <li>बहुभाषिक तत्वहरू:
+                        <ul>
+                            <li>संस्कृत शब्दहरू र तिनका नेपाली अनुवादहरूको ह्यान्डलिङ</li>
+                            <li>पाली धर्मग्रन्थ सन्दर्भहरूको व्यवस्थापन</li>
+                            <li>प्राविधिक बौद्ध शब्दावलीको संरक्षण</li>
+                            <li>लिप्यन्तरणमा एकरूपता कायम राख्ने</li>
+                        </ul>
+                    </li>
+                    <li>संरचनात्मक तत्वहरू:
+                        <ul>
+                            <li>श्लोक नम्बर र सन्दर्भहरूको ह्यान्डलिङ</li>
+                            <li>टीका खण्डहरूको व्यवस्थापन</li>
+                            <li>सम्बन्धित अवधारणा र शब्दहरूको लिङ्किङ</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <pre>
+# Example of structured Buddhist text data with comprehensive handling
+buddhist_texts = {
+    'texts': [
+        {
+            'title': 'धम्मपद',
+            'content': 'मनोपुब्बङ्गमा धम्मा मनोसेट्ठा मनोमया...',
+            'translation': 'Mind precedes all mental states...',
+            'category': 'canonical',
+            'source': 'Khuddaka Nikaya',
+            'chapter': 'Yamaka Vagga',
+            'verse_number': 1,
+            'commentary': 'अट्ठकथा: यहाँ "मन" भन्नाले...',
+            'cross_references': ['अभिधम्म पिटक', 'विसुद्धिमग्ग'],
+            'keywords': ['मन', 'धम्म', 'चेतसिक']
+        },
+        {
+            'title': 'चतुर्आर्यसत्य',
+            'content': 'दुक्खं अरियसच्चं, दुक्खसमुदयो अरियसच्चं...',
+            'translation': 'The Noble Truth of Suffering...',
+            'category': 'teachings',
+            'source': 'Dhammacakkappavattana Sutta',
+            'context': 'First Teaching of the Buddha',
+            'related_concepts': ['अष्टाङ्गिक मार्ग', 'प्रतीत्यसमुत्पाद']
+        }
+    ]
+}
+            </pre>
+        </div>
+
+        <div class="step-card">
+            <h3>Initial Knowledge Assessment</h3>
+            <p>Before training, it's crucial to assess the model's baseline understanding of Buddhist concepts. This process involves:</p>
+            <ul>
+                <li>Concept Testing:
+                    <ul>
+                        <li>Basic Buddhist terminology understanding</li>
+                        <li>Philosophical concept comprehension</li>
+                        <li>Contextual understanding of teachings</li>
+                        <li>Multi-language term recognition</li>
+                    </ul>
+                </li>
+                <li>Response Quality Assessment:
+                    <ul>
+                        <li>Accuracy of doctrinal explanations</li>
+                        <li>Consistency with Buddhist teachings</li>
+                        <li>Proper use of technical terms</li>
+                        <li>Contextual appropriateness</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nepali">
+                <p>तालिम सुरु गर्नु अघि, मोडेलको बौद्ध अवधारणाहरूको आधारभूत बुझाइको मूल्याङ्कन गर्नु महत्त्वपूर्ण छ। यस प्रक्रियामा समावेश छन्:</p>
+                <ul>
+                    <li>अवधारणा परीक्षण:
+                        <ul>
+                            <li>आधारभूत बौद्ध शब्दावलीको बुझाइ</li>
+                            <li>दार्शनिक अवधारणाको बोध</li>
+                            <li>शिक्षाहरूको सन्दर्भगत बुझाइ</li>
+                        </ul>
+                    </li>
+                    <li>प्रतिक्रिया गुणस्तर मूल्याङ्कन:
+                        <ul>
+                            <li>सिद्धान्तिक व्याख्याहरूको सटीकता</li>
+                            <li>बौद्ध शिक्षाहरूसँग सुसंगतता</li>
+                            <li>प्राविधिक शब्दहरूको उचित प्रयोग</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <pre>
+# Enhanced testing implementation with comprehensive evaluation
+def evaluate_buddhist_knowledge(model, tokenizer, test_questions):
+    """
+    Comprehensive evaluation of model's Buddhist knowledge
+    """
+    # Specialized test questions focusing on different aspects
+    doctrinal_questions = [
+        "चार आर्य सत्य के हुन्?",
+        "प्रतीत्यसमुत्पाद भनेको के हो?",
+        "अनात्मवादको सिद्धान्त कसरी व्याख्या गर्नुहुन्छ?"
+    ]
+    
+    technical_terms = [
+        "शून्यता",
+        "निर्वाण",
+        "स्कन्ध",
+        "आयतन"
+    ]
+    
+    contextual_understanding = [
+        "बुद्धले बनारसमा दिनुभएको पहिलो उपदेशको मुख्य विषय के थियो?",
+        "मध्यम प्रतिपदाको महत्व के हो?"
+    ]
+
+    results = {
+        'doctrinal_accuracy': evaluate_doctrinal_responses(model, tokenizer, doctrinal_questions),
+        'term_understanding': evaluate_term_usage(model, tokenizer, technical_terms),
+        'contextual_grasp': evaluate_context(model, tokenizer, contextual_understanding)
+    }
+    
+    return analyze_results(results)
+            </pre>
+        </div>
+
+        <div class="step-card">
+            <h3>Specialized Training Configuration</h3>
+            <p>Training a model on Buddhist texts requires specific configuration adjustments to handle the unique characteristics of the content:</p>
+            <ul>
+                <li>Model Architecture Considerations:
+                    <ul>
+                        <li>Vocabulary expansion for Buddhist terms</li>
+                        <li>Attention mechanism tuning for long-form texts</li>
+                        <li>Special token handling for citations and references</li>
+                        <li>Cross-lingual embedding alignments</li>
+                    </ul>
+                </li>
+                <li>Training Parameters:
+                    <ul>
+                        <li>Adjusted learning rates for domain adaptation</li>
+                        <li>Specialized loss functions for concept preservation</li>
+                        <li>Gradient accumulation for stable training</li>
+                        <li>Layer-wise learning rate decay</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="nepali">
+                <p>बौद्ध पाठहरूमा मोडेल तालिमको लागि सामग्रीको विशिष्ट विशेषताहरू सम्हाल्न विशेष कन्फिगरेसन समायोजनहरू आवश्यक छन्:</p>
+                <ul>
+                    <li>मोडेल संरचना विचारहरू:
+                        <ul>
+                            <li>बौद्ध शब्दहरूको लागि शब्दावली विस्तार</li>
+                            <li>लामो-फर्म पाठहरूको लागि ध्यान संयन्त्र ट्युनिङ</li>
+                            <li>उद्धरण र सन्दर्भहरूको लागि विशेष टोकन ह्यान्डलिङ</li>
+                        </ul>
+                    </li>
+                    <li>तालिम प्यारामिटरहरू:
+                        <ul>
+                            <li>डोमेन अनुकूलनको लागि समायोजित लर्निङ दरहरू</li>
+                            <li>अवधारणा संरक्षणको लागि विशेष लस फंक्सनहरू</li>
+                            <li>स्थिर तालिमको लागि ग्रेडियन्ट एकत्रीकरण</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <pre>
+# Enhanced training configuration with Buddhist-specific optimizations
+training_args = TrainingArguments(
+    output_dir="./buddhist_model",
+    num_train_epochs=5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    warmup_steps=500,
+    weight_decay=0.01,
+    logging_dir='./logs',
+    logging_steps=100,
+    save_strategy="epoch",
+    # Specialized configurations
+    gradient_accumulation_steps=4,
+    fp16=True,  # Use half-precision
+    learning_rate=2e-5,
+    max_grad_norm=0.5,
+    warmup_ratio=0.1,
+    # Custom scheduling
+    lr_scheduler_type="cosine",
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False
+)
+            </pre>
+        </div>
+
+        <div class="step-card">
+            <h3>Testing Initial Knowledge</h3>
+            <pre>
+# Test question
+question = "चार आर्य सत्य के हुन्?"
+
+# Generate response
+inputs = tokenizer(question, return_tensors="pt")
+outputs = model.generate(**inputs, max_length=100)
+response = tokenizer.decode(outputs[0])
+
+print("Pre-training response:", response)
+            </pre>
+        </div>
+
+        <div class="step-card">
+            <h3>Fine-tuning on Buddhist Texts</h3>
+            <pre>
+# Define specialized training arguments
+training_args = TrainingArguments(
+    output_dir="./buddhist_model",
+    num_train_epochs=5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    warmup_steps=500,
+    weight_decay=0.01,
+    logging_dir='./logs',
+    logging_steps=100,
+    save_strategy="epoch",
+)
+
+# Custom data collator
+def collate_fn(examples):
+    return {
+        'input_ids': torch.tensor([ex['input_ids'] for ex in examples]),
+        'attention_mask': torch.tensor([ex['attention_mask'] for ex in examples]),
+        'labels': torch.tensor([ex['input_ids'] for ex in examples])
+    }
+
+# Initialize specialized trainer
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_dataset,
+    data_collator=collate_fn
+)
+
+# Train model
+trainer.train()
+            </pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>Part 5: Advanced Techniques</h2>
+        <div class="step-card">
+            <h3>Memory Management</h3>
+            <p>Efficient memory management is crucial when training large language models, especially in environments with limited resources like Google Colab. The following techniques help optimize memory usage:</p>
+            <ul>
+                <li>Clearing CUDA cache to free up GPU memory</li>
+                <li>Using half-precision (FP16) to reduce memory requirements</li>
+                <li>Enabling gradient checkpointing to trade computation for memory</li>
+                <li>Managing batch sizes based on available resources</li>
+            </ul>
+
+            <div class="nepali">
+                <p>ठूला भाषा मोडेलहरू तालिम गर्दा कुशल मेमोरी व्यवस्थापन महत्त्वपूर्ण हुन्छ, विशेष गरी गुगल कोलाब जस्ता सीमित स्रोतहरू भएको वातावरणमा। निम्न प्रविधिहरूले मेमोरी प्रयोगलाई अनुकूलन गर्न मद्दत गर्छन्:</p>
+                <ul>
+                    <li>GPU मेमोरी खाली गर्न CUDA क्यास खाली गर्ने</li>
+                    <li>मेमोरी आवश्यकताहरू घटाउन हाफ-प्रिसिजन (FP16) प्रयोग गर्ने</li>
+                    <li>मेमोरीको लागि कम्प्युटेसन ट्रेड गर्न ग्रेडियन्ट चेकपोइन्टिङ सक्षम गर्ने</li>
+                    <li>उपलब्ध स्रोतहरूको आधारमा ब्याच साइजहरू व्यवस्थापन गर्ने</li>
+                </ul>
+            </div>
+            <pre>
+import torch
+
+# Clear CUDA cache
+torch.cuda.empty_cache()
+
+# Use half precision
+model = model.half()
+
+# Enable gradient checkpointing
+model.gradient_checkpointing_enable()
+            </pre>
+            <p>These techniques help manage memory when training large models on Colab's limited resources.</p>
+        </div>
+
+        <div class="step-card">
+            <h3>Custom Training Loop</h3>
+            <p>A custom training loop provides more control over the training process than the standard Trainer class. This approach allows you to:</p>
+            <ul>
+                <li>Implement custom optimization strategies</li>
+                <li>Monitor training progress at a more granular level</li>
+                <li>Add custom logic for loss calculation and backpropagation</li>
+                <li>Implement specialized learning rate schedules</li>
+            </ul>
+
+            <div class="nepali">
+                <p>कस्टम तालिम लूपले मानक ट्रेनर क्लास भन्दा तालिम प्रक्रियामा बढी नियन्त्रण प्रदान गर्दछ। यो दृष्टिकोणले तपाईंलाई निम्न कुराहरू गर्न अनुमति दिन्छ:</p>
+                <ul>
+                    <li>कस्टम अप्टिमाइजेसन रणनीतिहरू कार्यान्वयन गर्न</li>
+                    <li>बढी विस्तृत स्तरमा तालिम प्रगति निगरानी गर्न</li>
+                    <li>लस गणना र ब्याकप्रोपागेसनको लागि कस्टम लजिक थप्न</li>
+                    <li>विशेष लर्निङ दर शेड्युलहरू कार्यान्वयन गर्न</li>
+                </ul>
+            </div>
+            <pre>
+# Custom training loop example
+optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5)
+
+for epoch in range(num_epochs):
+    model.train()
+    for batch in train_dataloader:
+        optimizer.zero_grad()
+        outputs = model(**batch)
+        loss = outputs.loss
+        loss.backward()
+        optimizer.step()
+
+        if batch_idx % 100 == 0:
+            print(f"Epoch: {epoch}, Batch: {batch_idx}, Loss: {loss.item():.4f}")
+            </pre>
+        </div>
+
+        <div class="nepali">
+            <h2>उन्नत प्रविधिहरू</h2>
+            <p>यी उन्नत प्रविधिहरूले कोलाबको सीमित स्रोतहरूमा ठूला मोडेलहरू तालिम गर्दा मेमोरी व्यवस्थापन गर्न मद्दत गर्छन्।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Part 6: Evaluation and Fine-tuning</h2>
+        <div class="step-card">
+            <h3>Testing Model Improvements</h3>
+            <div class="example">
+                <h4>Buddhist Concept Questions</h4>
+                <pre>
+# Test questions
+test_questions = [
+    "शून्यता को सिद्धान्त के हो?",
+    "प्रतीत्यसमुत्पाद को अर्थ के हो?",
+    "बुद्ध को तीन लक्षण के हुन्?"
+]
+
+def evaluate_responses(model, tokenizer, questions):
+    for question in questions:
+        inputs = tokenizer(question, return_tensors="pt")
+        outputs = model.generate(**inputs, max_length=200)
+        print(f"Q: {question}")
+        print(f"A: {tokenizer.decode(outputs[0])}\n")
+
+evaluate_responses(model, tokenizer, test_questions)
+                </pre>
+            </div>
+        </div>
+
+        <div class="result">
+            <h3>Evaluation Results</h3>
+            <p>The evaluation results demonstrate the model's progress in understanding and generating responses about Buddhist concepts. Key improvements include:</p>
+            <ul>
+                <li>Enhanced understanding of technical Buddhist terminology</li>
+                <li>More accurate and detailed explanations of philosophical concepts</li>
+                <li>Better context understanding and relevant response generation</li>
+                <li>Improved handling of both classical and modern Nepali terms</li>
+            </ul>
+
+            <div class="nepali">
+                <p>मूल्याङ्कन परिणामहरूले बौद्ध अवधारणाहरू बुझ्ने र प्रतिक्रिया दिने मोडेलको प्रगति देखाउँछन्। मुख्य सुधारहरूमा समावेश छन्:</p>
+                <ul>
+                    <li>प्राविधिक बौद्ध शब्दावलीको बढ्दो बुझाइ</li>
+                    <li>दार्शनिक अवधारणाहरूको बढी सटीक र विस्तृत व्याख्याहरू</li>
+                    <li>राम्रो सन्दर्भ बुझाइ र सान्दर्भिक प्रतिक्रिया उत्पादन</li>
+                    <li>शास्त्रीय र आधुनिक नेपाली शब्दहरू दुवैको सुधारिएको ह्यान्डलिङ</li>
+                </ul>
+            </div>
+            <div class="example">
+                <h4>Before Training:</h4>
+                <p>Generic or incorrect responses about Buddhist concepts</p>
+                
+                <h4>After Training:</h4>
+                <p>Detailed, accurate explanations of Buddhist philosophy in Nepali</p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h3>Model Performance Metrics</h3>
+            <p>Performance metrics are crucial for understanding how well your model is learning and performing. The evaluation process includes:</p>
+            <ul>
+                <li>Calculating accuracy and other relevant metrics</li>
+                <li>Evaluating the model's predictions against reference answers</li>
+                <li>Tracking performance improvements over training iterations</li>
+                <li>Identifying areas where the model needs improvement</li>
+            </ul>
+
+            <div class="nepali">
+                <p>प्रदर्शन मेट्रिक्स तपाईंको मोडेलले कत्तिको राम्रोसँग सिक्दै छ र प्रदर्शन गर्दै छ भन्ने बुझ्नको लागि महत्त्वपूर्ण छन्। मूल्याङ्कन प्रक्रियामा समावेश छन्:</p>
+                <ul>
+                    <li>सटीकता र अन्य सान्दर्भिक मेट्रिक्स गणना गर्ने</li>
+                    <li>सन्दर्भ उत्तरहरूको विरुद्ध मोडेलको पूर्वानुमानहरूको मूल्याङ्कन गर्ने</li>
+                    <li>तालिम पुनरावृत्तिहरूमा प्रदर्शन सुधारहरू ट्र्याक गर्ने</li>
+                    <li>मोडेललाई सुधार आवश्यक पर्ने क्षेत्रहरू पहिचान गर्ने</li>
+                </ul>
+            </div>
+            <pre>
+# Calculate evaluation metrics
+from datasets import load_metric
+
+metric = load_metric("accuracy")
+
+def compute_metrics(eval_pred):
+    logits, labels = eval_pred
+    predictions = np.argmax(logits, axis=-1)
+    return metric.compute(predictions=predictions, references=labels)
+
+# Run evaluation
+eval_results = trainer.evaluate()
+print("Evaluation results:", eval_results)
+            </pre>
+        </div>
+
+        <div class="nepali">
+            <h2>मूल्याङ्कन र परिष्करण</h2>
+            <p>मोडेलको प्रदर्शन मूल्याङ्कन र परिष्करण प्रक्रियामा समावेश छन्:</p>
+            <ul>
+                <li>बौद्ध अवधारणाहरूको बुझाइ परीक्षण</li>
+                <li>तालिम अघि र पछिको प्रदर्शन तुलना</li>
+                <li>मूल्याङ्कन मेट्रिक्स गणना</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Best Practices and Recommendations</h2>
+        <div class="tip">
+            <h3>General Best Practices</h3>
+            <ul>
+                <li>Always validate and clean your input data</li>
+                <li>Start with a small subset of data to test your pipeline</li>
+                <li>Monitor training progress and loss curves</li>
+                <li>Save checkpoints regularly</li>
+                <li>Use appropriate batch sizes for your available memory</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <h3>Domain-Specific Recommendations</h3>
+            <ul>
+                <li>Include diverse text sources for comprehensive training</li>
+                <li>Balance classical and modern language examples</li>
+                <li>Maintain consistent terminology throughout the dataset</li>
+                <li>Include both questions and detailed answers in training data</li>
+                <li>Regular evaluation of domain-specific understanding</li>
+            </ul>
+        </div>
+
+        <div class="nepali">
+            <h2>उत्तम अभ्यास र सिफारिसहरू</h2>
+            <div class="tip">
+                <h3>सामान्य उत्तम अभ्यासहरू</h3>
+                <ul>
+                    <li>सधैं आफ्नो इनपुट डाटा प्रमाणीकरण र सफा गर्नुहोस्</li>
+                    <li>आफ्नो पाइपलाइन परीक्षण गर्न डाटाको सानो सबसेटबाट सुरु गर्नुहोस्</li>
+                    <li>तालिम प्रगति र लस कर्भहरू निगरानी गर्नुहोस्</li>
+                    <li>नियमित रूपमा चेकपोइन्टहरू सेभ गर्नुहोस्</li>
+                    <li>उपलब्ध मेमोरीको लागि उपयुक्त ब्याच साइजहरू प्रयोग गर्नुहोस्</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</html>

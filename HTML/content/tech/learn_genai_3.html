@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Generative AI Tools Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #334155;
+        }
+        h1, h2, h3 {
+            color: #2563eb;
+            margin-top: 1.5em;
+        }
+        .nepali {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .model-card {
+            background-color: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .example {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Free Generative AI Tools Guide</h1>
+    <div class="nepali">
+        <h1>नि:शुल्क जेनेरेटिभ एआई टूल्स गाइड</h1>
+    </div>
+
+    <section>
+        <h2>Text Generation Models</h2>
+        <div class="nepali">
+            <h2>टेक्स्ट जेनेरेशन मोडेलहरू</h2>
+        </div>
+
+        <div class="model-card">
+            <h3>GPT-2 (Hugging Face)</h3>
+            <p>Free and open-source language model for text generation.</p>
+            <div class="example">
+                <pre>
+from transformers import pipeline
+
+# Initialize the generator
+generator = pipeline('text-generation', model='gpt2')
+
+# Generate text
+response = generator("Once upon a time", 
+                    max_length=50, 
+                    num_return_sequences=1)
+
+print(response[0]['generated_text'])
+                </pre>
+            </div>
+        </div>
+
+        <div class="nepali">
+            <p>जीपीटी-२ एक नि:शुल्क र खुला-स्रोत भाषा मोडेल हो जसले पाठ उत्पादन गर्न सक्छ।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Image Generation</h2>
+        <div class="nepali">
+            <h2>छवि जेनेरेशन</h2>
+        </div>
+
+        <div class="model-card">
+            <h3>Stable Diffusion</h3>
+            <p>Open-source image generation model that can be run locally.</p>
+            <div class="example">
+                <pre>
+from diffusers import StableDiffusionPipeline
+import torch
+
+# Load model
+model_id = "CompVis/stable-diffusion-v1-4"
+pipe = StableDiffusionPipeline.from_pretrained(
+    model_id,
+    torch_dtype=torch.float16
+)
+pipe = pipe.to("cuda")
+
+# Generate image
+prompt = "A beautiful mountain landscape at sunset"
+image = pipe(prompt).images[0]
+image.save("landscape.png")
+                </pre>
+            </div>
+        </div>
+
+        <div class="nepali">
+            <p>स्टेबल डिफ्युजन एक खुला-स्रोत छवि जेनेरेशन मोडेल हो जसलाई स्थानीय रूपमा चलाउन सकिन्छ।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Audio Generation</h2>
+        <div class="nepali">
+            <h2>अडियो जेनेरेशन</h2>
+        </div>
+
+        <div class="model-card">
+            <h3>Bark</h3>
+            <p>Open-source text-to-audio model capable of generating voices and sound effects.</p>
+            <div class="example">
+                <pre>
+from bark import SAMPLE_RATE, generate_audio
+from scipy.io.wavfile import write as write_wav
+
+# Generate audio
+text = "Hello, this is a test of the Bark text to speech system."
+audio_array = generate_audio(text)
+
+# Save audio
+write_wav("output.wav", SAMPLE_RATE, audio_array)
+                </pre>
+            </div>
+        </div>
+
+        <div class="nepali">
+            <p>बार्क एक खुला-स्रोत टेक्स्ट-टु-अडियो मोडेल हो जसले आवाजहरू र ध्वनि प्रभावहरू उत्पन्न गर्न सक्छ।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Code Generation</h2>
+        <div class="nepali">
+            <h2>कोड जेनेरेशन</h2>
+        </div>
+
+        <div class="model-card">
+            <h3>CodeGen</h3>
+            <p>Open-source code generation model from Salesforce.</p>
+            <div class="example">
+                <pre>
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# Load model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained("Salesforce/codegen-350M-mono")
+model = AutoModelForCausalLM.from_pretrained("Salesforce/codegen-350M-mono")
+
+# Generate code
+prompt = "def calculate_fibonacci(n):"
+inputs = tokenizer(prompt, return_tensors="pt")
+outputs = model.generate(**inputs, max_length=128)
+code = tokenizer.decode(outputs[0])
+print(code)
+                </pre>
+            </div>
+        </div>
+
+        <div class="nepali">
+            <p>कोडजेन सेल्सफोर्सबाट एक खुला-स्रोत कोड जेनेरेशन मोडेल हो।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Best Practices</h2>
+        <div class="nepali">
+            <h2>उत्तम अभ्यासहरू</h2>
+        </div>
+
+        <ul>
+            <li>Always check model licenses and usage restrictions</li>
+            <li>Use appropriate computational resources (GPU/CPU)</li>
+            <li>Implement proper error handling</li>
+            <li>Consider model size and memory requirements</li>
+            <li>Test generated content for quality and appropriateness</li>
+        </ul>
+
+        <div class="nepali">
+            <ul>
+                <li>सधैं मोडेल लाइसेन्स र प्रयोग प्रतिबन्धहरू जाँच गर्नुहोस्</li>
+                <li>उपयुक्त कम्प्युटेशनल स्रोतहरू प्रयोग गर्नुहोस् (GPU/CPU)</li>
+                <li>उचित त्रुटि ह्यान्डलिङ कार्यान्वयन गर्नुहोस्</li>
+                <li>मोडेल आकार र मेमोरी आवश्यकताहरू विचार गर्नुहोस्</li>
+                <li>उत्पन्न सामग्रीको गुणस्तर र उपयुक्तताको लागि परीक्षण गर्नुहोस्</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Common Issues and Solutions</h2>
+        <div class="nepali">
+            <h2>सामान्य समस्याहरू र समाधानहरू</h2>
+        </div>
+
+        <div class="model-card">
+            <h3>Memory Management</h3>
+            <div class="example">
+                <pre>
+import torch
+
+# Clear CUDA cache
+torch.cuda.empty_cache()
+
+# Use half precision
+model = model.half()
+
+# Enable gradient checkpointing
+model.gradient_checkpointing_enable()
+                </pre>
+            </div>
+        </div>
+
+        <div class="nepali">
+            <h3>मेमोरी व्यवस्थापन</h3>
+            <p>ठूला मोडेलहरू चलाउँदा मेमोरी व्यवस्थापन महत्त्वपूर्ण छ। माथिको कोडले CUDA क्यास खाली गर्ने र मेमोरी प्रयोग कम गर्ने तरिकाहरू देखाउँछ।</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Resources</h2>
+        <div class="nepali">
+            <h2>स्रोतहरू</h2>
+        </div>
+
+        <ul>
+            <li>Hugging Face Model Hub - Wide variety of free models</li>
+            <li>GitHub - Open-source model repositories</li>
+            <li>Google Colab - Free GPU access for model training</li>
+            <li>Kaggle - Free notebooks and datasets</li>
+        </ul>
+
+        <div class="nepali">
+            <ul>
+                <li>हगिङ फेस मोडेल हब - विभिन्न नि:शुल्क मोडेलहरू</li>
+                <li>गिटहब - खुला-स्रोत मोडेल भण्डारहरू</li>
+                <li>गुगल कोलाब - मोडेल प्रशिक्षणको लागि नि:शुल्क GPU पहुँच</li>
+                <li>काग्गल - नि:शुल्क नोटबुकहरू र डाटासेटहरू</li>
+            </ul>
+        </div>
+    </section>
+</body>
+</html>

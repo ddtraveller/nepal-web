@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>CSS Guide - English & Nepali</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .english { color: #2c3e50; }
+        .nepali { 
+            color: #8e44ad;
+            margin-top: 10px;
+        }
+        pre {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        code {
+            font-family: monospace;
+            font-size: 14px;
+        }
+        h1, h2, h3 { 
+            color: #34495e;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Guide / CSS निर्देशिका</h1>
+    <div class="section">
+    <h2>Introduction / परिचय</h2>
+    <div class="english">CSS (Cascading Style Sheets) is a styling language used to describe the presentation of HTML documents.</div>
+    <div class="nepali">CSS (क्यास्केडिङ स्टाइल सिट) HTML दस्तावेजहरूको प्रस्तुति वर्णन गर्न प्रयोग गरिने स्टाइलिङ भाषा हो।</div>
+</div>
+
+<div class="section">
+    <h2>Adding CSS to HTML / HTML मा CSS थप्ने</h2>
+    
+    <h3>1. Inline CSS / इनलाइन CSS</h3>
+    <pre><code>&lt;p style="color: black; font-size: 16px;"&gt;
+This paragraph has inline styles.
+यो अनुच्छेदमा इनलाइन स्टाइलहरू छन्।
+&lt;/p&gt;</code></pre>
+    <h3>2. Internal CSS / आन्तरिक CSS</h3>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;style&gt;
+p {
+color: black;
+font-size: 16px;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;This paragraph uses internal styles.&lt;/p&gt;
+&lt;p&gt; यो अनुच्छेदमा इनलाइन स्टाइलहरू &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    <h3>3. External CSS / बाह्य CSS</h3>
+    <h4>File: styles.css</h4>
+    <pre><code>p {
+color: black;
+font-size: 16px;
+}</code></pre>
+    <h4>File: index.html</h4>
+    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html>
+&lt;head>
+&lt;link rel="stylesheet" href="styles.css">
+&lt;/head>
+&lt;body>
+&lt;p&gt;This paragraph uses external styles.&lt;/p&gt;
+&lt;p&gt;  यो अनुच्छेदले बाह्य स्टाइलहरू प्रयोग गर्छ।   &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+    <div class="section">
+    <h2>Selectors / सेलेक्टरहरू</h2>
+    <pre><code>/* Element Selector / एलिमेन्ट सेलेक्टर */
+p { color: red; }
+/* Class Selector / क्लास सेलेक्टर */
+.highlight { background-color: yellow; }
+/* ID Selector / आईडी सेलेक्टर */
+#header { font-size: 24px; }</code></pre>
+</div>
+    <div class="section">
+    <h2>Box Model / बक्स मोडेल</h2>
+    <pre><code>.box {
+margin: 10px;     /* Outer spacing / बाहिरी खाली ठाउँ */
+border: 1px solid black;  /* Border / किनारा */
+padding: 15px;    /* Inner spacing / भित्री खाली ठाउँ */
+width: 300px;     /* Content width / सामग्रीको चौडाई */
+height: 200px;    /* Content height / सामग्रीको उचाई */
+}</code></pre>
+</div>
+    <div class="section">
+    <h2>Flexbox / फ्लेक्सबक्स</h2>
+    <pre><code>.container {
+display: flex;
+justify-content: center;    /* Horizontal alignment / क्षैतिज संरेखण */
+align-items: center;        /* Vertical alignment / ठाडो संरेखण */
+}</code></pre>
+</div>
+    <div class="section">
+    <h2>Grid / ग्रिड</h2>
+    <pre><code>.grid-container {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;  /* Three equal columns / तीन बराबर स्तम्भहरू */
+gap: 10px;                           /* Space between items / वस्तुहरू बीचको खाली ठाउँ */
+}</code></pre>
+</div>
+    <div class="section">
+    <h2>Free CSS Resources / नि:शुल्क CSS स्रोतहरू</h2>
+    <h3>CSS Frameworks and Libraries / CSS फ्रेमवर्क र लाइब्रेरीहरू</h3>
+    <ul>
+        <li>Bootstrap (getbootstrap.com)</li>
+        <li>Tailwind CSS (tailwindcss.com)</li>
+        <li>Foundation (get.foundation)</li>
+        <li>Bulma (bulma.io)</li>
+    </ul>
+
+    <h3>CSS Tools / CSS उपकरणहरू</h3>
+    <ul>
+        <li>CSS Gradient Generator (cssgradient.io)</li>
+        <li>Animista CSS Animations (animista.net)</li>
+        <li>Flexbox Froggy Learning Game (flexboxfroggy.com)</li>
+        <li>Grid Garden Learning Game (cssgridgarden.com)</li>
+    </ul>
+</div>
+</body>
+</html>

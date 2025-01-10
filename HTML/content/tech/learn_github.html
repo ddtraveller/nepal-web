@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide to Checking In Code to GitHub - GitHub मा कोड चेक-इन गर्ने गाइड</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f6f8fa;
+            color: #24292e;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .command-block {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            margin: 10px 0;
+        }
+        .note {
+            background: #fff8c5;
+            padding: 16px;
+            border-left: 4px solid #f9c513;
+            margin: 16px 0;
+        }
+        .tip {
+            background: #e6ffed;
+            padding: 16px;
+            border-left: 4px solid #28a745;
+            margin: 16px 0;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .english { color: #24292e; }
+        .nepali { color: #2c5282; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="english">Guide to Checking In Code to GitHub</span><br>
+            <span class="nepali">GitHub मा कोड चेक-इन गर्ने गाइड</span>
+        </h1>
+        
+        <div class="section">
+            <h2>
+                <span class="english">Prerequisites</span><br>
+                <span class="nepali">पूर्वावश्यकताहरू</span>
+            </h2>
+            <ul>
+                <li>
+                    <span class="english">Git installed on your computer</span><br>
+                    <span class="nepali">तपाईंको कम्प्युटरमा Git इन्स्टल गरिएको</span>
+                </li>
+                <li>
+                    <span class="english">GitHub account</span><br>
+                    <span class="nepali">GitHub खाता</span>
+                </li>
+                <li>
+                    <span class="english">Repository created on GitHub</span><br>
+                    <span class="nepali">GitHub मा रिपोजिटरी सिर्जना गरिएको</span>
+                </li>
+                <li>
+                    <span class="english">Git configured with your credentials</span><br>
+                    <span class="nepali">तपाईंको परिचयपत्रहरूसँग Git कन्फिगर गरिएको</span>
+                </li>
+            </ul>
+
+            <div class="note">
+                <span class="english">First-time setup? Configure Git with these commands:</span><br>
+                <span class="nepali">पहिलो पटक सेटअप? यी कमाण्डहरूसँग Git कन्फिगर गर्नुहोस्:</span>
+                <div class="command-block">
+                git config --global user.name "Your Name"
+                git config --global user.email "your.email@example.com"</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Basic Workflow</span><br>
+                <span class="nepali">आधारभूत कार्यप्रवाह</span>
+            </h2>
+            
+            <h3>
+                <span class="english">1. Clone the Repository (First Time Only)</span><br>
+                <span class="nepali">१. रिपोजिटरी क्लोन गर्नुहोस् (पहिलो पटक मात्र)</span>
+            </h3>
+            <div class="command-block">
+                git clone https://github.com/username/repository.git
+                cd repository</div>
+
+            <h3>
+                <span class="english">2. Create/Switch to a Branch</span><br>
+                <span class="nepali">२. ब्रान्च सिर्जना गर्नुहोस्/स्विच गर्नुहोस्</span>
+            </h3>
+            <div class="command-block">
+                git checkout -b feature-branch-name</div>
+            
+            <h3>
+                <span class="english">3. Check Status of Your Changes</span><br>
+                <span class="nepali">३. तपाईंको परिवर्तनहरूको स्थिति जाँच गर्नुहोस्</span>
+            </h3>
+            <div class="command-block">
+                git status</div>
+
+            <h3>
+                <span class="english">4. Stage Your Changes</span><br>
+                <span class="nepali">४. तपाईंको परिवर्तनहरू स्टेज गर्नुहोस्</span>
+            </h3>
+            <div class="command-block">
+                # Stage specific files / विशेष फाइलहरू स्टेज गर्न
+                git add filename.ext
+                
+                # Stage all changes / सबै परिवर्तनहरू स्टेज गर्न
+                git add .</div>
+
+            <h3>
+                <span class="english">5. Commit Your Changes</span><br>
+                <span class="nepali">५. तपाईंको परिवर्तनहरू कमिट गर्नुहोस्</span>
+            </h3>
+            <div class="command-block">
+                git commit -m "Brief description of your changes"</div>
+
+            <h3>
+                <span class="english">6. Push to GitHub</span><br>
+                <span class="nepali">६. GitHub मा पुश गर्नुहोस्</span>
+            </h3>
+            <div class="command-block">
+                # First time pushing the branch / पहिलो पटक ब्रान्च पुश गर्दा
+                git push -u origin feature-branch-name
+                
+                # Subsequent pushes / त्यसपछिका पुशहरू
+                git push</div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Best Practices</span><br>
+                <span class="nepali">उत्तम अभ्यासहरू</span>
+            </h2>
+            
+            <div class="tip">
+                <h3>
+                    <span class="english">Commit Message Guidelines</span><br>
+                    <span class="nepali">कमिट सन्देश दिशानिर्देशहरू</span>
+                </h3>
+                <ul>
+                    <li>
+                        <span class="english">Use clear, descriptive commit messages</span><br>
+                        <span class="nepali">स्पष्ट, वर्णनात्मक कमिट सन्देशहरू प्रयोग गर्नुहोस्</span>
+                    </li>
+                    <li>
+                        <span class="english">Start with a verb (Add, Fix, Update, Refactor)</span><br>
+                        <span class="nepali">क्रिया बाट सुरु गर्नुहोस् (थप्नुहोस्, सुधार्नुहोस्, अपडेट गर्नुहोस्, रिफ्याक्टर गर्नुहोस्)</span>
+                    </li>
+                    <li>
+                        <span class="english">Keep the first line under 50 characters</span><br>
+                        <span class="nepali">पहिलो लाइन ५० अक्षरभन्दा कम राख्नुहोस्</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="tip">
+                <h3>
+                    <span class="english">Branch Management</span><br>
+                    <span class="nepali">ब्रान्च व्यवस्थापन</span>
+                </h3>
+                <ul>
+                    <li>
+                        <span class="english">Keep branches focused on single features/fixes</span><br>
+                        <span class="nepali">ब्रान्चहरूलाई एकल फिचर/फिक्सहरूमा केन्द्रित राख्नुहोस्</span>
+                    </li>
+                    <li>
+                        <span class="english">Regularly sync with main branch</span><br>
+                        <span class="nepali">नियमित रूपमा मुख्य ब्रान्चसँग सिंक गर्नुहोस्</span>
+                    </li>
+                    <li>
+                        <span class="english">Delete branches after merging</span><br>
+                        <span class="nepali">मर्ज गरेपछि ब्रान्चहरू मेटाउनुहोस्</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Common Scenarios</span><br>
+                <span class="nepali">सामान्य परिदृश्यहरू</span>
+            </h2>
+            
+            <h3>
+                <span class="english">Updating Your Branch with Main</span><br>
+                <span class="nepali">तपाईंको ब्रान्चलाई मुख्य ब्रान्चसँग अपडेट गर्दै</span>
+            </h3>
+            <div class="command-block">
+                git checkout main
+                git pull
+                git checkout your-branch
+                git merge main</div>
+        </div>
+    </div>
+</body>
+</html>

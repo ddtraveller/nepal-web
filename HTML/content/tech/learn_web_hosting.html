@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Hosting and Python Server Guide | वेब होस्टिङ र पाइथन सर्भर गाइड</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #1a1a1a;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2563eb;
+            margin-top: 1.5em;
+        }
+        h1 {
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        code {
+            background-color: #f1f5f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .tip {
+            background-color: #d1e7dd;
+            border-left: 4px solid #198754;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Hosting and Python Server Guide<br>वेब होस्टिङ र पाइथन सर्भर गाइड</h1>
+
+        <h2>Web Servers: Apache vs. Nginx<br>वेब सर्भरहरू: अपाचे बनाम एनजिन्क्स</h2>
+        
+        <h3>Apache HTTP Server | अपाचे एचटीटीपी सर्भर</h3>
+        <p>Apache is one of the oldest and most popular web servers. It uses a process-based approach to handle requests.</p>
+        <p>अपाचे सबैभन्दा पुरानो र लोकप्रिय वेब सर्भरहरू मध्ये एक हो। यसले अनुरोधहरू प्रशोधन गर्न प्रक्रिया-आधारित दृष्टिकोण प्रयोग गर्दछ।</p>
+        
+        <div class="tip">
+            <strong>Key Apache Features:</strong>
+            <ul>
+                <li>Process-based architecture (one process per connection)</li>
+                <li>More flexible with .htaccess files for per-directory configuration</li>
+                <li>Extensive module system</li>
+                <li>Better support for dynamic content through mod_php</li>
+            </ul>
+        </div>
+
+        <pre>
+# Basic Apache Virtual Host Configuration
+<VirtualHost *:80>
+    ServerName example.com
+    DocumentRoot /var/www/html
+    
+    <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost></pre>
+
+        <h3>Nginx | एनजिन्क्स</h3>
+        <p>Nginx is a newer web server that uses an event-driven, asynchronous architecture, making it more efficient for static content and high-concurrency scenarios.</p>
+        <p>एनजिन्क्स एउटा नयाँ वेब सर्भर हो जसले इभेन्ट-ड्रिभेन, एसिन्क्रोनस आर्किटेक्चर प्रयोग गर्दछ, जसले यसलाई स्थिर सामग्री र उच्च-कन्करेन्सी परिदृश्यहरूका लागि बढी कुशल बनाउँछ।</p>
+
+        <div class="tip">
+            <strong>Key Nginx Features:</strong>
+            <ul>
+                <li>Event-driven architecture (handles multiple connections per worker)</li>
+                <li>Better performance for static content</li>
+                <li>Built-in load balancing and reverse proxy</li>
+                <li>Lower memory footprint</li>
+            </ul>
+        </div>
+
+        <pre>
+# Basic Nginx Server Block Configuration
+server {
+    listen 80;
+    server_name example.com;
+    root /var/www/html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+    }
+
+    error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+}</pre>
+
+        <div class="warning">
+            <strong>Note:</strong> While Apache and Nginx can both serve Python applications, they typically do so by proxying requests to a WSGI server like Gunicorn or uWSGI.
+        </div>
+
+        <h2>Running Python on a Server<br>सर्भरमा पाइथन चलाउने</h2>
+
+        <h3>Python as a Cron Job | क्रोन जब को रूपमा पाइथन</h3>
+        <p>Cron jobs are useful for scheduling Python scripts to run at specific intervals.</p>
+        <p>क्रोन जबहरू विशेष अन्तरालमा पाइथन स्क्रिप्टहरू चलाउन तालिका बनाउन उपयोगी हुन्छन्।</p>
+
+        <pre>
+# Example crontab entry to run a Python script
+# Run script every day at 3 AM
+0 3 * * * /usr/bin/python3 /path/to/script.py >> /var/log/myscript.log 2>&1
+
+# Example Python script for cron
+#!/usr/bin/env python3
+import logging
+from datetime import datetime
+
+logging.basicConfig(
+    filename='/var/log/myscript.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s'
+)
+
+def main():
+    logging.info('Script started')
+    # Your code here
+    logging.info('Script completed')
+
+if __name__ == '__main__':
+    main()</pre>
+
+        <h3>Flask Web Application | फ्लास्क वेब एप्लिकेशन</h3>
+        <p>Flask is a lightweight web framework for Python that's perfect for building web applications.</p>
+        <p>फ्लास्क पाइथनको लागि एक हल्का वेब फ्रेमवर्क हो जुन वेब एप्लिकेशनहरू बनाउनका लागि उपयुक्त छ।</p>
+
+        <pre>
+# Basic Flask Application
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run()</pre>
+
+        <pre>
+# Production deployment with Gunicorn
+# Install: pip install gunicorn
+# Run: gunicorn -w 4 -b 0.0.0.0:8000 app:app
+
+# Systemd service file (/etc/systemd/system/myapp.service)
+[Unit]
+Description=Gunicorn instance to serve myapp
+After=network.target
+
+[Service]
+User=myapp
+WorkingDirectory=/home/myapp/myapp
+Environment="PATH=/home/myapp/myapp/venv/bin"
+ExecStart=/home/myapp/myapp/venv/bin/gunicorn -w 4 -b 0.0.0.0:8000 app:app
+
+[Install]
+WantedBy=multi-user.target</pre>
+
+        <h2>Cloud Hosting Solutions<br>क्लाउड होस्टिङ समाधानहरू</h2>
+
+        <h3>Amazon Web Services (AWS) | एमाजन वेब सर्भिसेज (एडब्ल्यूएस)</h3>
+        
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Use Case</th>
+                <th>Key Features</th>
+            </tr>
+            <tr>
+                <td>S3 (Simple Storage Service)</td>
+                <td>Static website hosting</td>
+                <td>
+                    <ul>
+                        <li>Infinite scaling</li>
+                        <li>Low cost</li>
+                        <li>Built-in CDN (CloudFront)</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>EKS (Elastic Kubernetes Service)</td>
+                <td>Container orchestration</td>
+                <td>
+                    <ul>
+                        <li>Managed Kubernetes</li>
+                        <li>Auto-scaling</li>
+                        <li>Multi-AZ deployment</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>Elastic Beanstalk</td>
+                <td>Python web applications</td>
+                <td>
+                    <ul>
+                        <li>Platform as a Service</li>
+                        <li>Auto-scaling</li>
+                        <li>Easy deployment</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <pre>
+# AWS S3 Static Website Hosting Configuration
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::your-bucket-name/*"
+        }
+    ]
+}</pre>
+
+        <h3>Other Major Cloud Providers</h3>
+        
+        <table>
+            <tr>
+                <th>Provider</th>
+                <th>Services</th>
+                <th>Best For</th>
+            </tr>
+            <tr>
+                <td>Google Cloud Platform</td>
+                <td>
+                    <ul>
+                        <li>Cloud Storage</li>
+                        <li>GKE (Kubernetes)</li>
+                        <li>App Engine</li>
+                    </ul>
+                </td>
+                <td>Machine learning applications, scalable containers</td>
+            </tr>
+            <tr>
+                <td>Microsoft Azure</td>
+                <td>
+                    <ul>
+                        <li>Blob Storage</li>
+                        <li>AKS (Kubernetes)</li>
+                        <li>App Service</li>
+                    </ul>
+                </td>
+                <td>Enterprise applications, Windows integration</td>
+            </tr>
+            <tr>
+                <td>DigitalOcean</td>
+                <td>
+                    <ul>
+                        <li>Spaces (Object Storage)</li>
+                        <li>App Platform</li>
+                        <li>Droplets</li>
+                    </ul>
+                </td>
+                <td>Developer-friendly, cost-effective solutions</td>
+            </tr>
+        </table>
+
+        <div class="warning">
+            <strong>Security Note | सुरक्षा टिप्पणी:</strong>
+            <p>Always follow security best practices when deploying web applications:<br>
+            वेब एप्लिकेशनहरू डिप्लोय गर्दा सधैं सुरक्षा उत्तम अभ्यासहरू पालना गर्नुहोस्:</p>
+            <ul>
+                <li>Use HTTPS with valid SSL certificates<br>मान्य एसएसएल प्रमाणपत्रहरूसँग HTTPS प्रयोग गर्नुहोस्</li>
+                <li>Implement proper authentication and authorization<br>उचित प्रमाणीकरण र अधिकृतता कार्यान्वयन गर्नुहोस्</li>
+                <li>Keep all software and dependencies updated<br>सबै सफ्टवेयर र निर्भरताहरू अपडेट राख्नुहोस्</li>
+                <li>Use secure configurations and follow the principle of least privilege<br>सुरक्षित कन्फिगरेसनहरू प्रयोग गर्नुहोस् र न्यूनतम विशेषाधिकारको सिद्धान्त पालना गर्नुहोस्</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

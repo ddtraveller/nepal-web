@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Python Programming - पाइथन प्रोग्रामिङ परिचय</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f6f8fa;
+            color: #24292e;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        h1, h2, h3 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+        }
+        .code-block {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fff8c5;
+            padding: 16px;
+            border-left: 4px solid #f9c513;
+            margin: 16px 0;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+        .english { color: #24292e; }
+        .nepali { color: #2c5282; }
+        .cmd {
+            background: #1a1b1c;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .highlight {
+            background: #e6ffed;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="english">Introduction to Python Programming</span><br>
+            <span class="nepali">पाइथन प्रोग्रामिङ परिचय</span>
+        </h1>
+
+        <div class="section">
+            <h2>
+                <span class="english">What is Python?</span><br>
+                <span class="nepali">पाइथन के हो?</span>
+            </h2>
+            <p class="english">Python is a popular, easy-to-learn programming language known for its simple syntax and wide range of applications.</p>
+            <p class="nepali">पाइथन एक लोकप्रिय, सिक्न सजिलो प्रोग्रामिङ भाषा हो जुन यसको सरल सिन्ट्याक्स र विभिन्न प्रयोगहरूको लागि प्रसिद्ध छ।</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Installing Python</span><br>
+                <span class="nepali">पाइथन इन्स्टल गर्दै</span>
+            </h2>
+            
+            <div class="step">
+                <h3>
+                    <span class="english">Step 1: Download Python</span><br>
+                    <span class="nepali">पहिलो चरण: पाइथन डाउनलोड गर्नुहोस्</span>
+                </h3>
+                <p class="english">1. Visit <a href="https://www.python.org/downloads/">python.org/downloads</a><br>
+                2. Click "Download Python" (latest version)<br>
+                3. Make sure to check "Add Python to PATH" during installation</p>
+                <p class="nepali">१. <a href="https://www.python.org/downloads/">python.org/downloads</a> मा जानुहोस्<br>
+                २. "Download Python" मा क्लिक गर्नुहोस् (नवीनतम संस्करण)<br>
+                ३. इन्स्टलेसन समयमा "Add Python to PATH" मा चिन्ह लगाउन नबिर्सनुहोस्</p>
+            </div>
+
+            <div class="note">
+                <p class="english">Important: The "Add Python to PATH" option is crucial for using Python from the command line.</p>
+                <p class="nepali">महत्त्वपूर्ण: कमाण्ड लाइनबाट पाइथन प्रयोग गर्न "Add Python to PATH" विकल्प महत्त्वपूर्ण छ।</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Python IDEs (Development Environments)</span><br>
+                <span class="nepali">पाइथन IDEs (डेभलपमेन्ट वातावरणहरू)</span>
+            </h2>
+
+            <h3>
+                <span class="english">1. IDLE (Comes with Python)</span><br>
+                <span class="nepali">१. IDLE (पाइथनसँगै आउँछ)</span>
+            </h3>
+            <p class="english">• Basic IDE included with Python installation<br>
+            • Good for beginners<br>
+            • Start from Windows menu → Python → IDLE</p>
+            <p class="nepali">• पाइथन इन्स्टलेसनसँग आउने आधारभूत IDE<br>
+            • सुरुवातकर्ताहरूको लागि राम्रो<br>
+            • Windows मेनु → Python → IDLE बाट सुरु गर्नुहोस्</p>
+
+            <h3>
+                <span class="english">2. Visual Studio Code (Free)</span><br>
+                <span class="nepali">२. भिजुअल स्टुडियो कोड (नि:शुल्क)</span>
+            </h3>
+            <p class="english">• Download from <a href="https://code.visualstudio.com/">code.visualstudio.com</a><br>
+            • Install Python extension from VS Code marketplace<br>
+            • Popular among professionals</p>
+            <p class="nepali">• <a href="https://code.visualstudio.com/">code.visualstudio.com</a> बाट डाउनलोड गर्नुहोस्<br>
+            • VS Code मार्केटप्लेसबाट पाइथन एक्सटेन्सन इन्स्टल गर्नुहोस्<br>
+            • पेशेवरहरू माझ लोकप्रिय</p>
+
+            <h3>
+                <span class="english">3. PyCharm Community Edition (Free)</span><br>
+                <span class="nepali">३. पाइचार्म कम्युनिटी एडिसन (नि:शुल्क)</span>
+            </h3>
+            <p class="english">• Download from <a href="https://www.jetbrains.com/pycharm/download/">jetbrains.com/pycharm</a><br>
+            • Full-featured Python IDE<br>
+            • Includes debugging tools</p>
+            <p class="nepali">• <a href="https://www.jetbrains.com/pycharm/download/">jetbrains.com/pycharm</a> बाट डाउनलोड गर्नुहोस्<br>
+            • पूर्ण सुविधायुक्त पाइथन IDE<br>
+            • डिबगिङ टूलहरू समावेश छन्</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Using Python in Windows</span><br>
+                <span class="nepali">Windows मा पाइथन प्रयोग गर्दै</span>
+            </h2>
+
+            <h3>
+                <span class="english">Method 1: Interactive Mode (Command Line)</span><br>
+                <span class="nepali">विधि १: इन्टर्याक्टिभ मोड (कमाण्ड लाइन)</span>
+            </h3>
+            <p class="english">1. Open Command Prompt (Windows + R, type "cmd")<br>
+            2. Type "python" and press Enter<br>
+            3. You'll see the Python prompt ">>>"</p>
+            <p class="nepali">१. कमाण्ड प्रम्प्ट खोल्नुहोस् (Windows + R, "cmd" टाइप गर्नुहोस्)<br>
+            २. "python" टाइप गर्नुहोस् र Enter थिच्नुहोस्<br>
+            ३. तपाईंले पाइथन प्रम्प्ट ">>>" देख्नुहुनेछ</p>
+            
+            <div class="cmd">
+                <code>C:\Users\YourName> python
+>>>
+</code>
+            </div>
+
+            <h3>
+                <span class="english">Method 2: Running Python Scripts</span><br>
+                <span class="nepali">विधि २: पाइथन स्क्रिप्टहरू चलाउँदै</span>
+            </h3>
+            <p class="english">1. Create a .py file (e.g., program.py)<br>
+            2. Open Command Prompt in the file's directory<br>
+            3. Run: python program.py</p>
+            <p class="nepali">१. .py फाइल सिर्जना गर्नुहोस् (जस्तै, program.py)<br>
+            २. फाइलको डाइरेक्टरीमा कमाण्ड प्रम्प्ट खोल्नुहोस्<br>
+            ३. चलाउनुहोस्: python program.py</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Your First Python Program</span><br>
+                <span class="nepali">तपाईंको पहिलो पाइथन प्रोग्राम</span>
+            </h2>
+
+            <div class="code-block">
+                <code>print("Hello, World!")</code>
+            </div>
+
+            <h3>
+                <span class="english">Code Explanation</span><br>
+                <span class="nepali">कोड व्याख्या</span>
+            </h3>
+            <p class="english">
+                • <span class="highlight">print()</span> is a built-in Python function<br>
+                • The text in quotes ("Hello, World!") is called a string<br>
+                • Parentheses () are used to call the function<br>
+                • The program outputs: Hello, World!
+            </p>
+            <p class="nepali">
+                • <span class="highlight">print()</span> एउटा बिल्ट-इन पाइथन फंक्सन हो<br>
+                • उद्धरण चिह्नभित्रको पाठ ("Hello, World!") लाई स्ट्रिङ भनिन्छ<br>
+                • फंक्सन कल गर्न कोष्ठकहरू () प्रयोग गरिन्छ<br>
+                • प्रोग्रामले यो आउटपुट दिन्छ: Hello, World!
+            </p>
+
+            <div class="note">
+                <p class="english">Try running this program both in interactive mode and as a script!</p>
+                <p class="nepali">यो प्रोग्रामलाई इन्टर्याक्टिभ मोड र स्क्रिप्टको रूपमा दुवै तरिकाले चलाएर हेर्नुहोस्!</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="english">Next Steps</span><br>
+                <span class="nepali">अर्को चरणहरू</span>
+            </h2>
+            <p class="english">
+                • Practice writing simple programs<br>
+                • Learn about variables and data types<br>
+                • Explore online Python tutorials<br>
+                • Join Python programming communities
+            </p>
+            <p class="nepali">
+                • सरल प्रोग्रामहरू लेख्ने अभ्यास गर्नुहोस्<br>
+                • भेरिएबलहरू र डाटा टाइपहरूको बारेमा सिक्नुहोस्<br>
+                • अनलाइन पाइथन ट्युटोरियलहरू हेर्नुहोस्<br>
+                • पाइथन प्रोग्रामिङ समुदायहरूमा सामेल हुनुहोस्
+            </p>
+        </div>
+    </div>
+</body>
+</html>
