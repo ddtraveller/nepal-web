@@ -118,6 +118,16 @@
         </div>
         <div class="field">
             <label class="label">
+                Gender / लिङ्ग:
+                <select id="gender">
+                    <option value="male">Male / पुरुष</option>
+                    <option value="female">Female / महिला</option>
+                    <option value="non-binary">Non-binary / गैर-बाइनरी</option>
+                </select>
+            </label>
+        </div>
+        <div class="field">
+            <label class="label">
                 Class / वर्ग:
                 <select id="class">
                     <option value="barbarian">Barbarian / बर्बेरियन</option>
@@ -229,6 +239,7 @@
     </div>
 
     <div class="buttons">
+        <button onclick="generateRandomCharacter()" class="generate-btn">Generate Random Character / यादृच्छिक पात्र सिर्जना गर्नुहोस्</button>
         <button onclick="saveCharacter()">Save Character / पात्र सेभ गर्नुहोस्</button>
         <button onclick="loadCharacter()">Load Character / पात्र लोड गर्नुहोस्</button>
     </div>
@@ -250,13 +261,13 @@
             generateBtn.disabled = true;
 
             try {
-                const prompt = `A highly detailed fantasy character portrait. ${race} ${characterClass} for Dungeons and Dragons. ${description}. Digital painting, detailed face, professional fantasy art, trending on artstation, masterpiece quality.`;
+                const prompt = `A highly detailed fantasy character portrait. ${race} ${characterClass} ${gender}, wearing ${equipment}. ${description}. Digital painting, detailed face, professional fantasy art, trending on artstation, masterpiece quality.`;
                 
                 const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer sk-bztqVnhUojtvMbHJs43YlidQRcUDDuS1dLPLStphptTn0PDX', // Replace with actual API key
+                        'Authorization': 'Bearer YOUR_API_KEY', // Replace with actual API key
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
@@ -306,9 +317,102 @@
             }
         }
 
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function rollAbilityScore() {
+            // Roll 4d6, drop lowest
+            const rolls = Array.from({length: 4}, () => getRandomInt(1, 6));
+            rolls.sort((a, b) => b - a);
+            return rolls.slice(0, 3).reduce((sum, roll) => sum + roll, 0);
+        }
+
+        function getModifier(score) {
+            return Math.floor((score - 10) / 2);
+        }
+
+        function calculateHP(characterClass, level, constitutionMod) {
+            const hitDice = {
+                'barbarian': 12,
+                'fighter': 10,
+                'paladin': 10,
+                'ranger': 10,
+                'monk': 8,
+                'rogue': 8,
+                'bard': 8,
+                'cleric': 8,
+                'druid': 8,
+                'warlock': 8,
+                'sorcerer': 6,
+                'wizard': 6
+            };
+            
+            const baseHP = hitDice[characterClass];
+            // First level gets maximum HP
+            return baseHP + constitutionMod + 
+                   ((level - 1) * (Math.floor(baseHP/2) + 1 + constitutionMod));
+        }
+
+        function calculateAC(characterClass, dexterityMod) {
+            // Basic AC calculation - this could be more complex based on class features
+            const baseAC = 10;
+            return baseAC + dexterityMod;
+        }
+
+        function generateRandomCharacter() {
+            // Generate random race
+            const races = ['elf', 'dwarf', 'human', 'faerie', 'halfling'];
+            const randomRace = races[Math.floor(Math.random() * races.length)];
+            
+            // Generate random class
+            const classes = ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 
+                           'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
+            const randomClass = classes[Math.floor(Math.random() * classes.length)];
+
+            // Generate random gender
+            const genders = ['male', 'female', 'non-binary'];
+            const randomGender = genders[Math.floor(Math.random() * genders.length)];
+
+            // Generate random level (1-20)
+            const level = getRandomInt(1, 20);
+
+            // Generate ability scores
+            const strength = rollAbilityScore();
+            const dexterity = rollAbilityScore();
+            const constitution = rollAbilityScore();
+            const intelligence = rollAbilityScore();
+            const wisdom = rollAbilityScore();
+            const charisma = rollAbilityScore();
+
+            // Calculate derived stats
+            const constitutionMod = getModifier(constitution);
+            const dexterityMod = getModifier(dexterity);
+            
+            const hp = calculateHP(randomClass, level, constitutionMod);
+            const ac = calculateAC(randomClass, dexterityMod);
+            const initiative = dexterityMod;
+
+            // Update form fields
+            document.getElementById('race').value = randomRace;
+            document.getElementById('class').value = randomClass;
+            document.getElementById('gender').value = randomGender;
+            document.getElementById('level').value = level;
+            document.getElementById('strength').value = strength;
+            document.getElementById('dexterity').value = dexterity;
+            document.getElementById('constitution').value = constitution;
+            document.getElementById('intelligence').value = intelligence;
+            document.getElementById('wisdom').value = wisdom;
+            document.getElementById('charisma').value = charisma;
+            document.getElementById('hitPoints').value = hp;
+            document.getElementById('armorClass').value = ac;
+            document.getElementById('initiative').value = initiative;
+        }
+
         function saveCharacter() {
             const character = {
                 race: document.getElementById('race').value,
+                gender: document.getElementById('gender').value,
                 name: document.getElementById('characterName').value,
                 class: document.getElementById('class').value,
                 level: document.getElementById('level').value,
