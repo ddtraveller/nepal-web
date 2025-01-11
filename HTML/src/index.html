@@ -140,7 +140,7 @@
             updateBreadcrumb(prefix);
 
             // Removed delimiter to get all files
-            const url = `https://${bucketName}.net/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
+            const url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
@@ -239,7 +239,7 @@
                         </div>
                     `;
                 } else {
-                    const fileUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${encodeURIComponent(entry.key)}`;
+                    const fileUrl = `https://${bucketName}.net/${encodeURIComponent(entry.key)}`;
                     html += `
                         <div class="file-item">
                             <a href="${fileUrl}" class="file-link" target="_blank">
