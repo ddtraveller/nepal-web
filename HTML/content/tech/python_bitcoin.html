@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Price Checking Tutorial - English & Nepali</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .glossary {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .intro {
+            border-left: 4px solid #ffd700;
+            padding-left: 20px;
+            margin-bottom: 30px;
+        }
+        .code-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .nepali {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bitcoin Price Checking Tutorial</h1>
+    
+    <div class="glossary">
+        <h2>Glossary / शब्दकोश</h2>
+        <ul>
+            <li><strong>API (Application Programming Interface)</strong> - A set of rules that allows different programs to communicate / एउटा प्रणाली जसले विभिन्न प्रोग्रामहरूलाई एक अर्कासँग कुराकानी गर्न दिन्छ</li>
+            <li><strong>Blockchain</strong> - A distributed digital ledger / वितरित डिजिटल खाता बही</li>
+            <li><strong>Cryptocurrency</strong> - Digital or virtual currency / डिजिटल वा आभासी मुद्रा</li>
+            <li><strong>Bitcoin (BTC)</strong> - The first and most well-known cryptocurrency / पहिलो र सबैभन्दा प्रसिद्ध क्रिप्टोकरेन्सी</li>
+            <li><strong>HTTP Request</strong> - A method to request data from a server / सर्भरबाट डाटा अनुरोध गर्ने विधि</li>
+        </ul>
+    </div>
+
+    <div class="intro">
+        <h2>Introduction to Bitcoin and Blockchain Technology</h2>
+        <p>Bitcoin, introduced in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto, represents a revolutionary approach to currency and financial transactions. At its core, Bitcoin is a decentralized digital currency that operates without the need for intermediaries like banks or government institutions.</p>
+        
+        <p>The technology that makes Bitcoin possible is called blockchain. A blockchain is essentially a distributed ledger that records all transactions across a network of computers. This ledger is maintained by thousands of nodes around the world, making it extremely difficult to manipulate or hack. Each block in the chain contains a list of transactions, and once a block is added, it cannot be altered without changing all subsequent blocks – a feature that makes blockchain incredibly secure.</p>
+        
+        <p>Bitcoin transactions work through a combination of public and private keys. When you own Bitcoin, what you actually possess is the private key that allows you to transfer a specific amount of Bitcoin recorded on the blockchain. Every transaction is verified by network participants called miners, who solve complex mathematical problems to add new blocks to the chain. This process, known as Proof of Work, ensures the security and integrity of the network.</p>
+        
+        <p>The revolutionary aspect of Bitcoin lies in its ability to enable peer-to-peer transactions without a trusted third party. Traditional financial systems rely on banks and other institutions to verify and process transactions. Bitcoin eliminates this need by using cryptographic proof instead of trust, allowing any two parties to transact directly with each other.</p>
+        
+        <p>Bitcoin's value is determined by market forces of supply and demand. Unlike traditional currencies, Bitcoin has a finite supply – only 21 million bitcoins will ever exist. This scarcity, combined with increasing adoption and recognition as a store of value, has led to significant price appreciation over the years, though with notable volatility.</p>
+        
+        <p>Understanding Bitcoin prices is crucial for investors and developers alike. The following tutorial will show you how to programmatically check Bitcoin prices using Python, allowing you to build applications that can track and analyze cryptocurrency markets.</p>
+    </div>
+
+    <div class="code-section">
+        <h2>Checking Bitcoin Price using Python / पाइथन प्रयोग गरेर बिटकोइनको मूल्य जाँच्ने</h2>
+        
+        <div class="english">
+            <h3>English Instructions</h3>
+            <p>To check Bitcoin's price using Python, we'll use the CoinGecko API. First, install the required library using pip:</p>
+            <pre>pip install requests</pre>
+            
+            <p>Here's a simple Python script to get the current Bitcoin price:</p>
+            <pre>
+import requests
+import json
+
+def get_bitcoin_price():
+    # CoinGecko API endpoint
+    url = "https://api.coingecko.com/api/v3/simple/price"
+    
+    # Parameters for the request
+    params = {
+        "ids": "bitcoin",
+        "vs_currencies": "usd,eur,gbp"
+    }
+    
+    try:
+        # Make the API request
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        
+        # Parse the response
+        data = response.json()
+        
+        # Extract prices
+        btc_usd = data["bitcoin"]["usd"]
+        btc_eur = data["bitcoin"]["eur"]
+        btc_gbp = data["bitcoin"]["gbp"]
+        
+        return {
+            "USD": btc_usd,
+            "EUR": btc_eur,
+            "GBP": btc_gbp
+        }
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching Bitcoin price: {e}")
+        return None
+
+# Use the function
+if __name__ == "__main__":
+    prices = get_bitcoin_price()
+    if prices:
+        print(f"Bitcoin Prices:")
+        print(f"USD: ${prices['USD']:,.2f}")
+        print(f"EUR: €{prices['EUR']:,.2f}")
+        print(f"GBP: £{prices['GBP']:,.2f}")
+            </pre>
+        </div>
+        
+        <div class="nepali">
+            <h3>नेपाली निर्देशनहरू</h3>
+            <p>पाइथन प्रयोग गरेर बिटकोइनको मूल्य जाँच्नको लागि, हामी CoinGecko API प्रयोग गर्नेछौं। सर्वप्रथम, आवश्यक लाइब्रेरी pip को माध्यमबाट इन्स्टल गर्नुहोस्:</p>
+            
+            <p>माथिको कोड निम्न कार्यहरू गर्छ:</p>
+            <ul>
+                <li>requests लाइब्रेरी प्रयोग गरेर CoinGecko API मा HTTP अनुरोध पठाउँछ</li>
+                <li>API बाट प्राप्त जवाफलाई JSON फर्म्याटमा रूपान्तरण गर्छ</li>
+                <li>बिटकोइनको मूल्य USD, EUR, र GBP मा प्राप्त गर्छ</li>
+                <li>कुनै त्रुटि भएमा उपयुक्त सन्देश प्रदर्शन गर्छ</li>
+            </ul>
+            
+            <p>कोड चलाउनको लागि:</p>
+            <ol>
+                <li>माथिको कोडलाई bitcoin_price.py नामक फाइलमा सेभ गर्नुहोस्</li>
+                <li>टर्मिनलमा निम्न कमाण्ड चलाउनुहोस्: <code>python bitcoin_price.py</code></li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
