@@ -79,6 +79,30 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+        .progress-container {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        .progress-bar {
+            width: 0;
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            color: #666;
+        }
+        .generate-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }        
         button {
             background-color: #4CAF50;
             color: white;
@@ -122,7 +146,6 @@
                 <select id="gender">
                     <option value="male">Male / पुरुष</option>
                     <option value="female">Female / महिला</option>
-                    <option value="non-binary">Non-binary / गैर-बाइनरी</option>
                 </select>
             </label>
         </div>
@@ -244,224 +267,218 @@
         <button onclick="loadCharacter()">Load Character / पात्र लोड गर्नुहोस्</button>
     </div>
 
-    <script>
-                async function generateAIImage() {
-            const description = document.getElementById('characterDescription').value;
-            const race = document.getElementById('race').value;
-            const characterClass = document.getElementById('class').value;
-            
-            if (!description) {
-                alert('Please add a character description first! / पहिले पात्र विवरण थप्नुहोस्!');
-                return;
-            }
+<script>
+    // Global variables for API keys
+    let HUGGING_FACE_API_KEY = null;
+    let STABILITY_API_KEY = null;
+    let keysInitialized = false;
 
-            const container = document.getElementById('characterImageContainer');
-            const generateBtn = document.querySelector('.generate-btn');
-            container.classList.add('loading');
-            generateBtn.disabled = true;
+    // Helper functions
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-            try {
-                const prompt = `A highly detailed fantasy character portrait. ${race} ${characterClass} ${gender}, wearing ${equipment}. ${description}. Digital painting, detailed face, professional fantasy art, trending on artstation, masterpiece quality.`;
-                
-                // Check if API key is set
-                const API_KEY = 'sk-bztqVnhUojtvMbHJs43YlidQRcUDDuS1dLPLStphptTn0PDX';
-                if (API_KEY === 'YOUR_API_KEY') {
-                    throw new Error('Please set your Stability AI API key first. Visit https://platform.stability.ai to get one.');
+    function rollAbilityScore() {
+        const rolls = Array.from({length: 4}, () => getRandomInt(1, 6));
+        rolls.sort((a, b) => b - a);
+        return rolls.slice(0, 3).reduce((sum, roll) => sum + roll, 0);
+    }
+
+    function getModifier(score) {
+        return Math.floor((score - 10) / 2);
+    }
+
+    function calculateHP(characterClass, level, constitutionMod) {
+        const hitDice = {
+            'barbarian': 12,
+            'fighter': 10,
+            'paladin': 10,
+            'ranger': 10,
+            'monk': 8,
+            'rogue': 8,
+            'bard': 8,
+            'cleric': 8,
+            'druid': 8,
+            'warlock': 8,
+            'sorcerer': 6,
+            'wizard': 6
+        };
+        const baseHP = hitDice[characterClass];
+        return baseHP + constitutionMod + 
+               ((level - 1) * (Math.floor(baseHP/2) + 1 + constitutionMod));
+    }
+
+    function calculateAC(characterClass, dexterityMod) {
+        return 10 + dexterityMod;
+    }
+
+    // API key initialization
+    async function initializeKeys() {
+        if (keysInitialized) return;
+        
+        try {
+            const response = await fetch('https://zuqaonnjhyobeljlum4m6gclae0gdxsp.lambda-url.us-west-2.on.aws/', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            });
 
-                const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const keys = await response.json();
+            if (!keys.huggingFaceKey || !keys.stabilityKey) {
+                throw new Error('Invalid API key data received');
+            }
+            
+            HUGGING_FACE_API_KEY = keys.huggingFaceKey;
+            STABILITY_API_KEY = keys.stabilityKey;
+            keysInitialized = true;
+            console.log('API keys initialized successfully');
+        } catch (error) {
+            console.error('Error initializing keys:', error);
+            throw error;
+        }
+    }
+
+    // Text generation
+    async function generateCharacterText(characterInfo) {
+        if (!keysInitialized) {
+            await initializeKeys();
+        }
+
+        const descriptionPrompt = `Create a character description for a D&D character with the following traits:
+    Race: ${characterInfo.race}
+    Class: ${characterInfo.class}
+    Gender: ${characterInfo.gender}
+    Level: ${characterInfo.level}
+    Strength: ${characterInfo.strength}
+    Dexterity: ${characterInfo.dexterity}
+    Constitution: ${characterInfo.constitution}
+    Intelligence: ${characterInfo.intelligence}
+    Wisdom: ${characterInfo.wisdom}
+    Charisma: ${characterInfo.charisma}
+
+    Write a two paragraph description of their appearance, personality, and background.`;
+
+        const equipmentPrompt = `List appropriate equipment for a level ${characterInfo.level} ${characterInfo.race} ${characterInfo.class}.
+    Include weapons, armor, and adventuring gear that would make sense for their class and level.
+    Format as a simple list.`;
+
+        try {
+            const [descriptionResponse, equipmentResponse] = await Promise.all([
+                fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
                     method: 'POST',
                     headers: {
+                        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        text_prompts: [
-                            {
-                                text: prompt,
-                                weight: 1
-                            }
-                        ],
-                        cfg_scale: 7,
-                        height: 1024,
-                        width: 1024,
-                        samples: 1,
-                        steps: 30,
-                    })
-                });
+                        inputs: descriptionPrompt,
+                        parameters: {
+                            max_new_tokens: 300,
+                            temperature: 0.7,
+                        }
+                    }),
+                }),
+                fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        inputs: equipmentPrompt,
+                        parameters: {
+                            max_new_tokens: 200,
+                            temperature: 0.7,
+                        }
+                    }),
+                })
+            ]);
 
-                if (!response.ok) {
-                    throw new Error('Image generation failed');
-                }
+            const description = await descriptionResponse.json();
+            const equipment = await equipmentResponse.json();
 
-                const result = await response.json();
-                const imageBase64 = result.artifacts[0].base64;
-                const imageUrl = `data:image/png;base64,${imageBase64}`;
-                
-                container.innerHTML = `<img src="${imageUrl}" alt="Generated Character Image">`;
-                localStorage.setItem('characterImage', imageUrl);
-            } catch (error) {
-                console.error('Error generating image:', error);
-                if (error.message.includes('API key')) {
-                    alert(error.message);
-                } else {
-                    alert('Failed to generate image. Please try again later. / चित्र सिर्जना गर्न असफल भयो। कृपया पछि पुन: प्रयास गर्नुहोस्।');
-                }
-            } finally {
-                container.classList.remove('loading');
-                generateBtn.disabled = false;
-            }
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const container = document.getElementById('characterImageContainer');
-                    container.innerHTML = `<img src="${e.target.result}" alt="Character Image">`;
-                    localStorage.setItem('characterImage', e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function getRandomInt(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        }
-
-        function rollAbilityScore() {
-            // Roll 4d6, drop lowest
-            const rolls = Array.from({length: 4}, () => getRandomInt(1, 6));
-            rolls.sort((a, b) => b - a);
-            return rolls.slice(0, 3).reduce((sum, roll) => sum + roll, 0);
-        }
-
-        function getModifier(score) {
-            return Math.floor((score - 10) / 2);
-        }
-
-        function calculateHP(characterClass, level, constitutionMod) {
-            const hitDice = {
-                'barbarian': 12,
-                'fighter': 10,
-                'paladin': 10,
-                'ranger': 10,
-                'monk': 8,
-                'rogue': 8,
-                'bard': 8,
-                'cleric': 8,
-                'druid': 8,
-                'warlock': 8,
-                'sorcerer': 6,
-                'wizard': 6
+            return {
+                description: Array.isArray(description) ? description[0].generated_text : description.generated_text,
+                equipment: Array.isArray(equipment) ? equipment[0].generated_text : equipment.generated_text
             };
-            
-            const baseHP = hitDice[characterClass];
-            // First level gets maximum HP
-            return baseHP + constitutionMod + 
-                   ((level - 1) * (Math.floor(baseHP/2) + 1 + constitutionMod));
+        } catch (error) {
+            console.error('Error generating text:', error);
+            throw new Error('Failed to generate character text. Please try again later.');
         }
+    }
 
-        function calculateAC(characterClass, dexterityMod) {
-            // Basic AC calculation - this could be more complex based on class features
-            const baseAC = 10;
-            return baseAC + dexterityMod;
+// Progress bar utility functions
+    function createProgressBar(container) {
+        // Create progress bar container
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'progress-container';
+        progressContainer.style.display = 'block';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+
+        const progressText = document.createElement('div');
+        progressText.className = 'progress-text';
+        progressText.textContent = 'Generating...';
+
+        progressContainer.appendChild(progressBar);
+        progressContainer.appendChild(progressText);
+        container.appendChild(progressContainer);
+
+        return {
+            progressBar,
+            progressText,
+            progressContainer
+        };
+    }
+
+    function updateProgressBar(progressBar, percent) {
+        progressBar.style.width = `${percent}%`;
+    }
+
+    function removeProgressBar(container) {
+        const progressContainer = container.querySelector('.progress-container');
+        if (progressContainer) {
+            progressContainer.remove();
         }
+    }
 
-        async function generateCharacterText(characterInfo) {
-            const HF_API_KEY = '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'; // Replace with your Hugging Face API key
-            
-            if (HF_API_KEY === 'YOUR_HUGGINGFACE_KEY') {
-                throw new Error('Please set your Hugging Face API key. Visit https://huggingface.co/settings/tokens to get one.');
+    // Modify generateRandomCharacter to include progress bar
+    async function generateRandomCharacter() {
+        // Get the generate character button
+        const generateBtn = document.querySelector('button[onclick="generateRandomCharacter()"]');
+        const container = generateBtn.closest('.buttons');
+
+        // Create progress bar
+        const { progressBar, progressText, progressContainer } = createProgressBar(container);
+
+        // Disable button and show progress
+        generateBtn.disabled = true;
+        updateProgressBar(progressBar, 20);
+        progressText.textContent = 'Initializing keys...';
+
+        try {
+            if (!keysInitialized) {
+                await initializeKeys();
             }
+            updateProgressBar(progressBar, 40);
+            progressText.textContent = 'Generating character traits...';
 
-            const descriptionPrompt = `Create a character description for a D&D character with the following traits:
-Race: ${characterInfo.race}
-Class: ${characterInfo.class}
-Gender: ${characterInfo.gender}
-Level: ${characterInfo.level}
-Strength: ${characterInfo.strength}
-Dexterity: ${characterInfo.dexterity}
-Constitution: ${characterInfo.constitution}
-Intelligence: ${characterInfo.intelligence}
-Wisdom: ${characterInfo.wisdom}
-Charisma: ${characterInfo.charisma}
-
-Write a two paragraph description of their appearance, personality, and background.`;
-
-            const equipmentPrompt = `List appropriate equipment for a level ${characterInfo.level} ${characterInfo.race} ${characterInfo.class}.
-Include weapons, armor, and adventuring gear that would make sense for their class and level.
-Format as a simple list.`;
-
-            try {
-                // Generate character description
-                const descriptionResponse = await fetch(
-                    'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${HF_API_KEY}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            inputs: descriptionPrompt,
-                            parameters: {
-                                max_new_tokens: 300,
-                                temperature: 0.7,
-                            }
-                        }),
-                    }
-                );
-
-                // Generate equipment list
-                const equipmentResponse = await fetch(
-                    'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${HF_API_KEY}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            inputs: equipmentPrompt,
-                            parameters: {
-                                max_new_tokens: 200,
-                                temperature: 0.7,
-                            }
-                        }),
-                    }
-                );
-
-                const description = await descriptionResponse.json();
-                const equipment = await equipmentResponse.json();
-
-                return {
-                    description: description[0].generated_text,
-                    equipment: equipment[0].generated_text
-                };
-            } catch (error) {
-                console.error('Error generating text:', error);
-                throw new Error('Failed to generate character text. Please check your API key or try again later.');
-            }
-        }
-
-        async function generateRandomCharacter() {
-            // Generate random race
+            // Generate random race, class, etc.
             const races = ['elf', 'dwarf', 'human', 'faerie', 'halfling'];
-            const randomRace = races[Math.floor(Math.random() * races.length)];
-            
-            // Generate random class
             const classes = ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 
                            'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
+            const genders = ['male', 'female', 'non-binary'];
+
+            const randomRace = races[Math.floor(Math.random() * races.length)];
             const randomClass = classes[Math.floor(Math.random() * classes.length)];
-
-            // Generate random gender
-            const genders = ['male', 'female'];
             const randomGender = genders[Math.floor(Math.random() * genders.length)];
-
-            // Generate random level (1-20)
             const level = getRandomInt(1, 2);
 
             // Generate ability scores
@@ -471,6 +488,9 @@ Format as a simple list.`;
             const intelligence = rollAbilityScore();
             const wisdom = rollAbilityScore();
             const charisma = rollAbilityScore();
+
+            updateProgressBar(progressBar, 60);
+            progressText.textContent = 'Generating character description...';
 
             // Calculate derived stats
             const constitutionMod = getModifier(constitution);
@@ -494,14 +514,12 @@ Format as a simple list.`;
             };
 
             // Generate AI text for description and equipment
-            try {
-                const generatedText = await generateCharacterText(characterInfo);
-                document.getElementById('characterDescription').value = generatedText.description;
-                document.getElementById('equipment').value = generatedText.equipment;
-            } catch (error) {
-                console.error(error);
-                alert(error.message);
-            }
+            updateProgressBar(progressBar, 80);
+            progressText.textContent = 'Generating character details...';
+
+            const generatedText = await generateCharacterText(characterInfo);
+            document.getElementById('characterDescription').value = generatedText.description;
+            document.getElementById('equipment').value = generatedText.equipment;
 
             // Update form fields
             document.getElementById('race').value = randomRace;
@@ -517,66 +535,195 @@ Format as a simple list.`;
             document.getElementById('hitPoints').value = hp;
             document.getElementById('armorClass').value = ac;
             document.getElementById('initiative').value = initiative;
+
+            updateProgressBar(progressBar, 100);
+            progressText.textContent = 'Character generated successfully!';
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+            progressText.textContent = 'Generation failed.';
+            updateProgressBar(progressBar, 0);
+        } finally {
+            // Re-enable button and remove progress bar after a short delay
+            setTimeout(() => {
+                generateBtn.disabled = false;
+                removeProgressBar(container);
+            }, 1500);
+        }
+    }
+
+    // Modify generateAIImage to include progress bar
+    async function generateAIImage() {
+        const description = document.getElementById('characterDescription').value;
+        const race = document.getElementById('race').value;
+        const characterClass = document.getElementById('class').value;
+        const gender = document.getElementById('gender').value;
+        
+        if (!description) {
+            alert('Please add a character description first! / पहिले पात्र विवरण थप्नुहोस्!');
+            return;
         }
 
-        function saveCharacter() {
-            const character = {
-                race: document.getElementById('race').value,
-                gender: document.getElementById('gender').value,
-                name: document.getElementById('characterName').value,
-                class: document.getElementById('class').value,
-                level: document.getElementById('level').value,
-                strength: document.getElementById('strength').value,
-                dexterity: document.getElementById('dexterity').value,
-                constitution: document.getElementById('constitution').value,
-                intelligence: document.getElementById('intelligence').value,
-                wisdom: document.getElementById('wisdom').value,
-                charisma: document.getElementById('charisma').value,
-                hitPoints: document.getElementById('hitPoints').value,
-                armorClass: document.getElementById('armorClass').value,
-                initiative: document.getElementById('initiative').value,
-                equipment: document.getElementById('equipment').value,
-                characterDescription: document.getElementById('characterDescription').value
-            };
+        const container = document.getElementById('characterImageContainer');
+        const generateBtn = document.querySelector('.generate-btn');
 
-            const characterString = JSON.stringify(character);
-            localStorage.setItem('dndCharacter', characterString);
-            alert('Character saved! / पात्र सेभ गरियो!');
-        }
+        // Create progress bar
+        const { progressBar, progressText, progressContainer } = createProgressBar(container);
 
-        function loadCharacter() {
-            const characterString = localStorage.getItem('dndCharacter');
-            if (!characterString) {
-                alert('No saved character found! / सेभ गरिएको पात्र फेला परेन!');
-                return;
+        // Disable button and show progress
+        generateBtn.disabled = true;
+        container.classList.add('loading');
+        updateProgressBar(progressBar, 20);
+        progressText.textContent = 'Initializing keys...';
+
+        try {
+            if (!keysInitialized) {
+                await initializeKeys();
+            }
+            updateProgressBar(progressBar, 40);
+            progressText.textContent = 'Preparing image generation...';
+
+            // Truncate and simplify the prompt to meet API constraints
+            const truncatedDescription = description.length > 500 ? description.substring(0, 500) : description;
+            const prompt = `Fantasy RPG character. ${race} ${characterClass} ${gender}. ${truncatedDescription}. Detailed portrait, digital art.`;
+            
+            updateProgressBar(progressBar, 60);
+            progressText.textContent = 'Generating image...';
+
+            const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${STABILITY_API_KEY}`,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    text_prompts: [
+                        {
+                            text: prompt,
+                            weight: 1
+                        }
+                    ],
+                    cfg_scale: 7,
+                    height: 1024,
+                    width: 1024,
+                    samples: 1,
+                    steps: 30,
+                })
+            });
+
+            updateProgressBar(progressBar, 80);
+            progressText.textContent = 'Processing image...';
+
+            if (!response.ok) {
+                const responseText = await response.text();
+                throw new Error(`Image generation failed: ${response.status} - ${responseText}`);
             }
 
-            const character = JSON.parse(characterString);
-            document.getElementById('characterName').value = character.name;
-            document.getElementById('class').value = character.class;
-            document.getElementById('level').value = character.level;
-            document.getElementById('strength').value = character.strength;
-            document.getElementById('dexterity').value = character.dexterity;
-            document.getElementById('constitution').value = character.constitution;
-            document.getElementById('intelligence').value = character.intelligence;
-            document.getElementById('wisdom').value = character.wisdom;
-            document.getElementById('charisma').value = character.charisma;
-            document.getElementById('hitPoints').value = character.hitPoints;
-            document.getElementById('armorClass').value = character.armorClass;
-            document.getElementById('initiative').value = character.initiative;
-            document.getElementById('equipment').value = character.equipment;
-            document.getElementById('race').value = character.race;
-            document.getElementById('characterDescription').value = character.characterDescription;
+            const result = await response.json();
+            const imageBase64 = result.artifacts[0].base64;
+            const imageUrl = `data:image/png;base64,${imageBase64}`;
+            
+            updateProgressBar(progressBar, 100);
+            progressText.textContent = 'Image generated successfully!';
+            
+            container.innerHTML = `<img src="${imageUrl}" alt="Generated Character Image">`;
+            localStorage.setItem('characterImage', imageUrl);
+        } catch (error) {
+            console.error('Error generating image:', error);
+            alert(`Failed to generate image: ${error.message}`);
+            progressText.textContent = 'Image generation failed.';
+            updateProgressBar(progressBar, 0);
+        } finally {
+            // Re-enable button and remove progress bar after a short delay
+            setTimeout(() => {
+                container.classList.remove('loading');
+                generateBtn.disabled = false;
+                removeProgressBar(container);
+            }, 1500);
+        }
+    }
 
-            // Load character image if it exists
-            const savedImage = localStorage.getItem('characterImage');
-            if (savedImage) {
+    // Image Upload
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
                 const container = document.getElementById('characterImageContainer');
-                container.innerHTML = `<img src="${savedImage}" alt="Character Image">`;
-            }
-
-            alert('Character loaded! / पात्र लोड गरियो!');
+                container.innerHTML = `<img src="${e.target.result}" alt="Character Image">`;
+                localStorage.setItem('characterImage', e.target.result);
+            };
+            reader.readAsDataURL(file);
         }
+    }
+
+    // Save Character
+    function saveCharacter() {
+        const character = {
+            name: document.getElementById('characterName').value,
+            race: document.getElementById('race').value,
+            gender: document.getElementById('gender').value,
+            class: document.getElementById('class').value,
+            level: document.getElementById('level').value,
+            strength: document.getElementById('strength').value,
+            dexterity: document.getElementById('dexterity').value,
+            constitution: document.getElementById('constitution').value,
+            intelligence: document.getElementById('intelligence').value,
+            wisdom: document.getElementById('wisdom').value,
+            charisma: document.getElementById('charisma').value,
+            hitPoints: document.getElementById('hitPoints').value,
+            armorClass: document.getElementById('armorClass').value,
+            initiative: document.getElementById('initiative').value,
+            equipment: document.getElementById('equipment').value,
+            characterDescription: document.getElementById('characterDescription').value
+        };
+
+        localStorage.setItem('dndCharacter', JSON.stringify(character));
+        alert('Character saved! / पात्र सेभ गरियो!');
+    }
+
+    // Load Character
+    function loadCharacter() {
+        const characterString = localStorage.getItem('dndCharacter');
+        if (!characterString) {
+            alert('No saved character found! / सेभ गरिएको पात्र फेला परेन!');
+            return;
+        }
+
+        const character = JSON.parse(characterString);
+        document.getElementById('characterName').value = character.name;
+        document.getElementById('race').value = character.race;
+        document.getElementById('gender').value = character.gender;
+        document.getElementById('class').value = character.class;
+        document.getElementById('level').value = character.level;
+        document.getElementById('strength').value = character.strength;
+        document.getElementById('dexterity').value = character.dexterity;
+        document.getElementById('constitution').value = character.constitution;
+        document.getElementById('intelligence').value = character.intelligence;
+        document.getElementById('wisdom').value = character.wisdom;
+        document.getElementById('charisma').value = character.charisma;
+        document.getElementById('hitPoints').value = character.hitPoints;
+        document.getElementById('armorClass').value = character.armorClass;
+        document.getElementById('initiative').value = character.initiative;
+        document.getElementById('equipment').value = character.equipment;
+        document.getElementById('characterDescription').value = character.characterDescription;
+
+        const savedImage = localStorage.getItem('characterImage');
+        if (savedImage) {
+            const container = document.getElementById('characterImageContainer');
+            container.innerHTML = `<img src="${savedImage}" alt="Character Image">`;
+        }
+
+        alert('Character loaded! / पात्र लोड गरियो!');
+    }
+
+    // Initialize keys when page loads
+    window.onload = function() {
+        initializeKeys().catch(error => {
+            console.error('Failed to initialize keys:', error);
+        });
+    };
     </script>
 </body>
 </html>
