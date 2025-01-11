@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Lambda function to fetch API keys from Parameter Store'
+
+Resources:
+  ApiKeysFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: get-api-keys
+      Handler: index.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+
+          def lambda_handler(event, context):
+              try:
+                  ssm = boto3.client('ssm')
+                  hf_key = ssm.get_parameter(
+                      Name='/HUGGINGFACE_KEY',
+                      WithDecryption=True
+                  )
+                  stability_key = ssm.get_parameter(
+                      Name='/STABILITY_AI_API_KEY',
+                      WithDecryption=True
+                  )
+                  
+                  return {
+                      'statusCode': 200,
+                      'headers': {
+                          'Access-Control-Allow-Origin': 'https://nepal-web.net',
+                          'Access-Control-Allow-Headers': 'Content-Type',
+                          'Access-Control-Allow-Methods': 'GET',
+                          'Content-Type': 'application/json'
+                      },
+                      'body': json.dumps({
+                          'huggingFaceKey': hf_key['Parameter']['Value'],
+                          'stabilityKey': stability_key['Parameter']['Value']
+                      })
+                  }
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  return {
+                      'statusCode': 500,
+                      'headers': {
+                          'Access-Control-Allow-Origin': 'https://nepal-web.net',
+                          'Access-Control-Allow-Headers': 'Content-Type',
+                          'Access-Control-Allow-Methods': 'GET',
+                          'Content-Type': 'application/json'
+                      },
+                      'body': json.dumps({
+                          'error': 'Failed to fetch API keys'
+                      })
+                  }
+      Runtime: python3.9
+      Timeout: 10
+      MemorySize: 128
+
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: SSMParameterAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ssm:GetParameter'
+                Resource:
+                  - 'arn:aws:ssm:us-west-2:874956223356:parameter/HUGGINGFACE_KEY'
+                  - 'arn:aws:ssm:us-west-2:874956223356:parameter/STABILITY_AI_API_KEY'
+
+  LambdaFunctionUrl:
+    Type: 'AWS::Lambda::Url'
+    Properties:
+      AuthType: NONE
+      TargetFunctionArn: !Ref ApiKeysFunction
+
+  LambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      FunctionName: !Ref ApiKeysFunction
+      Action: 'lambda:InvokeFunctionUrl'
+      Principal: '*'
+      FunctionUrlAuthType: NONE
+
+Outputs:
+  FunctionUrl:
+    Description: URL for the Lambda function
+    Value: !GetAtt LambdaFunctionUrl.FunctionUrl

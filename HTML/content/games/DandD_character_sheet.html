@@ -345,7 +345,7 @@
     }
 
     // Text generation
-    async function generateCharacterText(characterInfo) {
+async function generateCharacterText(characterInfo) {
         if (!keysInitialized) {
             await initializeKeys();
         }
@@ -403,9 +403,28 @@
             const description = await descriptionResponse.json();
             const equipment = await equipmentResponse.json();
 
+            // Extract generated text and remove the original prompt
+            const extractGeneratedText = (responseText) => {
+                const fullText = Array.isArray(responseText) 
+                    ? responseText[0].generated_text 
+                    : responseText.generated_text;
+
+                // Remove the original prompt text
+                const promptIndex = fullText.indexOf(descriptionPrompt);
+                const equipmentPromptIndex = fullText.indexOf(equipmentPrompt);
+
+                if (promptIndex !== -1) {
+                    return fullText.slice(promptIndex + descriptionPrompt.length).trim();
+                } else if (equipmentPromptIndex !== -1) {
+                    return fullText.slice(equipmentPromptIndex + equipmentPrompt.length).trim();
+                }
+
+                return fullText.trim();
+            };
+
             return {
-                description: Array.isArray(description) ? description[0].generated_text : description.generated_text,
-                equipment: Array.isArray(equipment) ? equipment[0].generated_text : equipment.generated_text
+                description: extractGeneratedText(description),
+                equipment: extractGeneratedText(equipment)
             };
         } catch (error) {
             console.error('Error generating text:', error);
