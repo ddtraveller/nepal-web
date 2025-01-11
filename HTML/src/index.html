@@ -140,7 +140,7 @@
             updateBreadcrumb(prefix);
 
             // Removed delimiter to get all files
-            const url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
+            const url = `https://${bucketName}.net/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
 
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
