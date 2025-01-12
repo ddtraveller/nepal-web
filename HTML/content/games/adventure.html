@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Interactive Story</title>
+    
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .story-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script>
+        const storyTemplates = [
+            {
+                type: "himalayan",
+                settings: [
+                    "remote mountain pass overlooking snow-capped peaks",
+                    "ancient Buddhist monastery perched on a cliff",
+                    "hidden Himalayan valley shrouded in mist",
+                    "traditional Nepalese village nestled in the mountains"
+                ],
+                elements: [
+                    "prayer flags fluttering in the wind",
+                    "ancient carved mani stones",
+                    "snow leopard tracks in the fresh snow",
+                    "sound of distant temple bells",
+                    "scent of burning juniper incense"
+                ],
+                situations: [
+                    "meet a wise sherpa with an intriguing proposition",
+                    "discover mysterious footprints leading off the main trail",
+                    "witness an unexplainable phenomenon in the mountains",
+                    "find traces of a lost expedition"
+                ]
+            },
+            {
+                type: "fantasy",
+                settings: [
+                    "enchanted forest glowing with magical light",
+                    "ancient wizard's tower floating in the sky",
+                    "mystical underground cavern filled with crystals",
+                    "magical library where books fly"
+                ],
+                elements: [
+                    "glowing magical runes",
+                    "mysterious portals swirling with energy",
+                    "ethereal creatures of light",
+                    "ancient magical artifacts",
+                    "floating orbs of magical energy"
+                ],
+                situations: [
+                    "stumble upon a magical ritual in progress",
+                    "find an ancient prophecy with your name",
+                    "witness a conflict between magical beings",
+                    "discover a powerful artifact awakening"
+                ]
+            },
+            {
+                type: "scifi",
+                settings: [
+                    "abandoned space station drifting in the void",
+                    "quantum research facility on a distant planet",
+                    "alien archaeological site on an asteroid",
+                    "terraforming colony on the edge of known space"
+                ],
+                elements: [
+                    "holographic displays flickering with data",
+                    "mysterious alien technology pulsing with energy",
+                    "experimental quantum devices",
+                    "advanced AI interfaces",
+                    "temporal anomalies bending space-time"
+                ],
+                situations: [
+                    "detect an unknown signal from deep space",
+                    "discover signs of advanced alien civilization",
+                    "witness a malfunction in the space-time continuum",
+                    "find evidence of a scientific breakthrough"
+                ]
+            },
+            {
+                type: "spiritual",
+                settings: [
+                    "ancient meditation temple beyond time",
+                    "interdimensional nexus of consciousness",
+                    "sacred garden of enlightenment",
+                    "crystal temple of higher dimensions"
+                ],
+                elements: [
+                    "swirling energy vortexes",
+                    "crystalline thought forms",
+                    "geometric patterns of pure light",
+                    "ethereal beings of pure consciousness",
+                    "vibrating frequencies of reality"
+                ],
+                situations: [
+                    "experience a profound spiritual awakening",
+                    "encounter beings from higher dimensions",
+                    "discover ancient wisdom teachings",
+                    "witness the interconnectedness of all things"
+                ]
+            }
+        ];
+
+        function App() {
+            const [storyHistory, setStoryHistory] = React.useState([]);
+            const [currentInput, setCurrentInput] = React.useState('');
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [error, setError] = React.useState(null);
+            const [apiKeys, setApiKeys] = React.useState(null);
+
+            React.useEffect(() => {
+                initializeKeys();
+            }, []);
+
+            function initializeKeys() {
+                setIsLoading(true);
+                fetch('https://zuqaonnjhyobeljlum4m6gclae0gdxsp.lambda-url.us-west-2.on.aws/', {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json();
+                })
+                .then(keys => {
+                    if (!keys.huggingFaceKey || !keys.stabilityKey) {
+                        throw new Error('Invalid API key data received');
+                    }
+                    setApiKeys(keys);
+                    startNewStory(keys);
+                })
+                .catch(error => {
+                    console.error('Error initializing keys:', error);
+                    setError('Failed to initialize API keys. Please refresh the page.');
+                });
+            }
+
+            function generateStoryText(prompt, keys) {
+                return fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${keys.huggingFaceKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        inputs: prompt,
+                        parameters: {
+                            max_new_tokens: 250,
+                            min_new_tokens: 100,
+                            temperature: 0.7,
+                            top_p: 0.9,
+                            repetition_penalty: 1.1,
+                            return_full_text: false
+                        }
+                    }),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    let text = Array.isArray(result) ? result[0].generated_text : result.generated_text;
+                    return cleanText(text);
+                });
+            }
+
+            function cleanText(text) {
+                text = text.replace(/^(You are a creative storyteller\.|Create a story|Continue the story|Write a complete scene|Requirements:|Based on the action:|Previous:|Action:).*?(?=\n|$)/gim, '');
+                text = text.replace(/\[(.*?)\]/g, '');
+                text = text.replace(/\{(.*?)\}/g, '');
+                text = text.replace(/```.*?```/gs, '');
+                text = text.replace(/^\s*[\r\n]/gm, '');
+                text = text.replace(/\n\s*\n/g, '\n');
+                return text.trim();
+            }
+
+            function generateImage(prompt, keys) {
+                return fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${keys.stabilityKey}`,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text_prompts: [{
+                            text: prompt,
+                            weight: 1
+                        }],
+                        cfg_scale: 7,
+                        height: 1024,
+                        width: 1024,
+                        samples: 1,
+                        steps: 30,
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.artifacts?.[0]?.base64) throw new Error('No image generated');
+                    return `data:image/png;base64,${result.artifacts[0].base64}`;
+                });
+            }
+
+            function startNewStory(keys) {
+                if (!keys) return;
+                
+                setIsLoading(true);
+                setError(null);
+
+                const template = storyTemplates[Math.floor(Math.random() * storyTemplates.length)];
+                const setting = template.settings[Math.floor(Math.random() * template.settings.length)];
+                const situation = template.situations[Math.floor(Math.random() * template.situations.length)];
+                const shuffledElements = [...template.elements].sort(() => 0.5 - Math.random());
+                const selectedElements = shuffledElements.slice(0, 2 + Math.floor(Math.random() * 2));
+
+                const prompt = `Create an immersive story opener in second-person perspective ("you"). 
+                The scene takes place in a ${setting} where you ${situation}. 
+                Include vivid details about ${selectedElements.join(' and ')}. 
+                Write 100-150 words.
+
+                Your story MUST end with a clear question presenting two distinct options for the reader.
+                Keep everything in second-person perspective with rich sensory details.
+
+                ### Response:`;
+
+                generateStoryText(prompt, keys)
+                    .then(storyText => {
+                        const imagePrompt = `${template.type} scene: ${storyText.slice(0, 200)}`;
+                        return Promise.all([storyText, generateImage(imagePrompt, keys)]);
+                    })
+                    .then(([storyText, imageUrl]) => {
+                        setStoryHistory([{ text: storyText, image: imageUrl }]);
+                        setIsLoading(false);
+                    })
+                    .catch(err => {
+                        setError(`Failed to generate story: ${err.message}`);
+                        console.error('Error:', err);
+                        setIsLoading(false);
+                    });
+            }
+
+            function handleSubmit(e) {
+                e.preventDefault();
+                if (!currentInput.trim() || isLoading || !apiKeys) return;
+
+                setIsLoading(true);
+                setError(null);
+
+                const prompt = `Continue the story based on this action: "${currentInput}"
+                Create a vivid scene that follows naturally from this choice. 
+                Keep everything in second-person perspective ("you") with rich sensory details.
+                ### Response:`;
+
+                generateStoryText(prompt, apiKeys)
+                    .then(storyText => {
+                        const imagePrompt = `Fantasy scene: ${storyText.slice(0, 200)}`;
+                        return Promise.all([storyText, generateImage(imagePrompt, apiKeys)]);
+                    })
+                    .then(([storyText, imageUrl]) => {
+                        setStoryHistory(prev => [...prev, {
+                            text: storyText,
+                            image: imageUrl,
+                            input: currentInput
+                        }]);
+                        setCurrentInput('');
+                        setIsLoading(false);
+                    })
+                    .catch(err => {
+                        setError(`Failed to generate story: ${err.message}`);
+                        console.error('Error:', err);
+                        setIsLoading(false);
+                    });
+            }
+
+            const mainContent = isLoading && storyHistory.length === 0 ? (
+                React.createElement('div', { className: 'text-center py-8 bg-gray-50 rounded-lg mb-6' },
+                    React.createElement('div', { 
+                        className: 'inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent mb-4' 
+                    }),
+                    React.createElement('p', { className: 'text-gray-600' },
+                        'Preparing your adventure...'
+                    )
+                )
+            ) : (
+                React.createElement(React.Fragment, null,
+                    storyHistory.map((entry, index) => 
+                        React.createElement('div', { 
+                            key: index,
+                            className: 'mb-6 p-4 bg-gray-50 rounded'
+                        },
+                            entry.image && React.createElement('img', {
+                                src: entry.image,
+                                alt: `Story scene ${index + 1}`,
+                                className: 'story-image'
+                            }),
+                            entry.input && React.createElement('p', { 
+                                className: 'text-gray-600 mb-2'
+                            }, `Your action: ${entry.input}`),
+                            React.createElement('p', { 
+                                className: 'text-gray-800'
+                            }, entry.text)
+                        )
+                    ),
+                    React.createElement('form', {
+                        onSubmit: handleSubmit,
+                        className: 'flex gap-2 mb-4'
+                    },
+                        React.createElement('input', {
+                            type: 'text',
+                            value: currentInput,
+                            onChange: (e) => setCurrentInput(e.target.value),
+                            placeholder: 'What would you like to do?',
+                            className: 'input',
+                            disabled: isLoading
+                        }),
+                        React.createElement('button', {
+                            type: 'submit',
+                            disabled: isLoading,
+                            className: 'button'
+                        }, isLoading ? 'Generating...' : 'Continue')
+                    ),
+                    React.createElement('button', {
+                        onClick: () => startNewStory(apiKeys),
+                        disabled: isLoading,
+                        className: 'button'
+                    }, 'Start New Story')
+                )
+            );
+
+            return React.createElement('div', { className: 'story-container' },
+                React.createElement('h1', { className: 'text-3xl font-bold mb-4 text-center' }, 'An Interactive Adventure Story'),
+                
+                React.createElement('div', { className: 'text-center mb-8 text-gray-600' },
+                    React.createElement('p', { className: 'mb-2' }, 
+                        'Welcome to an AI-powered interactive story experience! Your choices will shape the narrative as it unfolds.'
+                    ),
+                    React.createElement('p', { className: 'mb-2' },
+                        'Each scene presents you with choices. Type what you would like to do in the input box below to continue the story.'
+                    ),
+                    React.createElement('p', null,
+                        'The AI will generate unique scenes and images based on your decisions.'
+                    )
+                ),
+                
+                error && React.createElement('div', { className: 'error' }, error),
+                
+                (!error && (isLoading || storyHistory.length === 0)) 
+                    ? React.createElement('div', { 
+                        className: 'text-center py-8 bg-gray-50 rounded-lg mb-6'
+                      },
+                        React.createElement('div', { 
+                            className: 'inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent mb-4' 
+                        }),
+                        React.createElement('p', { 
+                            className: 'text-gray-600'
+                        }, 'Preparing your adventure...')
+                    )
+                    : React.createElement('div', null,
+                        storyHistory.map((entry, index) => 
+                            React.createElement('div', { 
+                                key: index,
+                                className: 'mb-6 p-4 bg-gray-50 rounded'
+                            },
+                                entry.image && React.createElement('img', {
+                                    src: entry.image,
+                                    alt: `Story scene ${index + 1}`,
+                                    className: 'story-image'
+                                }),
+                                entry.input && React.createElement('p', { 
+                                    className: 'text-gray-600 mb-2'
+                                }, `Your action: ${entry.input}`),
+                                React.createElement('p', { 
+                                    className: 'text-gray-800'
+                                }, entry.text)
+                            )
+                        ),
+
+                        React.createElement('form', {
+                            onSubmit: handleSubmit,
+                            className: 'flex gap-2 mb-4'
+                        },
+                            React.createElement('input', {
+                                type: 'text',
+                                value: currentInput,
+                                onChange: (e) => setCurrentInput(e.target.value),
+                                placeholder: 'What would you like to do?',
+                                className: 'input',
+                                disabled: isLoading
+                            }),
+                            React.createElement('button', {
+                                type: 'submit',
+                                disabled: isLoading,
+                                className: 'button'
+                            }, isLoading ? 'Generating...' : 'Continue')
+                        ),
+                        
+                        React.createElement('button', {
+                            onClick: () => startNewStory(apiKeys),
+                            disabled: isLoading,
+                            className: 'button'
+                        }, 'Start New Story')
+                    )
+            );
+        }
+
+        // Initialize the app
+        const rootElement = document.getElementById('root');
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
