@@ -283,7 +283,7 @@
                 const shuffledElements = [...template.elements].sort(() => 0.5 - Math.random());
                 const selectedElements = shuffledElements.slice(0, 2 + Math.floor(Math.random() * 2));
 
-                const prompt = `Create an immersive story opener in second-person perspective ("you"). 
+                const prompt = `Create an immersive story opener in second-person perspective ("you") with 6th grade level English. 
                 The scene takes place in a ${setting} where you ${situation}. 
                 Include vivid details about ${selectedElements.join(' and ')}. 
                 Write 100-150 words.
@@ -316,7 +316,7 @@
                 setIsLoading(true);
                 setError(null);
 
-                const prompt = `Continue the story based on this action: "${currentInput}"
+                const prompt = `Continue the story with 6th grade level English based on this action: "${currentInput}"
                 Create a vivid scene that follows naturally from this choice. 
                 Keep everything in second-person perspective ("you") with rich sensory details.
                 ### Response:`;
