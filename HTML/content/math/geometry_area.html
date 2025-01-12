@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry - Area</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.3.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const GeometryCalculator = () => {
+            const [shape, setShape] = useState('circle');
+            const [inputs, setInputs] = useState({
+                radius: '',
+                length: '',
+                width: '',
+                base: '',
+                height: '',
+            });
+            const [result, setResult] = useState(null);
+
+            const calculateArea = () => {
+                let area = 0;
+                switch(shape) {
+                    case 'circle':
+                        area = Math.PI * Math.pow(Number(inputs.radius), 2);
+                        break;
+                    case 'rectangle':
+                        area = Number(inputs.length) * Number(inputs.width);
+                        break;
+                    case 'triangle':
+                        area = (Number(inputs.base) * Number(inputs.height)) / 2;
+                        break;
+                }
+                setResult({
+                    type: 'area',
+                    value: area.toFixed(2)
+                });
+            };
+
+            const renderInputs = () => {
+                switch(shape) {
+                    case 'circle':
+                        return (
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-2">Radius:</label>
+                                <input
+                                    type="number"
+                                    value={inputs.radius}
+                                    onChange={(e) => setInputs({...inputs, radius: e.target.value})}
+                                    className="w-full p-2 border rounded"
+                                />
+                            </div>
+                        );
+                    case 'rectangle':
+                        return (
+                            <>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Length:</label>
+                                    <input
+                                        type="number"
+                                        value={inputs.length}
+                                        onChange={(e) => setInputs({...inputs, length: e.target.value})}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Width:</label>
+                                    <input
+                                        type="number"
+                                        value={inputs.width}
+                                        onChange={(e) => setInputs({...inputs, width: e.target.value})}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                </div>
+                            </>
+                        );
+                    case 'triangle':
+                        return (
+                            <>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Base:</label>
+                                    <input
+                                        type="number"
+                                        value={inputs.base}
+                                        onChange={(e) => setInputs({...inputs, base: e.target.value})}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Height:</label>
+                                    <input
+                                        type="number"
+                                        value={inputs.height}
+                                        onChange={(e) => setInputs({...inputs, height: e.target.value})}
+                                        className="w-full p-2 border rounded"
+                                    />
+                                </div>
+                            </>
+                        );
+                }
+            };
+
+            const ShapeVisualizer = () => {
+                // Constants for SVG canvas
+                const SVG_SIZE = 200;
+                const PADDING = 20;
+                const MAX_DIMENSION = SVG_SIZE - (2 * PADDING);
+
+                // Calculate scaled dimensions based on inputs
+                const getScaledDimensions = () => {
+                    switch(shape) {
+                        case 'circle': {
+                            const radius = Number(inputs.radius) || 0;
+                            const scale = Math.min(MAX_DIMENSION / (radius * 2), 1);
+                            return {
+                                radius: radius * scale,
+                                cx: SVG_SIZE / 2,
+                                cy: SVG_SIZE / 2
+                            };
+                        }
+                        case 'rectangle': {
+                            const length = Number(inputs.length) || 0;
+                            const width = Number(inputs.width) || 0;
+                            const scale = Math.min(
+                                MAX_DIMENSION / length,
+                                MAX_DIMENSION / width,
+                                1
+                            );
+                            return {
+                                width: length * scale,
+                                height: width * scale,
+                                x: (SVG_SIZE - (length * scale)) / 2,
+                                y: (SVG_SIZE - (width * scale)) / 2
+                            };
+                        }
+                        case 'triangle': {
+                            const base = Number(inputs.base) || 0;
+                            const height = Number(inputs.height) || 0;
+                            const scale = Math.min(
+                                MAX_DIMENSION / base,
+                                MAX_DIMENSION / height,
+                                1
+                            );
+                            const scaledBase = base * scale;
+                            const scaledHeight = height * scale;
+                            const startX = (SVG_SIZE - scaledBase) / 2;
+                            const startY = (SVG_SIZE - scaledHeight) / 2;
+                            return {
+                                path: `M${startX + (scaledBase/2)} ${startY} 
+                                      L${startX + scaledBase} ${startY + scaledHeight} 
+                                      L${startX} ${startY + scaledHeight} Z`
+                            };
+                        }
+                        default:
+                            return {};
+                    }
+                };
+
+                const dimensions = getScaledDimensions();
+
+                return (
+                    <div className="mt-4">
+                        <svg 
+                            width={SVG_SIZE} 
+                            height={SVG_SIZE} 
+                            className="border border-gray-300 bg-white"
+                            viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                        >
+                            {shape === 'circle' && dimensions.radius > 0 && (
+                                <circle
+                                    cx={dimensions.cx}
+                                    cy={dimensions.cy}
+                                    r={dimensions.radius}
+                                    fill="none"
+                                    stroke="#4299e1"
+                                    strokeWidth="2"
+                                />
+                            )}
+                            {shape === 'rectangle' && dimensions.width > 0 && dimensions.height > 0 && (
+                                <rect
+                                    x={dimensions.x}
+                                    y={dimensions.y}
+                                    width={dimensions.width}
+                                    height={dimensions.height}
+                                    fill="none"
+                                    stroke="#4299e1"
+                                    strokeWidth="2"
+                                />
+                            )}
+                            {shape === 'triangle' && dimensions.path && (
+                                <path
+                                    d={dimensions.path}
+                                    fill="none"
+                                    stroke="#4299e1"
+                                    strokeWidth="2"
+                                />
+                            )}
+                        </svg>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="max-w-2xl mx-auto p-6">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Geometry - Area</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                        <h2 className="text-xl font-semibold mb-4">Shape Calculator</h2>
+                        
+                        <div className="mb-4">
+                            <label className="block text-gray-700 mb-2">Select Shape:</label>
+                            <select
+                                value={shape}
+                                onChange={(e) => setShape(e.target.value)}
+                                className="w-full p-2 border rounded"
+                            >
+                                <option value="circle">Circle</option>
+                                <option value="rectangle">Rectangle</option>
+                                <option value="triangle">Triangle</option>
+                            </select>
+                        </div>
+
+                        {renderInputs()}
+
+                        <button
+                            onClick={calculateArea}
+                            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
+                        >
+                            Calculate Area
+                        </button>
+
+                        {result && (
+                            <div className="mt-4 p-4 bg-gray-100 rounded">
+                                <p className="text-lg">
+                                    Area: {result.value} square units
+                                </p>
+                            </div>
+                        )}
+
+                        <ShapeVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-6">
+                        <h2 className="text-xl font-semibold mb-4">Formulas and Explanations</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Circle (वृत्त)</h3>
+                                <p><strong>Formula:</strong> Area = πr²</p>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> To find the area of a circle, multiply pi (π ≈ 3.14159) by the square of the radius. The radius is the distance from the center of the circle to any point on its edge.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> वृत्तको क्षेत्रफल पत्ता लगाउन पाई (π ≈ 3.14159) लाई त्रिज्याको वर्गले गुणन गर्नुहोस्। त्रिज्या भनेको वृत्तको केन्द्र बिन्दुबाट वृत्तको कुनै पनि बिन्दुसम्मको दूरी हो।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Rectangle (आयत)</h3>
+                                <p><strong>Formula:</strong> Area = length × width</p>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> The area of a rectangle is calculated by multiplying its length by its width. This gives us the total space enclosed within the rectangle's four sides.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> आयतको क्षेत्रफल लम्बाई र चौडाईको गुणनफलबाट निकालिन्छ। यसले आयतको चार किनाराभित्रको कुल क्षेत्रफल दिन्छ।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Triangle (त्रिभुज)</h3>
+                                <p><strong>Formula:</strong> Area = (base × height) ÷ 2</p>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> To find a triangle's area, multiply the length of the base by the height (perpendicular distance from the base to the opposite vertex), then divide by 2. This works for any triangle shape.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> त्रिभुजको क्षेत्रफल पत्ता लगाउन आधार र उचाई (आधारबाट विपरीत शीर्ष बिन्दुसम्मको लम्बवत दूरी) को गुणनफललाई २ ले भाग गर्नुपर्छ। यो सूत्र सबै प्रकारका त्रिभुजहरूमा लागू हुन्छ।</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-8">
+                    <GeometryCalculator />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

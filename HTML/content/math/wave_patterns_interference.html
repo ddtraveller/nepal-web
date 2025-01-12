@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Patterns Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const WaveExplorer = () => {
+            const [amplitude1, setAmplitude1] = useState(50);
+            const [frequency1, setFrequency1] = useState(1);
+            const [phase1, setPhase1] = useState(0);
+            
+            const [amplitude2, setAmplitude2] = useState(50);
+            const [frequency2, setFrequency2] = useState(2);
+            const [phase2, setPhase2] = useState(0);
+            
+            const [showWave1, setShowWave1] = useState(true);
+            const [showWave2, setShowWave2] = useState(true);
+            const [showCombined, setShowCombined] = useState(true);
+
+            const WaveVisualizer = () => {
+                const SVG_WIDTH = 300;
+                const SVG_HEIGHT = 300;
+                const POINTS = 100;
+                const CENTER_Y = SVG_HEIGHT / 2;
+
+                const generateWavePoints = (amplitude, frequency, phase) => {
+                    const points = [];
+                    for (let i = 0; i <= POINTS; i++) {
+                        const x = (i / POINTS) * SVG_WIDTH;
+                        const angle = (i / POINTS) * Math.PI * 2 * frequency + phase;
+                        const y = CENTER_Y + (amplitude / 100) * (SVG_HEIGHT / 3) * Math.sin(angle);
+                        points.push({ x, y });
+                    }
+                    return points;
+                };
+
+                const wave1Points = generateWavePoints(amplitude1, frequency1, phase1 * Math.PI);
+                const wave2Points = generateWavePoints(amplitude2, frequency2, phase2 * Math.PI);
+                
+                const combinedPoints = wave1Points.map((point, i) => ({
+                    x: point.x,
+                    y: CENTER_Y + (point.y - CENTER_Y) + (wave2Points[i].y - CENTER_Y)
+                }));
+
+                const generatePath = (points) => {
+                    return `M ${points.map(p => `${p.x} ${p.y}`).join(' L ')}`;
+                };
+
+                return (
+                    <svg 
+                        width={SVG_WIDTH} 
+                        height={SVG_HEIGHT} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_WIDTH} ${SVG_HEIGHT}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_HEIGHT} />
+                                    <line x1="0" y1={pos} x2={SVG_WIDTH} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Center line */}
+                        <line 
+                            x1="0" 
+                            y1={CENTER_Y} 
+                            x2={SVG_WIDTH} 
+                            y2={CENTER_Y} 
+                            stroke="#9ca3af" 
+                            strokeWidth="1" 
+                            strokeDasharray="4"
+                        />
+
+                        {/* Waves */}
+                        {showWave1 && (
+                            <path
+                                d={generatePath(wave1Points)}
+                                fill="none"
+                                stroke="#4299e1"
+                                strokeWidth="2"
+                            />
+                        )}
+                        
+                        {showWave2 && (
+                            <path
+                                d={generatePath(wave2Points)}
+                                fill="none"
+                                stroke="#48bb78"
+                                strokeWidth="2"
+                            />
+                        )}
+                        
+                        {showCombined && (
+                            <path
+                                d={generatePath(combinedPoints)}
+                                fill="none"
+                                stroke="#ed64a6"
+                                strokeWidth="2"
+                                strokeDasharray="4"
+                            />
+                        )}
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Wave Patterns</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div className="border-b pb-4">
+                                <h3 className="font-semibold mb-2">Wave 1 (Blue)</h3>
+                                <div className="space-y-2">
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Amplitude:</label>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            value={amplitude1}
+                                            onChange={(e) => setAmplitude1(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Frequency:</label>
+                                        <input
+                                            type="range"
+                                            min="0.5"
+                                            max="4"
+                                            step="0.5"
+                                            value={frequency1}
+                                            onChange={(e) => setFrequency1(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Phase:</label>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="2"
+                                            step="0.1"
+                                            value={phase1}
+                                            onChange={(e) => setPhase1(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border-b pb-4">
+                                <h3 className="font-semibold mb-2">Wave 2 (Green)</h3>
+                                <div className="space-y-2">
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Amplitude:</label>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            value={amplitude2}
+                                            onChange={(e) => setAmplitude2(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Frequency:</label>
+                                        <input
+                                            type="range"
+                                            min="0.5"
+                                            max="4"
+                                            step="0.5"
+                                            value={frequency2}
+                                            onChange={(e) => setFrequency2(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">Phase:</label>
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="2"
+                                            step="0.1"
+                                            value={phase2}
+                                            onChange={(e) => setPhase2(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showWave1}
+                                        onChange={(e) => setShowWave1(e.target.checked)}
+                                    />
+                                    <span>Wave 1</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showWave2}
+                                        onChange={(e) => setShowWave2(e.target.checked)}
+                                    />
+                                    <span>Wave 2</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showCombined}
+                                        onChange={(e) => setShowCombined(e.target.checked)}
+                                    />
+                                    <span>Combined Wave</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <WaveVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Wave Properties</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Amplitude (आयाम)</h3>
+                                <p className="mb-2"><strong>English:</strong> Amplitude is the maximum displacement of a wave from its equilibrium position. It determines the wave's height and energy.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> आयाम तरंगको सन्तुलन स्थितिबाट अधिकतम विस्थापन हो। यसले तरंगको उचाई र ऊर्जा निर्धारण गर्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Frequency (आवृत्ति)</h3>
+                                <p className="mb-2"><strong>English:</strong> Frequency is the number of complete waves that pass a point in one second. It determines the wave's pitch in sound or color in light.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> आवृत्ति एक सेकेन्डमा कुनै बिन्दुबाट गुज्रने पूर्ण तरंगहरूको संख्या हो। यसले ध्वनिमा स्वर वा प्रकाशमा रंग निर्धारण गर्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Phase (कला)</h3>
+                                <p className="mb-2"><strong>English:</strong> Phase describes the position of a wave relative to its cycle. When waves are in phase, they combine constructively; when out of phase, they can cancel each other.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> कला तरंगको चक्रसँग सम्बन्धित स्थिति वर्णन गर्छ। जब तरंगहरू एकै कलामा हुन्छन्, तिनीहरू रचनात्मक रूपमा जोडिन्छन्; जब फरक कलामा हुन्छन्, एक अर्कालाई रद्द गर्न सक्छन्।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Interference (व्यतिकरण)</h3>
+                                <p className="mb-2"><strong>English:</strong> Wave interference occurs when two or more waves combine. Constructive interference amplifies the wave, while destructive interference reduces it.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> तरंग व्यतिकरण दुई वा बढी तरंगहरू मिल्दा हुन्छ। रचनात्मक व्यतिकरणले तरंग बढाउँछ, जबकि विनाशात्मक व्यतिकरणले घटाउँछ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <WaveExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

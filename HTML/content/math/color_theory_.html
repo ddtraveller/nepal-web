@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Theory Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const ColorExplorer = () => {
+            const [red, setRed] = useState(128);
+            const [green, setGreen] = useState(128);
+            const [blue, setBlue] = useState(128);
+
+            const rgbToHex = (r, g, b) => {
+                return '#' + [r, g, b].map(x => {
+                    const hex = x.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex;
+                }).join('');
+            };
+
+            const currentColor = rgbToHex(red, green, blue);
+
+            const ColorWheel = () => {
+                const SVG_SIZE = 300;
+                const CENTER = SVG_SIZE / 2;
+                const RADIUS = 120;
+
+                const generateColorWheel = () => {
+                    const segments = [];
+                    const steps = 360;
+                    
+                    for (let i = 0; i < steps; i++) {
+                        const angle = (i * Math.PI) / 180;
+                        const hue = i;
+                        
+                        // Convert HSL to RGB
+                        const h = hue;
+                        const s = 100;
+                        const l = 50;
+                        
+                        const c = (1 - Math.abs(2 * l / 100 - 1)) * s / 100;
+                        const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+                        const m = l / 100 - c / 2;
+                        
+                        let r, g, b;
+                        if (h < 60) { r = c; g = x; b = 0; }
+                        else if (h < 120) { r = x; g = c; b = 0; }
+                        else if (h < 180) { r = 0; g = c; b = x; }
+                        else if (h < 240) { r = 0; g = x; b = c; }
+                        else if (h < 300) { r = x; g = 0; b = c; }
+                        else { r = c; g = 0; b = x; }
+                        
+                        const color = rgbToHex(
+                            Math.round((r + m) * 255),
+                            Math.round((g + m) * 255),
+                            Math.round((b + m) * 255)
+                        );
+                        
+                        segments.push(
+                            <line
+                                key={i}
+                                x1={CENTER}
+                                y1={CENTER}
+                                x2={CENTER + RADIUS * Math.cos(angle)}
+                                y2={CENTER + RADIUS * Math.sin(angle)}
+                                stroke={color}
+                                strokeWidth="2"
+                            />
+                        );
+                    }
+                    return segments;
+                };
+
+                return (
+                    <svg width={SVG_SIZE} height={SVG_SIZE} className="border border-gray-300 bg-white">
+                        {generateColorWheel()}
+                        <circle cx={CENTER} cy={CENTER} r={RADIUS/4} 
+                                fill={currentColor} stroke="#000" strokeWidth="1" />
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Color Theory Explorer</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Red:</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="255"
+                                    value={red}
+                                    onChange={(e) => setRed(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{red}</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Green:</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="255"
+                                    value={green}
+                                    onChange={(e) => setGreen(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{green}</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Blue:</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="255"
+                                    value={blue}
+                                    onChange={(e) => setBlue(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{blue}</span>
+                            </div>
+
+                            <div className="h-24 rounded-lg" style={{ backgroundColor: currentColor }}></div>
+                            <p className="text-center font-mono">{currentColor}</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <ColorWheel />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Color Theory</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Primary Colors (प्राथमिक रंगहरू)</h3>
+                                <p className="mb-2"><strong>English:</strong> Primary colors (red, blue, and yellow) are the basic colors from which all other colors can be created.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> प्राथमिक रंगहरू (रातो, नीलो र पहेंलो) मौलिक रंगहरू हुन् जसबाट अन्य सबै रंगहरू बनाउन सकिन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Secondary Colors (द्वितीय रंगहरू)</h3>
+                                <p className="mb-2"><strong>English:</strong> Secondary colors (green, orange, and purple) are created by mixing two primary colors.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> द्वितीय रंगहरू (हरियो, सुन्तला र बैंगनी) दुई प्राथमिक रंगहरू मिसाएर बनाइन्छन्।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Color Mixing (रंग मिश्रण)</h3>
+                                <p className="mb-2"><strong>English:</strong> RGB color model uses red, green, and blue light to create all other colors. This is how digital screens display colors.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> RGB रंग मोडेलले रातो, हरियो र नीलो प्रकाश प्रयोग गरेर सबै रंगहरू सिर्जना गर्छ। डिजिटल स्क्रिनहरूले यसरी नै रंगहरू देखाउँछन्।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Color Wheel (रंग चक्र)</h3>
+                                <p className="mb-2"><strong>English:</strong> The color wheel shows the relationships between colors and helps in understanding color harmony and complementary colors.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> रंग चक्रले रंगहरू बीचको सम्बन्ध देखाउँछ र रंग सामञ्जस्य र पूरक रंगहरू बुझ्न मद्दत गर्छ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <ColorExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

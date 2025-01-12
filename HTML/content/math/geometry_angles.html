@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry - Angles and Triangles</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.3.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const AngleExplorer = () => {
+            const [section, setSection] = useState('angles');
+            const [angle1, setAngle1] = useState(30);
+            const [triangleType, setTriangleType] = useState('equilateral');
+
+            const renderAngleArc = (cx, cy, radius, startAngle, endAngle, color) => {
+                const start = {
+                    x: cx + radius * Math.cos(startAngle * Math.PI / 180),
+                    y: cy - radius * Math.sin(startAngle * Math.PI / 180)
+                };
+                const end = {
+                    x: cx + radius * Math.cos(endAngle * Math.PI / 180),
+                    y: cy - radius * Math.sin(endAngle * Math.PI / 180)
+                };
+                const largeArc = endAngle - startAngle <= 180 ? 0 : 1;
+
+                return (
+                    <path
+                        d={`M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y} L ${cx} ${cy}`}
+                        fill={color}
+                        fillOpacity="0.2"
+                        stroke={color}
+                        strokeWidth="2"
+                    />
+                );
+            };
+
+            const AnglePairVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER_X = SVG_SIZE / 2;
+                const CENTER_Y = SVG_SIZE / 2;
+                const RADIUS = 100;
+
+                return (
+                    <svg width={SVG_SIZE} height={SVG_SIZE} className="border border-gray-300 bg-white">
+                        {/* First angle */}
+                        {renderAngleArc(CENTER_X, CENTER_Y, RADIUS, 0, angle1, "#4299e1")}
+                        
+                        {/* Complementary angle (90° - angle1) */}
+                        {renderAngleArc(CENTER_X, CENTER_Y, RADIUS, angle1, 90, "#48bb78")}
+                        
+                        {/* Supplementary angle (180° - angle1) */}
+                        {renderAngleArc(CENTER_X, CENTER_Y, RADIUS + 30, angle1, 180, "#ed64a6")}
+                        
+                        {/* Angle labels */}
+                        <text x={CENTER_X + 50} y={CENTER_Y - 20} fill="#4299e1">{angle1}°</text>
+                        <text x={CENTER_X + 20} y={CENTER_Y - 60} fill="#48bb78">{90 - angle1}°</text>
+                        <text x={CENTER_X - 70} y={CENTER_Y - 20} fill="#ed64a6">{180 - angle1}°</text>
+                    </svg>
+                );
+            };
+
+            const TriangleVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER_X = SVG_SIZE / 2;
+                const CENTER_Y = SVG_SIZE / 2;
+                const RADIUS = 100;
+
+                const getTrianglePoints = () => {
+                    switch(triangleType) {
+                        case 'equilateral':
+                            return {
+                                points: `${CENTER_X},${CENTER_Y - RADIUS} 
+                                        ${CENTER_X + RADIUS * Math.cos(210 * Math.PI / 180)},${CENTER_Y - RADIUS * Math.sin(210 * Math.PI / 180)} 
+                                        ${CENTER_X + RADIUS * Math.cos(330 * Math.PI / 180)},${CENTER_Y - RADIUS * Math.sin(330 * Math.PI / 180)}`,
+                                angles: [60, 60, 60]
+                            };
+                        case 'right':
+                            return {
+                                points: `${CENTER_X - RADIUS/2},${CENTER_Y - RADIUS/2} 
+                                        ${CENTER_X - RADIUS/2},${CENTER_Y + RADIUS/2} 
+                                        ${CENTER_X + RADIUS/2},${CENTER_Y + RADIUS/2}`,
+                                angles: [90, 45, 45]
+                            };
+                        case 'isosceles':
+                            return {
+                                points: `${CENTER_X},${CENTER_Y - RADIUS} 
+                                        ${CENTER_X - RADIUS * 0.8},${CENTER_Y + RADIUS * 0.5} 
+                                        ${CENTER_X + RADIUS * 0.8},${CENTER_Y + RADIUS * 0.5}`,
+                                angles: [60, 60, 60]
+                            };
+                        default:
+                            return {points: '', angles: []};
+                    }
+                };
+
+                const {points, angles} = getTrianglePoints();
+
+                return (
+                    <svg width={SVG_SIZE} height={SVG_SIZE} className="border border-gray-300 bg-white">
+                        <polygon
+                            points={points}
+                            fill="none"
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+                        {/* Add angle markers and labels here */}
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto p-6">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Geometry - Angles and Triangles</h1>
+                    
+                    <div className="mb-6">
+                        <div className="flex space-x-4">
+                            <button
+                                onClick={() => setSection('angles')}
+                                className={`px-4 py-2 rounded ${section === 'angles' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                            >
+                                Angle Relationships
+                            </button>
+                            <button
+                                onClick={() => setSection('triangles')}
+                                className={`px-4 py-2 rounded ${section === 'triangles' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                            >
+                                Triangle Types
+                            </button>
+                        </div>
+                    </div>
+
+                    {section === 'angles' ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-white rounded-lg shadow-lg p-6">
+                                <h2 className="text-xl font-semibold mb-4">Angle Controls</h2>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Primary Angle:</label>
+                                    <input
+                                        type="range"
+                                        min="1"
+                                        max="89"
+                                        value={angle1}
+                                        onChange={(e) => setAngle1(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">{angle1}°</span>
+                                </div>
+
+                                <div className="mt-6 space-y-4">
+                                    <div className="p-4 bg-blue-100 rounded">
+                                        <p><strong>Primary Angle:</strong> {angle1}°</p>
+                                    </div>
+                                    <div className="p-4 bg-green-100 rounded">
+                                        <p><strong>Complementary Angle:</strong> {90 - angle1}°</p>
+                                        <p className="text-sm text-gray-600">Two angles are complementary when they add up to 90°</p>
+                                    </div>
+                                    <div className="p-4 bg-pink-100 rounded">
+                                        <p><strong>Supplementary Angle:</strong> {180 - angle1}°</p>
+                                        <p className="text-sm text-gray-600">Two angles are supplementary when they add up to 180°</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-lg shadow-lg p-6">
+                                <h2 className="text-xl font-semibold mb-4">Visualization</h2>
+                                <AnglePairVisualizer />
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-white rounded-lg shadow-lg p-6">
+                                <h2 className="text-xl font-semibold mb-4">Triangle Types</h2>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 mb-2">Select Triangle Type:</label>
+                                    <select
+                                        value={triangleType}
+                                        onChange={(e) => setTriangleType(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="equilateral">Equilateral Triangle</option>
+                                        <option value="isosceles">Isosceles Triangle</option>
+                                        <option value="right">Right Triangle</option>
+                                    </select>
+                                </div>
+
+                                <div className="mt-6 space-y-4">
+                                    <div className="p-4 bg-blue-100 rounded">
+                                        <h3 className="font-semibold mb-2">Properties</h3>
+                                        {triangleType === 'equilateral' && (
+                                            <>
+                                                <p>• All sides are equal in length</p>
+                                                <p>• All angles are 60 degrees</p>
+                                                <p>• All angles are equal</p>
+                                            </>
+                                        )}
+                                        {triangleType === 'isosceles' && (
+                                            <>
+                                                <p>• Two sides are equal in length</p>
+                                                <p>• Two angles are equal</p>
+                                                <p>• Has one line of symmetry</p>
+                                            </>
+                                        )}
+                                        {triangleType === 'right' && (
+                                            <>
+                                                <p>• One angle is 90 degrees</p>
+                                                <p>• Pythagorean theorem applies: a² + b² = c²</p>
+                                                <p>• The longest side is called the hypotenuse</p>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-lg shadow-lg p-6">
+                                <h2 className="text-xl font-semibold mb-4">Visualization</h2>
+                                <TriangleVisualizer />
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
+                        <h2 className="text-xl font-semibold mb-4">Explanations</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Angles (कोण)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Angles are measured in degrees, from 0° to 360°. Complementary angles add up to 90° (a right angle), while supplementary angles add up to 180° (a straight line).</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> कोणहरू डिग्रीमा मापन गरिन्छ, ०° देखि ३६०° सम्म। परिपूरक कोणहरू ९०° (समकोण) को योगफल बनाउँछन्, जबकि पूरक कोणहरू १८०° (सीधा रेखा) को योगफल बनाउँछन्।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Triangles (त्रिभुज)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> A triangle is a three-sided polygon. The sum of angles in any triangle is always 180°. Special triangles include equilateral (all sides equal), isosceles (two sides equal), and right triangles (one 90° angle).</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> त्रिभुज एक तीन भुजा भएको बहुभुज हो। कुनै पनि त्रिभुजको कोणहरूको योगफल सधैं १८०° हुन्छ। विशेष त्रिभुजहरूमा समबाहु (सबै भुजा बराबर), समद्विबाहु (दुई भुजा बराबर), र समकोण त्रिभुज (एउटा ९०° कोण) समावेश छन्।</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-8">
+                    <AngleExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

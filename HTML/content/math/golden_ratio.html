@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Ratio Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const GoldenRatioExplorer = () => {
+            const [iterations, setIterations] = useState(5);
+            const [visualizationType, setVisualizationType] = useState('spiral');
+            const [showGuides, setShowGuides] = useState(true);
+
+            const calculateFibonacciSequence = (count) => {
+                const sequence = [1, 1];
+                while (sequence.length < count) {
+                    sequence.push(sequence[sequence.length - 1] + sequence[sequence.length - 2]);
+                }
+                return sequence;
+            };
+
+            const GoldenRatioVisualization = () => {
+                const SVG_SIZE = 400;
+                const CENTER = SVG_SIZE / 2;
+                const BASE_SIZE = 200;
+
+                const renderSpiral = () => {
+                    const sequence = calculateFibonacciSequence(iterations + 2);
+                    let path = '';
+                    let lastX = CENTER, lastY = CENTER;
+
+                    // Directions: 0-right, 1-down, 2-left, 3-up
+                    let currentDir = 0;
+                    let stepCount = 1;
+                    let currentStep = 0;
+                    let dirChanges = 0;
+
+                    for (let i = 1; i < sequence.length; i++) {
+                        const size = sequence[i];
+                        let newX = lastX, newY = lastY;
+
+                        switch(currentDir) {
+                            case 0: // Right
+                                newX += size;
+                                break;
+                            case 1: // Down
+                                newY += size;
+                                break;
+                            case 2: // Left
+                                newX -= size;
+                                break;
+                            case 3: // Up
+                                newY -= size;
+                                break;
+                        }
+
+                        // Create arc segment
+                        path += `A ${size/2} ${size/2} 0 0 1 ${newX} ${newY}`;
+
+                        lastX = newX;
+                        lastY = newY;
+
+                        // Change direction
+                        currentStep++;
+                        if (currentStep === stepCount) {
+                            currentDir = (currentDir + 1) % 4;
+                            currentStep = 0;
+                            dirChanges++;
+
+                            // Increase step count every two direction changes
+                            if (dirChanges % 2 === 0) {
+                                stepCount++;
+                            }
+                        }
+                    }
+
+                    return path;
+                };
+
+                const renderRectangles = () => {
+                    const sequence = calculateFibonacciSequence(iterations + 2);
+                    const rectangles = [];
+                    let x = CENTER - BASE_SIZE/2;
+                    let y = CENTER - BASE_SIZE/2;
+                    let currentDir = 0;
+                    let stepCount = 1;
+                    let currentStep = 0;
+                    let dirChanges = 0;
+
+                    for (let i = 1; i < sequence.length; i++) {
+                        const width = sequence[i-1];
+                        const height = sequence[i];
+
+                        rectangles.push(
+                            <rect
+                                key={i}
+                                x={x}
+                                y={y}
+                                width={width}
+                                height={height}
+                                fill="none"
+                                stroke="#4299e1"
+                                strokeWidth="2"
+                            />
+                        );
+
+                        switch(currentDir) {
+                            case 0: // Right
+                                x += width;
+                                break;
+                            case 1: // Down
+                                y += height;
+                                break;
+                            case 2: // Left
+                                x -= width;
+                                break;
+                            case 3: // Up
+                                y -= height;
+                                break;
+                        }
+
+                        currentStep++;
+                        if (currentStep === stepCount) {
+                            currentDir = (currentDir + 1) % 4;
+                            currentStep = 0;
+                            dirChanges++;
+
+                            if (dirChanges % 2 === 0) {
+                                stepCount++;
+                            }
+                        }
+                    }
+
+                    return rectangles;
+                };
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Background grid */}
+                        {showGuides && Array.from({length: 11}, (_, i) => i * 40).map(pos => (
+                            <React.Fragment key={pos}>
+                                <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} stroke="#e5e7eb" strokeWidth="0.5" />
+                                <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} stroke="#e5e7eb" strokeWidth="0.5" />
+                            </React.Fragment>
+                        ))}
+
+                        {visualizationType === 'spiral' ? (
+                            <path
+                                d={`M ${CENTER} ${CENTER} ${renderSpiral()}`}
+                                fill="none"
+                                stroke="#4299e1"
+                                strokeWidth="2"
+                            />
+                        ) : (
+                            renderRectangles()
+                        )}
+                    </svg>
+                );
+            };
+
+            const calculateGoldenRatio = () => {
+                const sequence = calculateFibonacciSequence(iterations + 2);
+                const lastTwo = sequence.slice(-2);
+                const ratio = lastTwo[1] / lastTwo[0];
+                return {
+                    sequence,
+                    ratio: ratio.toFixed(4),
+                    approximation: Math.round(ratio * 1000) / 1000
+                };
+            };
+
+            const goldenRatioData = calculateGoldenRatio();
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Golden Ratio Explorer</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Iterations:</label>
+                                <input
+                                    type="range"
+                                    min="3"
+                                    max="10"
+                                    value={iterations}
+                                    onChange={(e) => setIterations(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{iterations} iterations</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Visualization Type:</label>
+                                <select 
+                                    value={visualizationType}
+                                    onChange={(e) => setVisualizationType(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option value="spiral">Spiral</option>
+                                    <option value="rectangles">Rectangles</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showGuides}
+                                        onChange={(e) => setShowGuides(e.target.checked)}
+                                    />
+                                    <span>Show Grid</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <GoldenRatioVisualization />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-2">Fibonacci Sequence and Golden Ratio</h2>
+                        <div className="space-y-3 text-sm">
+                            <p><strong>Sequence:</strong> {goldenRatioData.sequence.join(' → ')}</p>
+                            <p>
+                                <strong>Ratio (φ):</strong> {goldenRatioData.ratio} 
+                                <span className="ml-2 text-gray-600">(Approximation: {goldenRatioData.approximation})</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding the Golden Ratio (सुनौलो अनुपात)</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">What is the Golden Ratio? (सुनौलो अनुपात के हो?)</h3>
+                                <p className="mb-2">
+                                    <strong>English:</strong> The Golden Ratio (φ) is a special number approximately equal to 1.618, found by dividing a line into two parts so that the longer part divided by the shorter part is equal to the whole length divided by the longer part.
+                                </p>
+                                <p className="font-normal">
+                                    <strong>नेपाली:</strong> सुनौलो अनुपात (φ) एक विशेष संख्या हो जुन लगभग १.६१८ बराबर हुन्छ, जुन एउटा रेखालाई दुई भागमा विभाजन गरेर पाइन्छ ताकि लामो भाग र छोटो भागको अनुपात, पूरै रेखाको लामो भागसँग समान हुन्छ।
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Mathematical Properties (गणितीय गुणहरू)</h3>
+                                <div className="bg-blue-50 p-3 rounded">
+                                    <p><strong>Golden Ratio Formula:</strong> φ = (1 + √5) / 2</p>
+                                    <p className="text-sm mt-2">
+                                        φ ≈ 1.618033988749895
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Natural Occurrences (प्राकृतिक घटनाहरू)</h3>
+                                <ul className="list-disc list-inside">
+                                    <li>
+                                        <strong>English:</strong> Flower petals
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> फूलका पंखुड़ीहरू
+                                    </li>
+                                    <li>
+                                        <strong>English:</strong> Spiral patterns in shells
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> सीपमा स्पाइरल ढाँचाहरू
+                                    </li>
+                                    <li>
+                                        <strong>English:</strong> Human body proportions
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> मानव शरीरको अनुपातहरू
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <GoldenRatioExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

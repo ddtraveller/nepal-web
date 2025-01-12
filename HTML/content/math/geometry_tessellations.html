@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry - Tessellations and Patterns</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.3.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const TessellationExplorer = () => {
+            const [pattern, setPattern] = useState('regular');
+            const [shape, setShape] = useState('hexagon');
+            const [gridSize, setGridSize] = useState(5);
+            const [spacing, setSpacing] = useState(40);
+            const [rotation, setRotation] = useState(0);
+            const [showGrid, setShowGrid] = useState(true);
+            const [color1, setColor1] = useState('#4299e1');
+            const [color2, setColor2] = useState('#48bb78');
+
+            const PatternVisualizer = () => {
+                const SVG_SIZE = 400;
+                const PADDING = 20;
+
+                const getRegularPolygonPoints = (cx, cy, radius, sides, rotation = 0) => {
+                    const points = [];
+                    for (let i = 0; i < sides; i++) {
+                        const angle = (i * 360 / sides + rotation) * Math.PI / 180;
+                        points.push(`${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`);
+                    }
+                    return points.join(' ');
+                };
+
+                const createPattern = () => {
+                    const patterns = [];
+                    const tileSize = spacing;
+                    const radius = tileSize / 2;
+                    
+                    if (pattern === 'regular') {
+                        const sides = shape === 'triangle' ? 3 : shape === 'square' ? 4 : 6;
+                        
+                        for (let row = 0; row < gridSize; row++) {
+                            for (let col = 0; col < gridSize; col++) {
+                                let x = col * tileSize + PADDING + radius;
+                                let y = row * tileSize + PADDING + radius;
+                                
+                                // Offset every other row for hexagons
+                                if (shape === 'hexagon' && row % 2 === 1) {
+                                    x += radius;
+                                }
+
+                                patterns.push(
+                                    <polygon
+                                        key={`${row}-${col}`}
+                                        points={getRegularPolygonPoints(x, y, radius * 0.95, sides, rotation)}
+                                        fill={(row + col) % 2 === 0 ? color1 : color2}
+                                        stroke="white"
+                                        strokeWidth="2"
+                                    />
+                                );
+                            }
+                        }
+                    } else if (pattern === 'semiregular') {
+                        // Create a mix of shapes
+                        for (let row = 0; row < gridSize; row++) {
+                            for (let col = 0; col < gridSize; col++) {
+                                let x = col * tileSize + PADDING + radius;
+                                let y = row * tileSize + PADDING + radius;
+                                
+                                const sides = ((row + col) % 2 === 0) ? 6 : 3;
+                                
+                                patterns.push(
+                                    <polygon
+                                        key={`${row}-${col}`}
+                                        points={getRegularPolygonPoints(x, y, radius * 0.95, sides, rotation)}
+                                        fill={sides === 6 ? color1 : color2}
+                                        stroke="white"
+                                        strokeWidth="2"
+                                    />
+                                );
+                            }
+                        }
+                    }
+
+                    return patterns;
+                };
+
+                return (
+                    <div className="relative">
+                        <svg 
+                            width={SVG_SIZE} 
+                            height={SVG_SIZE} 
+                            className="border border-gray-300 bg-white"
+                            viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                        >
+                            {/* Background grid */}
+                            {showGrid && (
+                                <g stroke="#e5e7eb" strokeWidth="0.5">
+                                    {Array.from({length: gridSize + 1}, (_, i) => i * spacing + PADDING).map(pos => (
+                                        <React.Fragment key={pos}>
+                                            <line x1={pos} y1={PADDING} x2={pos} y2={SVG_SIZE - PADDING} />
+                                            <line x1={PADDING} y1={pos} x2={SVG_SIZE - PADDING} y2={pos} />
+                                        </React.Fragment>
+                                    ))}
+                                </g>
+                            )}
+                            
+                            {/* Patterns */}
+                            {createPattern()}
+                        </svg>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto p-6">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Geometry - Tessellations and Patterns</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-lg shadow-lg p-6">
+                            <h2 className="text-xl font-semibold mb-4">Pattern Controls</h2>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Pattern Type:</label>
+                                    <select
+                                        value={pattern}
+                                        onChange={(e) => setPattern(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="regular">Regular Tessellation</option>
+                                        <option value="semiregular">Semi-Regular Tessellation</option>
+                                    </select>
+                                </div>
+
+                                {pattern === 'regular' && (
+                                    <div>
+                                        <label className="block text-gray-700 mb-2">Base Shape:</label>
+                                        <select
+                                            value={shape}
+                                            onChange={(e) => setShape(e.target.value)}
+                                            className="w-full p-2 border rounded"
+                                        >
+                                            <option value="triangle">Triangle</option>
+                                            <option value="square">Square</option>
+                                            <option value="hexagon">Hexagon</option>
+                                        </select>
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Grid Size:</label>
+                                    <input
+                                        type="range"
+                                        min="3"
+                                        max="8"
+                                        value={gridSize}
+                                        onChange={(e) => setGridSize(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">{gridSize}x{gridSize}</span>
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Spacing:</label>
+                                    <input
+                                        type="range"
+                                        min="30"
+                                        max="60"
+                                        value={spacing}
+                                        onChange={(e) => setSpacing(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Rotation:</label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="360"
+                                        value={rotation}
+                                        onChange={(e) => setRotation(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">{rotation}°</span>
+                                </div>
+
+                                <div className="flex space-x-4">
+                                    <div>
+                                        <label className="block text-gray-700 mb-2">Color 1:</label>
+                                        <input
+                                            type="color"
+                                            value={color1}
+                                            onChange={(e) => setColor1(e.target.value)}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 mb-2">Color 2:</label>
+                                        <input
+                                            type="color"
+                                            value={color2}
+                                            onChange={(e) => setColor2(e.target.value)}
+                                            className="w-full"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="mt-4">
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={showGrid}
+                                            onChange={(e) => setShowGrid(e.target.checked)}
+                                        />
+                                        <span>Show Grid</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg shadow-lg p-6">
+                            <h2 className="text-xl font-semibold mb-4">Pattern Preview</h2>
+                            <PatternVisualizer />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
+                        <h2 className="text-xl font-semibold mb-4">Understanding Tessellations</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Regular Tessellations (नियमित टेसेलेसन)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Regular tessellations use a single regular polygon repeated in a pattern that covers a plane with no gaps or overlaps. Only three regular polygons can create regular tessellations: equilateral triangles, squares, and regular hexagons.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> नियमित टेसेलेसनले एउटै नियमित बहुभुजलाई दोहोर्याएर कुनै खाली ठाउँ वा खप्टिने बिना समतलमा ढाक्ने ढाँचा बनाउँछ। केवल तीन नियमित बहुभुजहरूले नियमित टेसेलेसन बनाउन सक्छन्: समबाहु त्रिभुज, वर्ग, र नियमित षट्भुज।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Semi-Regular Tessellations (अर्ध-नियमित टेसेलेसन)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Semi-regular tessellations use two or more different regular polygons to create a pattern. At each vertex, the arrangement of polygons must be identical. These patterns create more complex and interesting designs while still maintaining mathematical properties.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> अर्ध-नियमित टेसेलेसनले ढाँचा बनाउन दुई वा बढी फरक नियमित बहुभुजहरू प्रयोग गर्छ। प्रत्येक शीर्ष बिन्दुमा, बहुभुजहरूको व्यवस्था एकै हुनुपर्छ। यी ढाँचाहरूले गणितीय गुणहरू कायम राख्दै जटिल र रोचक डिजाइनहरू सिर्जना गर्छन्।</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-blue-50 p-4 rounded">
+                                <h3 className="font-semibold text-lg mb-2">Properties of Tessellations</h3>
+                                <ul className="list-disc list-inside space-y-2">
+                                    <li>Cover an entire plane without gaps or overlaps</li>
+                                    <li>Can continue infinitely in all directions</li>
+                                    <li>Regular tessellations have consistent vertex arrangements</li>
+                                    <li>Interior angles at each vertex must sum to exactly 360°</li>
+                                    <li>Found frequently in nature and human-made designs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-8">
+                    <TessellationExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

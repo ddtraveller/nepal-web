@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Properties Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const CircleExplorer = () => {
+            const [radius, setRadius] = useState(50);
+            const [showRadius, setShowRadius] = useState(true);
+            const [showDiameter, setShowDiameter] = useState(true);
+            const [showCircumference, setShowCircumference] = useState(true);
+            const [showArea, setShowArea] = useState(true);
+
+            const CircleVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER = SVG_SIZE / 2;
+                const MAX_RADIUS = 120;
+                const scaledRadius = (radius / 100) * MAX_RADIUS;
+
+                const getCircumferencePoints = () => {
+                    const points = [];
+                    const segments = 36;
+                    for (let i = 0; i <= segments; i++) {
+                        const angle = (i * 2 * Math.PI) / segments;
+                        points.push({
+                            x: CENTER + scaledRadius * Math.cos(angle),
+                            y: CENTER + scaledRadius * Math.sin(angle)
+                        });
+                    }
+                    return points;
+                };
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                    <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Circle */}
+                        <circle
+                            cx={CENTER}
+                            cy={CENTER}
+                            r={scaledRadius}
+                            fill="none"
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+
+                        {/* Center point */}
+                        <circle
+                            cx={CENTER}
+                            cy={CENTER}
+                            r="3"
+                            fill="#4299e1"
+                        />
+
+                        {/* Radius */}
+                        {showRadius && (
+                            <g>
+                                <line
+                                    x1={CENTER}
+                                    y1={CENTER}
+                                    x2={CENTER + scaledRadius}
+                                    y2={CENTER}
+                                    stroke="#48bb78"
+                                    strokeWidth="2"
+                                />
+                                <text
+                                    x={CENTER + scaledRadius/2}
+                                    y={CENTER - 10}
+                                    textAnchor="middle"
+                                    className="text-sm"
+                                    fill="#48bb78"
+                                >
+                                    r = {radius}
+                                </text>
+                            </g>
+                        )}
+
+                        {/* Diameter */}
+                        {showDiameter && (
+                            <g>
+                                <line
+                                    x1={CENTER - scaledRadius}
+                                    y1={CENTER}
+                                    x2={CENTER + scaledRadius}
+                                    y2={CENTER}
+                                    stroke="#ed64a6"
+                                    strokeWidth="2"
+                                    strokeDasharray="4"
+                                />
+                                <text
+                                    x={CENTER}
+                                    y={CENTER + 20}
+                                    textAnchor="middle"
+                                    className="text-sm"
+                                    fill="#ed64a6"
+                                >
+                                    d = {radius * 2}
+                                </text>
+                            </g>
+                        )}
+
+                        {/* Circumference markers */}
+                        {showCircumference && (
+                            <circle
+                                cx={CENTER}
+                                cy={CENTER}
+                                r={scaledRadius}
+                                fill="none"
+                                stroke="#9f7aea"
+                                strokeWidth="4"
+                                strokeDasharray="8 4"
+                            >
+                                <title>Circumference: {(2 * Math.PI * radius).toFixed(2)}</title>
+                            </circle>
+                        )}
+
+                        {/* Area visualization */}
+                        {showArea && (
+                            <circle
+                                cx={CENTER}
+                                cy={CENTER}
+                                r={scaledRadius}
+                                fill="#4299e1"
+                                opacity="0.1"
+                            />
+                        )}
+                    </svg>
+                );
+            };
+
+            const calculateCircleProperties = () => {
+                return {
+                    diameter: (radius * 2).toFixed(2),
+                    circumference: (2 * Math.PI * radius).toFixed(2),
+                    area: (Math.PI * radius * radius).toFixed(2)
+                };
+            };
+
+            const properties = calculateCircleProperties();
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Circle Properties</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Radius:</label>
+                                <input
+                                    type="range"
+                                    min="10"
+                                    max="100"
+                                    value={radius}
+                                    onChange={(e) => setRadius(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{radius} units</span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showRadius}
+                                        onChange={(e) => setShowRadius(e.target.checked)}
+                                    />
+                                    <span>Radius</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showDiameter}
+                                        onChange={(e) => setShowDiameter(e.target.checked)}
+                                    />
+                                    <span>Diameter</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showCircumference}
+                                        onChange={(e) => setShowCircumference(e.target.checked)}
+                                    />
+                                    <span>Circumference</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showArea}
+                                        onChange={(e) => setShowArea(e.target.checked)}
+                                    />
+                                    <span>Area</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <CircleVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-2">Measurements</h2>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p><strong>Radius (r):</strong> {radius}</p>
+                                <p><strong>Diameter (d):</strong> {properties.diameter}</p>
+                            </div>
+                            <div>
+                                <p><strong>Circumference (C):</strong> {properties.circumference}</p>
+                                <p><strong>Area (A):</strong> {properties.area}</p>
+                            </div>
+                        </div>
+                        <div className="mt-4 p-3 bg-blue-50 rounded text-sm">
+                            <p><strong>Formulas:</strong></p>
+                            <p>d = 2r</p>
+                            <p>C = 2πr</p>
+                            <p>A = πr²</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Circle Properties</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Radius (त्रिज्या)</h3>
+                                <p className="mb-2"><strong>English:</strong> The radius is the distance from the center of the circle to any point on its edge. All radii in a circle are equal in length.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> त्रिज्या वृत्तको केन्द्रबिन्दुबाट वृत्तको परिधिको कुनै पनि बिन्दुसम्मको दूरी हो। एउटै वृत्तका सबै त्रिज्याहरूको लम्बाई बराबर हुन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Diameter (व्यास)</h3>
+                                <p className="mb-2"><strong>English:</strong> The diameter is a line segment that passes through the center of the circle and has its endpoints on the circle. It is twice the length of the radius.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> व्यास वृत्तको केन्द्रबिन्दु भएर जाने र वृत्तको परिधिमा अन्त्य हुने रेखाखण्ड हो। यो त्रिज्याको दोब्बर लम्बाइको हुन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Circumference (परिधि)</h3>
+                                <p className="mb-2"><strong>English:</strong> The circumference is the total distance around the circle. It equals 2π times the radius, where π (pi) is approximately 3.14159.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> परिधि वृत्तको वरिपरिको कुल दूरी हो। यो त्रिज्याको २π गुणा बराबर हुन्छ, जहाँ π (पाई) लगभग ३.१४१५९ हुन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Area (क्षेत्रफल)</h3>
+                                <p className="mb-2"><strong>English:</strong> The area is the total space enclosed by the circle. It equals π times the square of the radius (πr²).</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> क्षेत्रफल वृत्तभित्र समेटिएको कुल क्षेत्र हो। यो त्रिज्याको वर्गलाई π ले गुणन गर्दा (πr²) प्राप्त हुन्छ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <CircleExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

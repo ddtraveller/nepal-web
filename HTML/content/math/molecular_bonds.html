@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Bonds Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const MoleculeExplorer = () => {
+            const [bondType, setBondType] = useState('ionic');
+            const [element1, setElement1] = useState('Na');
+            const [element2, setElement2] = useState('Cl');
+            const [showElectrons, setShowElectrons] = useState(true);
+            const [showCharges, setShowCharges] = useState(true);
+
+            const elements = {
+                'H': { color: '#CCCCCC', electrons: 1, size: 25 },
+                'Na': { color: '#AB5CF2', electrons: 1, size: 35 },
+                'Cl': { color: '#16A34A', electrons: 7, size: 30 },
+                'O': { color: '#EF4444', electrons: 6, size: 30 },
+                'N': { color: '#3B82F6', electrons: 5, size: 30 },
+                'C': { color: '#374151', electrons: 4, size: 30 }
+            };
+
+            const MoleculeVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER = SVG_SIZE / 2;
+
+                const drawBond = () => {
+                    const spacing = elements[element1].size + elements[element2].size + 20;
+                    
+                    if (bondType === 'ionic') {
+                        return (
+                            <g>
+                                <line 
+                                    x1={CENTER - spacing/2} 
+                                    y1={CENTER}
+                                    x2={CENTER + spacing/2} 
+                                    y2={CENTER}
+                                    stroke="#9CA3AF"
+                                    strokeWidth="1"
+                                    strokeDasharray="4"
+                                />
+                                {showCharges && (
+                                    <>
+                                        <text x={CENTER - spacing/2 - 5} y={CENTER - 20} className="text-sm">+</text>
+                                        <text x={CENTER + spacing/2 - 5} y={CENTER - 20} className="text-sm">-</text>
+                                    </>
+                                )}
+                            </g>
+                        );
+                    } else if (bondType === 'covalent') {
+                        return (
+                            <line 
+                                x1={CENTER - spacing/2} 
+                                y1={CENTER}
+                                x2={CENTER + spacing/2} 
+                                y2={CENTER}
+                                stroke="#374151"
+                                strokeWidth="3"
+                            />
+                        );
+                    } else if (bondType === 'double') {
+                        return (
+                            <g>
+                                <line 
+                                    x1={CENTER - spacing/2} 
+                                    y1={CENTER - 5}
+                                    x2={CENTER + spacing/2} 
+                                    y2={CENTER - 5}
+                                    stroke="#374151"
+                                    strokeWidth="3"
+                                />
+                                <line 
+                                    x1={CENTER - spacing/2} 
+                                    y1={CENTER + 5}
+                                    x2={CENTER + spacing/2} 
+                                    y2={CENTER + 5}
+                                    stroke="#374151"
+                                    strokeWidth="3"
+                                />
+                            </g>
+                        );
+                    }
+                };
+
+                const drawElectrons = (element, x, y) => {
+                    if (!showElectrons) return null;
+
+                    const electrons = elements[element].electrons;
+                    const radius = elements[element].size + 10;
+                    const electronPositions = [];
+
+                    for (let i = 0; i < electrons; i++) {
+                        const angle = (i * 2 * Math.PI) / 8;
+                        electronPositions.push({
+                            x: x + radius * Math.cos(angle),
+                            y: y + radius * Math.sin(angle)
+                        });
+                    }
+
+                    return electronPositions.map((pos, i) => (
+                        <circle
+                            key={i}
+                            cx={pos.x}
+                            cy={pos.y}
+                            r="3"
+                            fill="#000"
+                        />
+                    ));
+                };
+
+                const spacing = elements[element1].size + elements[element2].size + 20;
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                    <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Bond */}
+                        {drawBond()}
+
+                        {/* Atoms */}
+                        <g>
+                            <circle 
+                                cx={CENTER - spacing/2}
+                                cy={CENTER}
+                                r={elements[element1].size}
+                                fill={elements[element1].color}
+                            />
+                            <text 
+                                x={CENTER - spacing/2}
+                                y={CENTER + 5}
+                                textAnchor="middle"
+                                className="font-bold"
+                            >
+                                {element1}
+                            </text>
+                            {drawElectrons(element1, CENTER - spacing/2, CENTER)}
+                        </g>
+
+                        <g>
+                            <circle 
+                                cx={CENTER + spacing/2}
+                                cy={CENTER}
+                                r={elements[element2].size}
+                                fill={elements[element2].color}
+                            />
+                            <text 
+                                x={CENTER + spacing/2}
+                                y={CENTER + 5}
+                                textAnchor="middle"
+                                className="font-bold"
+                            >
+                                {element2}
+                            </text>
+                            {drawElectrons(element2, CENTER + spacing/2, CENTER)}
+                        </g>
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Chemical Bonds Explorer</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Bond Type:</label>
+                                <select 
+                                    value={bondType}
+                                    onChange={(e) => setBondType(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option value="ionic">Ionic Bond</option>
+                                    <option value="covalent">Single Covalent Bond</option>
+                                    <option value="double">Double Covalent Bond</option>
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Element 1:</label>
+                                    <select 
+                                        value={element1}
+                                        onChange={(e) => setElement1(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        {Object.keys(elements).map(el => (
+                                            <option key={el} value={el}>{el}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Element 2:</label>
+                                    <select 
+                                        value={element2}
+                                        onChange={(e) => setElement2(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        {Object.keys(elements).map(el => (
+                                            <option key={el} value={el}>{el}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="flex space-x-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showElectrons}
+                                        onChange={(e) => setShowElectrons(e.target.checked)}
+                                    />
+                                    <span>Show Electrons</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showCharges}
+                                        onChange={(e) => setShowCharges(e.target.checked)}
+                                    />
+                                    <span>Show Charges</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <MoleculeVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Chemical Bonds</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Ionic Bonds (आयनिक बन्धन)</h3>
+                                <p className="mb-2"><strong>English:</strong> Ionic bonds form when electrons are transferred from one atom to another, creating oppositely charged ions that attract each other.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> आयनिक बन्धन तब बन्छ जब एउटा परमाणुबाट अर्को परमाणुमा इलेक्ट्रोनहरू स्थानान्तरण हुन्छन्, जसले विपरीत चार्ज भएका आयनहरू सिर्जना गर्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Covalent Bonds (सहसंयोजक बन्धन)</h3>
+                                <p className="mb-2"><strong>English:</strong> Covalent bonds form when atoms share electrons. Single bonds share one pair, while double bonds share two pairs of electrons.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> सहसंयोजक बन्धन तब बन्छ जब परमाणुहरूले इलेक्ट्रोनहरू साझा गर्छन्। एकल बन्धनले एक जोडी साझा गर्छ, जबकि दोहोरो बन्धनले दुई जोडी इलेक्ट्रोनहरू साझा गर्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Valence Electrons (संयोजी इलेक्ट्रोन)</h3>
+                                <p className="mb-2"><strong>English:</strong> Valence electrons are the outer electrons of an atom that participate in chemical bonding. Most atoms aim to achieve eight valence electrons.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> संयोजी इलेक्ट्रोनहरू परमाणुका बाहिरी इलेक्ट्रोनहरू हुन् जो रासायनिक बन्धनमा सहभागी हुन्छन्। धेरैजसो परमाणुहरूले आठ संयोजी इलेक्ट्रोन प्राप्त गर्ने लक्ष्य राख्छन्।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Electron Configuration (इलेक्ट्रोन विन्यास)</h3>
+                                <p className="mb-2"><strong>English:</strong> The arrangement of electrons in an atom determines its chemical properties and the types of bonds it can form.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> परमाणुमा इलेक्ट्रोनहरूको व्यवस्थापनले यसको रासायनिक गुणहरू र यसले बनाउन सक्ने बन्धनका प्रकारहरू निर्धारण गर्छ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <MoleculeExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

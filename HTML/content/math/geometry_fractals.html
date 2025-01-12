@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal Patterns Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const FractalExplorer = () => {
+            const [iterations, setIterations] = useState(3);
+            const [fractalType, setFractalType] = useState('koch');
+            const [showSteps, setShowSteps] = useState(true);
+            const [size, setSize] = useState(80);
+
+            const generateKochCurve = (startX, startY, endX, endY, depth) => {
+                if (depth === 0) {
+                    return `L ${endX} ${endY}`;
+                }
+
+                const dx = endX - startX;
+                const dy = endY - startY;
+                
+                // Calculate the four points that make up the Koch curve
+                const p1x = startX + dx / 3;
+                const p1y = startY + dy / 3;
+                
+                const p2x = startX + dx / 2 - dy * Math.sqrt(3) / 6;
+                const p2y = startY + dy / 2 + dx * Math.sqrt(3) / 6;
+                
+                const p3x = startX + 2 * dx / 3;
+                const p3y = startY + 2 * dy / 3;
+
+                return (
+                    generateKochCurve(startX, startY, p1x, p1y, depth - 1) +
+                    generateKochCurve(p1x, p1y, p2x, p2y, depth - 1) +
+                    generateKochCurve(p2x, p2y, p3x, p3y, depth - 1) +
+                    generateKochCurve(p3x, p3y, endX, endY, depth - 1)
+                );
+            };
+
+            const generateSierpinskiTriangle = (x, y, size, depth) => {
+                if (depth === 0) {
+                    const height = size * Math.sqrt(3) / 2;
+                    return `M ${x} ${y + height} L ${x + size} ${y + height} L ${x + size/2} ${y} Z`;
+                }
+
+                const newSize = size / 2;
+                const height = size * Math.sqrt(3) / 2;
+                
+                return (
+                    generateSierpinskiTriangle(x, y + height/2, newSize, depth - 1) +
+                    generateSierpinskiTriangle(x + newSize/2, y, newSize, depth - 1) +
+                    generateSierpinskiTriangle(x + newSize, y + height/2, newSize, depth - 1)
+                );
+            };
+
+            const FractalVisualizer = () => {
+                const SVG_SIZE = 300;
+                const PADDING = 40;
+                const scaledSize = (size / 100) * (SVG_SIZE - 2 * PADDING);
+
+                const generatePath = () => {
+                    if (fractalType === 'koch') {
+                        const centerX = SVG_SIZE / 2;
+                        const centerY = SVG_SIZE / 2;
+                        const radius = scaledSize;
+                        
+                        // Generate points for equilateral triangle
+                        const points = [];
+                        for (let i = 0; i < 3; i++) {
+                            const angle = (i * 2 * Math.PI / 3) - Math.PI / 2;
+                            points.push({
+                                x: centerX + radius * Math.cos(angle),
+                                y: centerY + radius * Math.sin(angle)
+                            });
+                        }
+
+                        let path = `M ${points[0].x} ${points[0].y}`;
+                        for (let i = 0; i < 3; i++) {
+                            const nextIndex = (i + 1) % 3;
+                            path += generateKochCurve(
+                                points[i].x, points[i].y,
+                                points[nextIndex].x, points[nextIndex].y,
+                                iterations
+                            );
+                        }
+                        return path;
+                    } else {
+                        return generateSierpinskiTriangle(
+                            PADDING,
+                            PADDING,
+                            scaledSize,
+                            iterations
+                        );
+                    }
+                };
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                    <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Fractal */}
+                        <path
+                            d={generatePath()}
+                            fill={fractalType === 'sierpinski' ? '#4299e1' : 'none'}
+                            stroke="#4299e1"
+                            strokeWidth="1"
+                        />
+                    </svg>
+                );
+            };
+
+            const calculateComplexity = () => {
+                if (fractalType === 'koch') {
+                    return {
+                        segments: Math.pow(4, iterations),
+                        scale: Math.pow(3, iterations)
+                    };
+                } else {
+                    return {
+                        triangles: Math.pow(3, iterations),
+                        scale: Math.pow(2, iterations)
+                    };
+                }
+            };
+
+            const complexity = calculateComplexity();
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Fractal Patterns</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Fractal Type:</label>
+                                <select 
+                                    value={fractalType}
+                                    onChange={(e) => setFractalType(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option value="koch">Koch Snowflake</option>
+                                    <option value="sierpinski">Sierpinski Triangle</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Iterations:</label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="6"
+                                    value={iterations}
+                                    onChange={(e) => setIterations(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{iterations} iterations</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Size:</label>
+                                <input
+                                    type="range"
+                                    min="40"
+                                    max="100"
+                                    value={size}
+                                    onChange={(e) => setSize(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showSteps}
+                                        onChange={(e) => setShowSteps(e.target.checked)}
+                                    />
+                                    <span>Show Steps</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <FractalVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-2">Pattern Properties</h2>
+                        <div className="space-y-3 text-sm">
+                            {fractalType === 'koch' ? (
+                                <>
+                                    <p><strong>Line Segments:</strong> {complexity.segments}</p>
+                                    <p><strong>Scale Factor:</strong> 1/{complexity.scale}</p>
+                                </>
+                            ) : (
+                                <>
+                                    <p><strong>Triangles:</strong> {complexity.triangles}</p>
+                                    <p><strong>Scale Factor:</strong> 1/{complexity.scale}</p>
+                                </>
+                            )}
+                        </div>
+                        <div className="mt-4 p-3 bg-blue-50 rounded text-sm">
+                            <p><strong>Dimension Formula:</strong></p>
+                            <p>D = log(N) / log(r)</p>
+                            <p>where N = number of self-similar pieces</p>
+                            <p>and r = scaling factor</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Fractals</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Self-Similarity (स्व-समानता)</h3>
+                                <p className="mb-2"><strong>English:</strong> Fractals are patterns that repeat themselves at different scales, creating infinite detail through self-similarity.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> फ्र्याक्टलहरू यस्ता ढाँचाहरू हुन् जो विभिन्न स्केलमा आफैलाई दोहोर्याउँछन्, स्व-समानताको माध्यमबाट अनन्त विवरण सिर्जना गर्छन्।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Koch Snowflake (कोच हिमपुष्प)</h3>
+                                <p className="mb-2"><strong>English:</strong> The Koch Snowflake begins with an equilateral triangle. Each line segment is divided into thirds, with the middle third replaced by two lines forming a triangular bump.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> कोच हिमपुष्प एउटा समबाहु त्रिभुजबाट सुरु हुन्छ। प्रत्येक रेखाखण्डलाई तीन भागमा विभाजन गरिन्छ, र बीचको भागलाई त्रिकोणीय उभार बनाउने दुई रेखाहरूले प्रतिस्थापन गरिन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Sierpinski Triangle (सियर्पिन्स्की त्रिभुज)</h3>
+                                <p className="mb-2"><strong>English:</strong> The Sierpinski Triangle is formed by repeatedly removing the central triangle from an equilateral triangle, leaving three smaller triangles.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> सियर्पिन्स्की त्रिभुज एउटा समबाहु त्रिभुजको केन्द्रीय त्रिभुजलाई पटक-पटक हटाएर बनाइन्छ, जसले तीन वटा साना त्रिभुजहरू छोड्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Natural Fractals (प्राकृतिक फ्र्याक्टलहरू)</h3>
+                                <p className="mb-2"><strong>English:</strong> Fractal patterns appear throughout nature in things like ferns, clouds, mountains, and coastlines, demonstrating nature's inherent self-similarity.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> फ्र्याक्टल ढाँचाहरू उन्युँ, बादल, पहाड र समुद्री किनारहरू जस्ता प्रकृतिमा देखिन्छन्, जसले प्रकृतिको अन्तर्निहित स्व-समानता प्रदर्शन गर्छ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <FractalExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

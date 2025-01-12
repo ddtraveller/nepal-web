@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry - Transformations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.3.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const GeometryTransformations = () => {
+            const [shape, setShape] = useState('square');
+            const [transforms, setTransforms] = useState({
+                rotation: 0,
+                scaleX: 1,
+                scaleY: 1,
+                translateX: 0,
+                translateY: 0
+            });
+
+            const renderInputControls = () => {
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-gray-700 mb-2">Rotation (degrees):</label>
+                            <input
+                                type="range"
+                                min="-180"
+                                max="180"
+                                value={transforms.rotation}
+                                onChange={(e) => setTransforms({...transforms, rotation: Number(e.target.value)})}
+                                className="w-full"
+                            />
+                            <span className="text-sm text-gray-600">{transforms.rotation}°</span>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-gray-700 mb-2">Scale X:</label>
+                            <input
+                                type="range"
+                                min="0.1"
+                                max="2"
+                                step="0.1"
+                                value={transforms.scaleX}
+                                onChange={(e) => setTransforms({...transforms, scaleX: Number(e.target.value)})}
+                                className="w-full"
+                            />
+                            <span className="text-sm text-gray-600">{transforms.scaleX}x</span>
+                        </div>
+
+                        <div>
+                            <label className="block text-gray-700 mb-2">Scale Y:</label>
+                            <input
+                                type="range"
+                                min="0.1"
+                                max="2"
+                                step="0.1"
+                                value={transforms.scaleY}
+                                onChange={(e) => setTransforms({...transforms, scaleY: Number(e.target.value)})}
+                                className="w-full"
+                            />
+                            <span className="text-sm text-gray-600">{transforms.scaleY}x</span>
+                        </div>
+
+                        <div>
+                            <label className="block text-gray-700 mb-2">Translate X:</label>
+                            <input
+                                type="range"
+                                min="-50"
+                                max="50"
+                                value={transforms.translateX}
+                                onChange={(e) => setTransforms({...transforms, translateX: Number(e.target.value)})}
+                                className="w-full"
+                            />
+                            <span className="text-sm text-gray-600">{transforms.translateX} units</span>
+                        </div>
+
+                        <div>
+                            <label className="block text-gray-700 mb-2">Translate Y:</label>
+                            <input
+                                type="range"
+                                min="-50"
+                                max="50"
+                                value={transforms.translateY}
+                                onChange={(e) => setTransforms({...transforms, translateY: Number(e.target.value)})}
+                                className="w-full"
+                            />
+                            <span className="text-sm text-gray-600">{transforms.translateY} units</span>
+                        </div>
+                    </div>
+                );
+            };
+
+            const ShapeVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER = SVG_SIZE / 2;
+                const BASE_SIZE = 50;
+
+                const getShapePath = () => {
+                    switch(shape) {
+                        case 'square':
+                            return `M-25,-25 L25,-25 L25,25 L-25,25 Z`;
+                        case 'triangle':
+                            return `M0,-25 L25,25 L-25,25 Z`;
+                        case 'hexagon':
+                            return `M25,0 L12.5,21.65 L-12.5,21.65 L-25,0 L-12.5,-21.65 L12.5,-21.65 Z`;
+                        default:
+                            return '';
+                    }
+                };
+
+                const transformString = `
+                    translate(${CENTER + transforms.translateX}, ${CENTER + transforms.translateY})
+                    rotate(${transforms.rotation})
+                    scale(${transforms.scaleX}, ${transforms.scaleY})
+                `;
+
+                return (
+                    <div className="mt-4">
+                        <svg 
+                            width={SVG_SIZE} 
+                            height={SVG_SIZE} 
+                            className="border border-gray-300 bg-white"
+                            viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                        >
+                            {/* Grid lines */}
+                            <g stroke="#e5e7eb" strokeWidth="1">
+                                {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                    <React.Fragment key={pos}>
+                                        <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                        <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                    </React.Fragment>
+                                ))}
+                            </g>
+                            
+                            {/* Coordinate axes */}
+                            <g stroke="#4b5563" strokeWidth="2">
+                                <line x1={CENTER} y1="0" x2={CENTER} y2={SVG_SIZE} />
+                                <line x1="0" y1={CENTER} x2={SVG_SIZE} y2={CENTER} />
+                            </g>
+
+                            {/* Shape */}
+                            <path
+                                d={getShapePath()}
+                                transform={transformString}
+                                fill="none"
+                                stroke="#4299e1"
+                                strokeWidth="2"
+                            />
+                        </svg>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="max-w-4xl mx-auto p-6">
+                    <h1 className="text-3xl font-bold mb-6 text-center">Geometry - Transformations</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="bg-white rounded-lg shadow-lg p-6">
+                            <h2 className="text-xl font-semibold mb-4">Shape Controls</h2>
+                            
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-2">Select Shape:</label>
+                                <select
+                                    value={shape}
+                                    onChange={(e) => setShape(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option value="square">Square</option>
+                                    <option value="triangle">Triangle</option>
+                                    <option value="hexagon">Hexagon</option>
+                                </select>
+                            </div>
+
+                            {renderInputControls()}
+                        </div>
+
+                        <div className="bg-white rounded-lg shadow-lg p-6">
+                            <h2 className="text-xl font-semibold mb-4">Visualization</h2>
+                            <ShapeVisualizer />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-6 mt-6">
+                        <h2 className="text-xl font-semibold mb-4">Transformations Explained</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Rotation (घुमाउने)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Rotation transforms a shape by turning it around a fixed point (the origin in this case). The angle is measured in degrees, where positive values rotate clockwise and negative values rotate counterclockwise.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> घुमाउने रूपान्तरणले आकृतिलाई एउटा निश्चित बिन्दु (यस मामिलामा मूल बिन्दु) वरिपरि घुमाउँछ। कोण डिग्रीमा मापन गरिन्छ, जहाँ धनात्मक मानले घडीको दिशामा र ऋणात्मक मानले घडीको विपरीत दिशामा घुमाउँछ।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Scaling (आकार परिवर्तन)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Scaling changes the size of a shape. You can scale horizontally (X) and vertically (Y) independently. A scale factor greater than 1 enlarges the shape, while a factor less than 1 shrinks it.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> स्केलिङले आकृतिको आकार परिवर्तन गर्छ। तपाईं तेर्सो (X) र ठाडो (Y) रूपमा स्वतन्त्र रूपमा स्केल गर्न सक्नुहुन्छ। १ भन्दा ठूलो स्केल कारकले आकृति ठूलो बनाउँछ, जबकि १ भन्दा कम कारकले यसलाई सानो बनाउँछ।</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">Translation (स्थानान्तरण)</h3>
+                                <div className="mt-2">
+                                    <p className="mb-2"><strong>English:</strong> Translation moves a shape horizontally (X) and vertically (Y) without changing its size or orientation. Positive X values move right, negative left. Positive Y values move down, negative up.</p>
+                                    <p className="font-normal"><strong>नेपाली:</strong> स्थानान्तरणले आकृतिको आकार वा अभिमुखीकरण परिवर्तन नगरी यसलाई तेर्सो (X) र ठाडो (Y) रूपमा सार्छ। धनात्मक X मानले दायाँ, ऋणात्मक बायाँ सार्छ। धनात्मक Y मानले तल, ऋणात्मक माथि सार्छ।</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-8">
+                    <GeometryTransformations />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle Properties Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const TriangleExplorer = () => {
+            const [baseLength, setBaseLength] = useState(100);
+            const [height, setHeight] = useState(80);
+            const [showBase, setShowBase] = useState(true);
+            const [showHeight, setShowHeight] = useState(true);
+            const [showArea, setShowArea] = useState(true);
+            const [showAngles, setShowAngles] = useState(true);
+
+            const TriangleVisualizer = () => {
+                const SVG_SIZE = 300;
+                const CENTER_X = SVG_SIZE / 2;
+                const CENTER_Y = SVG_SIZE / 2;
+                const SCALE = 1.5;
+
+                const scaledBase = baseLength / SCALE;
+                const scaledHeight = height / SCALE;
+
+                // Calculate triangle points
+                const points = {
+                    base1: { x: CENTER_X - scaledBase/2, y: CENTER_Y + scaledHeight/2 },
+                    base2: { x: CENTER_X + scaledBase/2, y: CENTER_Y + scaledHeight/2 },
+                    apex: { x: CENTER_X, y: CENTER_Y - scaledHeight/2 }
+                };
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                    <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Triangle */}
+                        <path
+                            d={`M ${points.base1.x} ${points.base1.y} 
+                               L ${points.base2.x} ${points.base2.y} 
+                               L ${points.apex.x} ${points.apex.y} Z`}
+                            fill={showArea ? "rgba(66, 153, 225, 0.1)" : "none"}
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+
+                        {/* Base */}
+                        {showBase && (
+                            <g>
+                                <line
+                                    x1={points.base1.x}
+                                    y1={points.base1.y}
+                                    x2={points.base2.x}
+                                    y2={points.base2.y}
+                                    stroke="#48bb78"
+                                    strokeWidth="3"
+                                />
+                                <text
+                                    x={CENTER_X}
+                                    y={points.base1.y + 20}
+                                    textAnchor="middle"
+                                    className="text-sm"
+                                    fill="#48bb78"
+                                >
+                                    base = {baseLength}
+                                </text>
+                            </g>
+                        )}
+
+                        {/* Height */}
+                        {showHeight && (
+                            <g>
+                                <line
+                                    x1={CENTER_X}
+                                    y1={points.apex.y}
+                                    x2={CENTER_X}
+                                    y2={points.base1.y}
+                                    stroke="#ed64a6"
+                                    strokeWidth="2"
+                                    strokeDasharray="4"
+                                />
+                                <text
+                                    x={CENTER_X + 10}
+                                    y={CENTER_Y}
+                                    textAnchor="start"
+                                    className="text-sm"
+                                    fill="#ed64a6"
+                                >
+                                    h = {height}
+                                </text>
+                            </g>
+                        )}
+
+                        {/* Angles */}
+                        {showAngles && (
+                            <g>
+                                <path
+                                    d={`M ${points.base1.x + 20} ${points.base1.y}
+                                       A 20 20 0 0 1 ${points.base1.x + 14} ${points.base1.y - 14}`}
+                                    fill="none"
+                                    stroke="#9f7aea"
+                                    strokeWidth="2"
+                                />
+                                <path
+                                    d={`M ${points.base2.x - 20} ${points.base2.y}
+                                       A 20 20 0 0 0 ${points.base2.x - 14} ${points.base2.y - 14}`}
+                                    fill="none"
+                                    stroke="#9f7aea"
+                                    strokeWidth="2"
+                                />
+                                <path
+                                    d={`M ${points.apex.x - 10} ${points.apex.y + 17}
+                                       A 20 20 0 0 1 ${points.apex.x + 10} ${points.apex.y + 17}`}
+                                    fill="none"
+                                    stroke="#9f7aea"
+                                    strokeWidth="2"
+                                />
+                            </g>
+                        )}
+                    </svg>
+                );
+            };
+
+            const calculateTriangleProperties = () => {
+                return {
+                    area: ((baseLength * height) / 2).toFixed(2),
+                    perimeter: (baseLength + 2 * Math.sqrt(Math.pow(baseLength/2, 2) + Math.pow(height, 2))).toFixed(2)
+                };
+            };
+
+            const properties = calculateTriangleProperties();
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Triangle Properties</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Base Length:</label>
+                                <input
+                                    type="range"
+                                    min="40"
+                                    max="160"
+                                    value={baseLength}
+                                    onChange={(e) => setBaseLength(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{baseLength} units</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Height:</label>
+                                <input
+                                    type="range"
+                                    min="40"
+                                    max="120"
+                                    value={height}
+                                    onChange={(e) => setHeight(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{height} units</span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showBase}
+                                        onChange={(e) => setShowBase(e.target.checked)}
+                                    />
+                                    <span>Base</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showHeight}
+                                        onChange={(e) => setShowHeight(e.target.checked)}
+                                    />
+                                    <span>Height</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showArea}
+                                        onChange={(e) => setShowArea(e.target.checked)}
+                                    />
+                                    <span>Area</span>
+                                </label>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={showAngles}
+                                        onChange={(e) => setShowAngles(e.target.checked)}
+                                    />
+                                    <span>Angles</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <TriangleVisualizer />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-2">Measurements</h2>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p><strong>Base (b):</strong> {baseLength}</p>
+                                <p><strong>Height (h):</strong> {height}</p>
+                            </div>
+                            <div>
+                                <p><strong>Area (A):</strong> {properties.area}</p>
+                                <p><strong>Perimeter (P):</strong> {properties.perimeter}</p>
+                            </div>
+                        </div>
+                        <div className="mt-4 p-3 bg-blue-50 rounded text-sm">
+                            <p><strong>Formulas:</strong></p>
+                            <p>Area (A) = ½ × base × height</p>
+                            <p>Sum of angles = 180°</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Triangle Properties</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Base (आधार)</h3>
+                                <p className="mb-2"><strong>English:</strong> The base is any side of the triangle upon which the height (altitude) is drawn perpendicular to it.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> त्रिभुजको आधार त्यो भुजा हो जसमा उचाई (शीर्ष लम्ब) लम्बरूप हुन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Height (उचाई)</h3>
+                                <p className="mb-2"><strong>English:</strong> The height or altitude is the perpendicular distance from a vertex to the opposite side (base) or its extension.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> उचाई वा शीर्ष लम्ब भनेको कुनै शीर्षबिन्दुबाट विपरीत भुजा (आधार) वा त्यसको विस्तारमा खिचिएको लम्ब दूरी हो।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Area (क्षेत्रफल)</h3>
+                                <p className="mb-2"><strong>English:</strong> The area is the space enclosed by the three sides of the triangle. It can be calculated using the base and height.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> क्षेत्रफल त्रिभुजका तीन भुजाहरूले घेरेको क्षेत्र हो। यो आधार र उचाईको माध्यमबाट गणना गर्न सकिन्छ।</p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Angles (कोणहरू)</h3>
+                                <p className="mb-2"><strong>English:</strong> A triangle has three angles that sum to 180 degrees. Each angle is formed by two sides meeting at a vertex.</p>
+                                <p className="font-normal"><strong>नेपाली:</strong> त्रिभुजमा तीन वटा कोणहरू हुन्छन् जसको योगफल १८० डिग्री हुन्छ। प्रत्येक कोण दुई भुजाहरू शीर्षबिन्दुमा मिल्दा बन्छ।</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <TriangleExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

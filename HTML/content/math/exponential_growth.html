@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponential Growth Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const ExponentialGrowthExplorer = () => {
+            const [baseValue, setBaseValue] = useState(2);
+            const [iterations, setIterations] = useState(5);
+            const [growthType, setGrowthType] = useState('exponential');
+            const [visualizationMode, setVisualizationMode] = useState('graph');
+
+            const calculateSequence = () => {
+                const sequence = [1];
+                for (let i = 1; i < iterations + 1; i++) {
+                    if (growthType === 'exponential') {
+                        sequence.push(sequence[i-1] * baseValue);
+                    } else {
+                        sequence.push(sequence[i-1] + baseValue);
+                    }
+                }
+                return sequence;
+            };
+
+            const GrowthVisualization = () => {
+                const sequence = calculateSequence();
+                const SVG_SIZE = 400; // Increased width
+                const MAX_HEIGHT = 250;
+                const PADDING = 40;
+
+                const maxValue = Math.max(...sequence);
+                const scaleFactor = MAX_HEIGHT / maxValue;
+                const itemSpacing = Math.min(40, (SVG_SIZE - 2 * PADDING) / (sequence.length - 1));
+
+                return (
+                    <svg 
+                        width={SVG_SIZE} 
+                        height={SVG_SIZE} 
+                        className="border border-gray-300 bg-white"
+                        viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
+                    >
+                        {/* Grid */}
+                        <g stroke="#e5e7eb" strokeWidth="0.5">
+                            {Array.from({length: 11}, (_, i) => i * 30).map(pos => (
+                                <React.Fragment key={pos}>
+                                    <line x1={pos} y1="0" x2={pos} y2={SVG_SIZE} />
+                                    <line x1="0" y1={pos} x2={SVG_SIZE} y2={pos} />
+                                </React.Fragment>
+                            ))}
+                        </g>
+
+                        {/* Data Visualization */}
+                        {/* Axes lines */}
+                        <line 
+                            x1={PADDING} 
+                            y1={SVG_SIZE - PADDING} 
+                            x2={SVG_SIZE - PADDING} 
+                            y2={SVG_SIZE - PADDING} 
+                            stroke="#888" 
+                            strokeWidth="2"
+                        />
+                        <line 
+                            x1={PADDING} 
+                            y1={PADDING} 
+                            x2={PADDING} 
+                            y2={SVG_SIZE - PADDING} 
+                            stroke="#888" 
+                            strokeWidth="2"
+                        />
+
+                        {visualizationMode === 'graph' ? (
+                            sequence.map((value, index) => (
+                                <circle 
+                                    key={index} 
+                                    cx={PADDING + index * itemSpacing} 
+                                    cy={SVG_SIZE - PADDING - value * scaleFactor} 
+                                    r="5" 
+                                    fill="#4299e1" 
+                                    title={`Value: ${value}`}
+                                />
+                            ))
+                        ) : (
+                            sequence.map((value, index) => (
+                                <rect 
+                                    key={index} 
+                                    x={PADDING + index * itemSpacing - 10} 
+                                    y={SVG_SIZE - PADDING - value * scaleFactor} 
+                                    width="20" 
+                                    height={value * scaleFactor} 
+                                    fill="#4299e1" 
+                                    fillOpacity="0.7" 
+                                    title={`Value: ${value}`}
+                                />
+                            ))
+                        )}
+
+                        {/* Horizontal value labels */}
+                        {sequence.map((value, index) => (
+                            <text
+                                key={`label-${index}`}
+                                x={PADDING + index * itemSpacing}
+                                y={SVG_SIZE - 10}
+                                textAnchor="middle"
+                                fontSize="10"
+                                fill="#666"
+                            >
+                                {index}
+                            </text>
+                        ))}
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-lg mx-auto p-4">
+                    <h1 className="text-2xl font-bold mb-4 text-center">Exponential Growth Explorer</h1>
+                    
+                    <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-gray-700 mb-2">Growth Type:</label>
+                                <select 
+                                    value={growthType}
+                                    onChange={(e) => setGrowthType(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                >
+                                    <option value="exponential">Exponential Growth</option>
+                                    <option value="linear">Linear Growth</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">
+                                    {growthType === 'exponential' ? 'Growth Base' : 'Increment Value'}:
+                                </label>
+                                <input
+                                    type="range"
+                                    min="2"
+                                    max="10"
+                                    value={baseValue}
+                                    onChange={(e) => setBaseValue(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">
+                                    {growthType === 'exponential' ? 'Base' : 'Increment'}: {baseValue}
+                                </span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Iterations:</label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={iterations}
+                                    onChange={(e) => setIterations(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                                <span className="text-sm text-gray-600">{iterations} iterations</span>
+                            </div>
+
+                            <div>
+                                <label className="block text-gray-700 mb-2">Visualization Mode:</label>
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="radio"
+                                            name="visualizationMode"
+                                            value="graph"
+                                            checked={visualizationMode === 'graph'}
+                                            onChange={() => setVisualizationMode('graph')}
+                                        />
+                                        <span>Points</span>
+                                    </label>
+                                    <label className="flex items-center space-x-2">
+                                        <input
+                                            type="radio"
+                                            name="visualizationMode"
+                                            value="bars"
+                                            checked={visualizationMode === 'bars'}
+                                            onChange={() => setVisualizationMode('bars')}
+                                        />
+                                        <span>Bars</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4">
+                        <GrowthVisualization />
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-2">Pattern Analysis</h2>
+                        <div className="space-y-3 text-sm">
+                            <p><strong>Sequence:</strong> {calculateSequence().join(' → ')}</p>
+                            <p>
+                                <strong>Final Value:</strong> {calculateSequence()[iterations]}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow-lg p-4 mt-4">
+                        <h2 className="text-lg font-semibold mb-4">Understanding Growth (वृद्धि बुझ्ने)</h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="font-semibold mb-2">Exponential Growth (घातीय वृद्धि)</h3>
+                                <p className="mb-2">
+                                    <strong>English:</strong> Exponential growth occurs when a quantity increases by a fixed percentage in each time period, leading to rapid acceleration.
+                                </p>
+                                <p className="font-normal">
+                                    <strong>नेपाली:</strong> घातीय वृद्धि त्यसबेला हुन्छ जब एक परिमाण प्रत्येक समय अवधिमा एक निश्चित प्रतिशतले बढ्छ, जसले छिटो त्वरण ल्याउँछ।
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Real-World Examples (वास्तविक दुनियाँका उदाहरणहरू)</h3>
+                                <ul className="list-disc list-inside">
+                                    <li>
+                                        <strong>English:</strong> Population growth
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> जनसंख्या वृद्धि
+                                    </li>
+                                    <li>
+                                        <strong>English:</strong> Compound interest
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> चक्रवृद्धि ब्याज
+                                    </li>
+                                    <li>
+                                        <strong>English:</strong> Viral spread
+                                        <strong className="ml-2 text-sm text-gray-600">नेपाली:</strong> भाइरल प्रसार
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold mb-2">Mathematical Formula (गणितीय सूत्र)</h3>
+                                <div className="bg-blue-50 p-3 rounded">
+                                    <p><strong>Exponential Growth:</strong> A = P * (1 + r)ᵗ</p>
+                                    <p className="text-sm mt-2">
+                                        Where: A = Final amount, P = Principal, r = Growth rate, t = Time
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <ExponentialGrowthExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
