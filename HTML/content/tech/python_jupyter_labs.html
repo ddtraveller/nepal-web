@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>जुपाइटर ल्याब्स को व्यापक गाइड | Comprehensive Guide to Jupyter Labs</title>
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .bilingual-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .bilingual-header .nepali {
+            font-weight: bold;
+        }
+        .bilingual-header .english {
+            color: #666;
+            font-size: 0.8em;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        ul, ol {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bilingual-header">
+        <h1 class="nepali">जुपाइटर ल्याब्स को व्यापक गाइड</h1>
+        <span class="english">Comprehensive Guide to Jupyter Labs</span>
+    </div>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">जुपाइटर ल्याब्स परिचय</h2>
+        <span class="english">Introduction to Jupyter Labs</span>
+    </div>
+    <p>जुपाइटर ल्याब्स नोटबुक, कोड र डाटासँग काम गर्न एक शक्तिशाली, अर्को पुस्ताको वेब-आधारित इन्टरएक्टिभ विकास वातावरण हो। यो क्लासिक जुपाइटर नोटबुकको विकास हो, जसले डाटा वैज्ञानिक, अनुसन्धानकर्ता र विकासकर्ताहरूका लागि अधिक लचिलो र सुविधा सम्पन्न कार्यस्थल प्रदान गर्छ।</p>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">जुपाइटर ल्याब्सका मुख्य विशेषताहरू</h2>
+        <span class="english">Key Features of Jupyter Labs</span>
+    </div>
+    <ul>
+        <li>
+            <strong>एकीकृत विकास वातावरण / Integrated Development Environment:</strong> 
+            नोटबुक, पाठ सम्पादक, टर्मिनल, डाटा फाइल दर्शक र अन्य धेरै उपकरणहरू समावेश गर्ने एक व्यापक कार्यस्थल प्रदान गर्छ।
+        </li>
+        <li>
+            <strong>लचिलो लेआउट / Flexible Layout:</strong> 
+            ड्र्याग र ड्रप कार्यक्षमताको साथ धेरै कागजात र गतिविधिहरू एकै साथ मिलाउन सक्छ।
+        </li>
+        <li>
+            <strong>बहु प्रोग्रामिङ भाषाहरूको समर्थन / Support for Multiple Programming Languages:</strong> 
+            पाइथन, आर, जुलिया लगायत ४० भन्दा बढी प्रोग्रामिङ भाषाहरूलाई समर्थन गर्छ।
+        </li>
+        <li>
+            <strong>समृद्ध पारिस्थितिकी तन्त्र / Rich Ecosystem:</strong> 
+            विभिन्न वैज्ञानिक कम्प्युटिङ लाइब्रेरी र डाटा भिजुअलाइजेसन उपकरणहरूसँग एकीकृत हुन्छ।
+        </li>
+    </ul>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">इन्स्टलेसन गाइड</h2>
+        <span class="english">Installation Guide</span>
+    </div>
+    <div class="bilingual-header">
+        <h3 class="nepali">पूर्व आवश्यकताहरू</h3>
+        <span class="english">Prerequisites</span>
+    </div>
+    <p>जुपाइटर ल्याब्स इन्स्टल गर्नु अघि, तपाईंसँग पाइथन र पिप (पाइथन प्याकेज म्यानेजर) इन्स्टल गरिएको हुनुपर्छ। यहाँ इन्स्टलेसनका विधिहरू छन्:</p>
+
+    <div class="bilingual-header">
+        <h3 class="nepali">विधि १: पिप मार्फत इन्स्टलेसन</h3>
+        <span class="english">Method 1: Installing via Pip (Recommended)</span>
+    </div>
+    <pre><code>pip install jupyterlab</code></pre>
+
+    <div class="bilingual-header">
+        <h3 class="nepali">विधि २: कोन्डा मार्फत इन्स्टलेसन</h3>
+        <span class="english">Method 2: Installing via Conda (Recommended for Data Science)</span>
+    </div>
+    <pre><code>conda install -c conda-forge jupyterlab</code></pre>
+
+    <div class="bilingual-header">
+        <h3 class="nepali">विधि ३: अनाकोन्डा वितरण मार्फत इन्स्टलेसन</h3>
+        <span class="english">Method 3: Installing via Anaconda Distribution</span>
+    </div>
+    <p>यदि तपाईं अनाकोन्डा प्रयोग गर्दै हुनुहुन्छ भने, जुपाइटर ल्याब्स पहिले नै इन्स्टल गरिएको हुन्छ। अनाकोन्डा navigator बाट यसलाई सुरु गर्नुहोस्।</p>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">जुपाइटर ल्याब्स सञ्चालन गर्ने</h2>
+        <span class="english">Running Jupyter Labs</span>
+    </div>
+    <p>इन्स्टलेसन पछि, तपाईं आफ्नो टर्मिनल वा कमाण्ड प्रोम्प्टमा निम्न कमाण्ड प्रयोग गरेर जुपाइटर ल्याब्स सुरु गर्न सक्नुहुन्छ:</p>
+    <pre><code>jupyter lab</code></pre>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">जुपाइटर सेटअप र प्रयोग गाइड</h2>
+        <span class="english">Comprehensive Jupyter Setup and Usage Guide</span>
+    </div>
+    <pre><code># पाइथन इन्स्टलेसन (यदि पहिले नै इन्स्टल गरिएको छैन भने)
+# Windows/Mac/Linux का लागि
+# python.org बाट डाउनलोड गर्नुहोस् वा प्याकेज म्यानेजर प्रयोग गर्नुहोस्
+
+# pip (पाइथन प्याकेज म्यानेजर) इन्स्टल गर्नुहोस्
+python -m ensurepip --upgrade
+
+# भर्चुअल वातावरण सिर्जना गर्नुहोस् (अनुशंसित)
+python -m venv jupyter_env
+
+# भर्चुअल वातावरण सक्रिय गर्नुहोस्
+# Windows
+jupyter_env\Scripts\activate
+# Mac/Linux
+source jupyter_env/bin/activate
+
+# जुपाइटर मुख्य प्याकेजहरू इन्स्टल गर्नुहोस्
+pip install jupyter jupyterlab notebook
+
+# अतिरिक्त वैज्ञानिक कम्प्युटिङ प्याकेजहरू इन्स्टल गर्नुहोस्
+pip install numpy pandas matplotlib seaborn scikit-learn
+
+# जुपाइटर ल्याब सुरु गर्नुहोस्
+jupyter lab
+
+# वैकल्पिक: क्लासिक नोटबुक इन्टरफेस सुरु गर्नुहोस्
+jupyter notebook
+
+# सामान्य जुपाइटर कमाण्डहरू
+# इन्स्टल गरिएका एक्सटेन्सनहरू सूची
+jupyter labextension list
+
+# जुपाइटर ल्याब एक्सटेन्सन इन्स्टल गर्नुहोस्
+jupyter labextension install extension_name
+
+# जुपाइटर ल्याब अपग्रेड गर्नुहोस्
+pip install --upgrade jupyterlab
+
+# नयाँ नोटबुक सिर्जना गर्ने
+# 1. जुपाइटर ल्याब इन्टरफेसमा '+' क्लिक गर्नुहोस्
+# 2. इच्छित केर्नेल (पाइथन ३, आदि) छान्नुहोस्
+
+# आधारभूत नोटबुक सञ्चालनहरू
+# Shift + Enter: वर्तमान सेल सञ्चालन गर्ने
+# Esc: कमाण्ड मोड
+# Enter: सम्पादन मोड
+# 'B': तल सेल थप्ने
+# 'A': माथि सेल थप्ने
+# 'DD': वर्तमान सेल मेटाउने
+
+# उदाहरण: आधारभूत पाइथन नोटबुक सेटअप
+# सेल १: लाइब्रेरीहरू आयात गर्ने
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# सेल २: नमुना डाटा सिर्जना गर्ने
+data = np.random.randn(100)
+
+# सेल ३: डाटा भिजुअलाइज गर्ने
+plt.figure(figsize=(10,6))
+plt.hist(data, bins=20)
+plt.title('यादृच्छिक डाटा वितरण')
+plt.show()</code></pre>
+
+    <div class="bilingual-header">
+        <h2 class="nepali">आधारभूत प्रयोग र नेभिगेसन</h2>
+        <span class="english">Basic Usage and Navigation</span>
+    </div>
+    <div class="bilingual-header">
+        <h3 class="nepali">नयाँ नोटबुक सिर्जना गर्ने</h3>
+        <span class="english">Creating a New Notebook</span>
+    </div>
+    <ol>
+        <li>लन्चरमा "+" आइकनमा क्लिक गर्नुहोस् / Click on the "+" icon in the launcher</li>
+        <li>इच्छित केर्नेल (प्रोग्रामिङ भाषा) छान्नुहोस् / Select the desired kernel (programming language)</li>
+        <li>सेलहरूमा आफ्नो कोड लेख्न सुरु गर्नुहोस् / Start writing your code in cells</li>
+    </ol>
+
+    <div class="bilingual-header">
+        <h3 class="nepali">सेल प्रकारहरू</h3>
+        <span class="english">Cell Types</span>
+    </div>
+    <ul>
+        <li>
+            <strong>कोड सेलहरू / Code Cells:</strong> 
+            जहाँ तपाईं सञ्चालन योग्य कोड लेख्न सक्नुहोस्
+        </li>
+        <li>
+            <strong>मार्कडाउन सेलहरू / Markdown Cells:</strong> 
+            डकुमेन्टेसन, व्याख्या र समृद्ध पाठ ढाँचाका लागि
+        </li>
+        <li>
+            <strong>कच्चा सेलहरू / Raw Cells:</strong> 
+            अस्वरूपित पाठका लागि
+        </li>
+    </ul>
+
+    <div class="bilingual-header">
+        <h3 class="nepali">महत्वपूर्ण किबोर्ड सर्टकटहरू</h3>
+        <span class="english">Key Keyboard Shortcuts</span>
+    </div>
+    <ul>
+        <li><code>Shift + Enter</code>: वर्तम
