@@ -76,6 +76,27 @@
         .animate-spin {
             animation: spin 1s linear infinite;
         }
+        
+        .translation-container {
+            margin-top: 12px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+        }
+        
+        .translation-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .translation-text {
+            font-size: 16px;
+            color: #212529;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -208,8 +229,8 @@
                 });
             }
 
-            function generateStoryText(prompt, keys) {
-                return fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+            async function generateStoryText(prompt, keys) {
+                const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${keys.huggingFaceKey}`,
@@ -226,12 +247,23 @@
                             return_full_text: false
                         }
                     }),
-                })
-                .then(response => response.json())
-                .then(result => {
-                    let text = Array.isArray(result) ? result[0].generated_text : result.generated_text;
-                    return cleanText(text);
                 });
+            
+                if (!response.ok) {
+                    throw new Error('Story generation failed');
+                }
+            
+                const result = await response.json();
+                let text = Array.isArray(result) ? result[0].generated_text : result.generated_text;
+                text = cleanText(text);
+                
+                // Get Nepali translation
+                const nepaliText = await translateToNepali(text, keys);
+                
+                return {
+                    english: text,
+                    nepali: nepaliText
+                };
             }
 
             function cleanText(text) {
@@ -271,35 +303,33 @@
                 });
             }
 
-            function startNewStory(keys) {
+function startNewStory(keys) {
                 if (!keys) return;
                 
                 setIsLoading(true);
                 setError(null);
-
                 const template = storyTemplates[Math.floor(Math.random() * storyTemplates.length)];
                 const setting = template.settings[Math.floor(Math.random() * template.settings.length)];
                 const situation = template.situations[Math.floor(Math.random() * template.situations.length)];
                 const shuffledElements = [...template.elements].sort(() => 0.5 - Math.random());
                 const selectedElements = shuffledElements.slice(0, 2 + Math.floor(Math.random() * 2));
-
                 const prompt = `Create an immersive story opener in second-person perspective ("you") with 6th grade level English. 
                 The scene takes place in a ${setting} where you ${situation}. 
                 Include vivid details about ${selectedElements.join(' and ')}. 
                 Write 100-150 words.
-
-                Your story MUST end with a clear question presenting two distinct options for the reader.
                 Keep everything in second-person perspective with rich sensory details.
-
                 ### Response:`;
-
                 generateStoryText(prompt, keys)
                     .then(storyText => {
-                        const imagePrompt = `${template.type} scene: ${storyText.slice(0, 200)}`;
+                        const imagePrompt = `${template.type} scene: ${storyText.english.slice(0, 200)}`;
                         return Promise.all([storyText, generateImage(imagePrompt, keys)]);
                     })
                     .then(([storyText, imageUrl]) => {
-                        setStoryHistory([{ text: storyText, image: imageUrl }]);
+                        setStoryHistory([{ 
+                            text: storyText.english,
+                            nepaliText: storyText.nepali,
+                            image: imageUrl 
+                        }]);
                         setIsLoading(false);
                     })
                     .catch(err => {
@@ -312,25 +342,33 @@
             function handleSubmit(e) {
                 e.preventDefault();
                 if (!currentInput.trim() || isLoading || !apiKeys) return;
-
+            
                 setIsLoading(true);
                 setError(null);
-
-                const prompt = `Continue the story with 6th grade level English based on this action: "${currentInput}"
-                Create a vivid scene that follows naturally from this choice. 
-                Keep everything in second-person perspective ("you") with rich sensory details.
-                ### Response:`;
-
-                generateStoryText(prompt, apiKeys)
-                    .then(storyText => {
-                        const imagePrompt = `Fantasy scene: ${storyText.slice(0, 200)}`;
-                        return Promise.all([storyText, generateImage(imagePrompt, apiKeys)]);
+            
+                // First translate the user's input
+                translateToNepali(currentInput, apiKeys)
+                    .then(nepaliInput => {
+                        const prompt = `Continue the story with 6th grade level English based on this action: "${currentInput}"
+                        Create a vivid scene that follows naturally from this choice. 
+                        Keep everything in second-person perspective ("you") with rich sensory details.
+                        If it warrants it, bring the story to an end, otherwise continue.
+                        ### Response:`;
+            
+                        // Generate the story with translation
+                        return generateStoryText(prompt, apiKeys)
+                            .then(storyText => {
+                                const imagePrompt = `Fantasy scene: ${storyText.english.slice(0, 200)}`;
+                                return Promise.all([storyText, nepaliInput, generateImage(imagePrompt, apiKeys)]);
+                            });
                     })
-                    .then(([storyText, imageUrl]) => {
+                    .then(([storyText, nepaliInput, imageUrl]) => {
                         setStoryHistory(prev => [...prev, {
-                            text: storyText,
+                            text: storyText.english,
+                            nepaliText: storyText.nepali,
                             image: imageUrl,
-                            input: currentInput
+                            input: currentInput,
+                            nepaliInput: nepaliInput
                         }]);
                         setCurrentInput('');
                         setIsLoading(false);
@@ -342,7 +380,35 @@
                     });
             }
 
-            const mainContent = isLoading && storyHistory.length === 0 ? (
+            async function translateToNepali(text, keys) {
+                try {
+                    const response = await fetch('https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${keys.huggingFaceKey}`,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            inputs: text,
+                            parameters: {
+                                src_lang: "en_XX",
+                                tgt_lang: "ne_NP"
+                            }
+                        }),
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error('Translation failed');
+                    }
+            
+                    const result = await response.json();
+                    return result[0]?.translation_text || '(Translation failed)';
+                } catch (error) {
+                    console.error('Translation error:', error);
+                    return '(Translation failed)';
+                }
+            }
+const mainContent = isLoading && storyHistory.length === 0 ? (
                 React.createElement('div', { className: 'text-center py-8 bg-gray-50 rounded-lg mb-6' },
                     React.createElement('div', { 
                         className: 'inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-900 border-t-transparent mb-4' 
@@ -363,12 +429,34 @@
                                 alt: `Story scene ${index + 1}`,
                                 className: 'story-image'
                             }),
-                            entry.input && React.createElement('p', { 
-                                className: 'text-gray-600 mb-2'
-                            }, `Your action: ${entry.input}`),
+                            entry.input && React.createElement('div', null,
+                                React.createElement('p', { 
+                                    className: 'text-gray-600 mb-2'
+                                }, `Your action: ${entry.input}`),
+                                entry.nepaliInput && React.createElement('div', {
+                                    className: 'translation-container'
+                                },
+                                    React.createElement('div', {
+                                        className: 'translation-label'
+                                    }, 'तपाईंको कार्य:'),
+                                    React.createElement('div', {
+                                        className: 'translation-text'
+                                    }, entry.nepaliInput)
+                                )
+                            ),
                             React.createElement('p', { 
                                 className: 'text-gray-800'
-                            }, entry.text)
+                            }, entry.text),
+                            entry.nepaliText && React.createElement('div', {
+                                className: 'translation-container'
+                            },
+                                React.createElement('div', {
+                                    className: 'translation-label'
+                                }, 'नेपाली अनुवाद:'),
+                                React.createElement('div', {
+                                    className: 'translation-text'
+                                }, entry.nepaliText)
+                            )
                         )
                     ),
                     React.createElement('form', {
@@ -402,7 +490,7 @@
                 
                 React.createElement('div', { className: 'text-center mb-8 text-gray-600' },
                     React.createElement('p', { className: 'mb-2' }, 
-                        'Welcome to an AI-powered interactive story experience! Your choices will shape the narrative as it unfolds.'
+                        'Welcome to an AI-powered interactive story experience in English and Nepali!'
                     ),
                     React.createElement('p', { className: 'mb-2' },
                         'Each scene presents you with choices. Type what you would like to do in the input box below to continue the story.'
@@ -436,12 +524,34 @@
                                     alt: `Story scene ${index + 1}`,
                                     className: 'story-image'
                                 }),
-                                entry.input && React.createElement('p', { 
-                                    className: 'text-gray-600 mb-2'
-                                }, `Your action: ${entry.input}`),
+                                entry.input && React.createElement('div', null,
+                                    React.createElement('p', { 
+                                        className: 'text-gray-600 mb-2'
+                                    }, `Your action: ${entry.input}`),
+                                    entry.nepaliInput && React.createElement('div', {
+                                        className: 'translation-container'
+                                    },
+                                        React.createElement('div', {
+                                            className: 'translation-label'
+                                        }, 'तपाईंको कार्य:'),
+                                        React.createElement('div', {
+                                            className: 'translation-text'
+                                        }, entry.nepaliInput)
+                                    )
+                                ),
                                 React.createElement('p', { 
                                     className: 'text-gray-800'
-                                }, entry.text)
+                                }, entry.text),
+                                entry.nepaliText && React.createElement('div', {
+                                    className: 'translation-container'
+                                },
+                                    React.createElement('div', {
+                                        className: 'translation-label'
+                                    }, 'नेपाली अनुवाद:'),
+                                    React.createElement('div', {
+                                        className: 'translation-text'
+                                    }, entry.nepaliText)
+                                )
                             )
                         ),
 
@@ -472,7 +582,6 @@
                     )
             );
         }
-
         // Initialize the app
         const rootElement = document.getElementById('root');
         const root = ReactDOM.createRoot(rootElement);

@@ -3,22 +3,97 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 
-const STORY_THEMES = {
-  scifi: "Science Fiction",
-  fantasy: "Fantasy",
-  spiritual: "Spiritual"
-};
-
-// Story seeds from the sample code
-const storySeeds = [
-  "A magical library where books write themselves",
-  "A city where dreams are traded like currency",
-  "A forest where the trees can walk",
-  "An ancient spaceship discovered in a desert",
-  // ... add more seeds as needed
+const STORY_TEMPLATES = [
+  {
+    type: "himalayan",
+    settings: [
+      "remote mountain pass overlooking snow-capped peaks",
+      "ancient Buddhist monastery perched on a cliff",
+      "hidden Himalayan valley shrouded in mist",
+      "traditional Nepalese village nestled in the mountains"
+    ],
+    elements: [
+      "prayer flags fluttering in the wind",
+      "ancient carved mani stones",
+      "snow leopard tracks in the fresh snow",
+      "sound of distant temple bells",
+      "scent of burning juniper incense"
+    ],
+    situations: [
+      "meet a wise sherpa with an intriguing proposition",
+      "discover mysterious footprints leading off the main trail",
+      "witness an unexplainable phenomenon in the mountains",
+      "find traces of a lost expedition"
+    ]
+  },
+  {
+    type: "fantasy",
+    settings: [
+      "enchanted forest glowing with magical light",
+      "ancient wizard's tower floating in the sky",
+      "mystical underground cavern filled with crystals",
+      "magical library where books fly"
+    ],
+    elements: [
+      "glowing magical runes",
+      "mysterious portals swirling with energy",
+      "ethereal creatures of light",
+      "ancient magical artifacts",
+      "floating orbs of magical energy"
+    ],
+    situations: [
+      "stumble upon a magical ritual in progress",
+      "find an ancient prophecy with your name",
+      "witness a conflict between magical beings",
+      "discover a powerful artifact awakening"
+    ]
+  },
+  {
+    type: "scifi",
+    settings: [
+      "abandoned space station drifting in the void",
+      "quantum research facility on a distant planet",
+      "alien archaeological site on an asteroid",
+      "terraforming colony on the edge of known space"
+    ],
+    elements: [
+      "holographic displays flickering with data",
+      "mysterious alien technology pulsing with energy",
+      "experimental quantum devices",
+      "advanced AI interfaces",
+      "temporal anomalies bending space-time"
+    ],
+    situations: [
+      "detect an unknown signal from deep space",
+      "discover signs of advanced alien civilization",
+      "witness a malfunction in the space-time continuum",
+      "find evidence of a scientific breakthrough"
+    ]
+  },
+  {
+    type: "spiritual",
+    settings: [
+      "ancient meditation temple beyond time",
+      "interdimensional nexus of consciousness",
+      "sacred garden of enlightenment",
+      "crystal temple of higher dimensions"
+    ],
+    elements: [
+      "swirling energy vortexes",
+      "crystalline thought forms",
+      "geometric patterns of pure light",
+      "ethereal beings of pure consciousness",
+      "vibrating frequencies of reality"
+    ],
+    situations: [
+      "experience a profound spiritual awakening",
+      "encounter beings from higher dimensions",
+      "discover ancient wisdom teachings",
+      "witness the interconnectedness of all things"
+    ]
+  }
 ];
 
 const InteractiveStory = () => {
@@ -26,7 +101,6 @@ const InteractiveStory = () => {
   const [currentInput, setCurrentInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [theme, setTheme] = useState('fantasy');
   const [huggingFaceKey, setHuggingFaceKey] = useState(null);
   const [stabilityKey, setStabilityKey] = useState(null);
   const [currentImage, setCurrentImage] = useState('/api/placeholder/600/300');
@@ -48,13 +122,9 @@ const InteractiveStory = () => {
         }
 
         const keys = await response.json();
-        if (!keys.huggingFaceKey || !keys.stabilityKey) {
-          throw new Error('Invalid API key data received');
-        }
-
         setHuggingFaceKey(keys.huggingFaceKey);
         setStabilityKey(keys.stabilityKey);
-        startNewStory(); // Start story once keys are initialized
+        startNewStory();
       } catch (error) {
         console.error('Error initializing keys:', error);
         setError('Failed to initialize API keys. Please refresh the page.');
@@ -64,9 +134,68 @@ const InteractiveStory = () => {
     initializeKeys();
   }, []);
 
-  // Generate story text using Hugging Face
-  const generateStoryText = async (prompt) => {
+  const translateToNepali = async (text) => {
     try {
+      const response = await fetch('https://api-inference.huggingface.co/models/facebook/mbart-large-50-many-to-many-mmt', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${huggingFaceKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inputs: text,
+          parameters: {
+            src_lang: "en_XX",
+            tgt_lang: "ne_NP"
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Translation failed');
+      }
+
+      const result = await response.json();
+      return result[0]?.translation_text || text;
+    } catch (error) {
+      console.error('Translation error:', error);
+      return '(Translation failed)';
+    }
+  };
+
+  const buildStoryContext = (history) => {
+    if (history.length === 0) return '';
+    
+    return history.map((entry, index) => {
+      if (entry.type === 'story') {
+        return `Scene ${index + 1}: ${entry.content}`;
+      } else {
+        return `Your choice: ${entry.content}`;
+      }
+    }).join('\n\n');
+  };
+
+  const generateStoryText = async (prompt, context = '') => {
+    try {
+      const fullPrompt = context ? 
+        `You are a creative storyteller narrating an interactive story.
+         
+         Previous story context:
+         ${context}
+         
+         Based on this context:
+         ${prompt}
+         
+         Requirements:
+         - Maintain consistency with previous events and character choices
+         - Reference past decisions when relevant
+         - Keep the same tone and style
+         - End with "Choice A:" and "Choice B:" that reflect meaningful decisions
+         - Write a complete scene in 60-80 words
+         
+         Response:` 
+        : prompt;
+
       const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
         method: 'POST',
         headers: {
@@ -74,7 +203,7 @@ const InteractiveStory = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          inputs: prompt,
+          inputs: fullPrompt,
           parameters: {
             max_new_tokens: 150,
             min_new_tokens: 50,
@@ -86,37 +215,41 @@ const InteractiveStory = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Hugging Face API error: ${response.status}`);
+        throw new Error(`Story generation failed: ${response.status}`);
       }
 
       const result = await response.json();
       let generatedText = Array.isArray(result) ? result[0].generated_text : result.generated_text;
       
-      // Clean up the text using the same logic as the sample code
-      const storytellerPrompts = [
-        "You are a creative storyteller.",
-        "Based on this story context:",
-        "The reader chooses to:",
-        "Continue the story",
+      // Clean up the text
+      const cleanupPrompts = [
+        "You are a creative storyteller",
+        "Previous story context:",
+        "Based on this context:",
         "Requirements:",
         "Response:"
       ];
       
-      for (const prompt of storytellerPrompts) {
+      for (const prompt of cleanupPrompts) {
         if (generatedText.includes(prompt)) {
           const parts = generatedText.split(prompt);
           generatedText = parts[parts.length - 1].trim();
         }
       }
 
-      return generatedText;
+      // Get Nepali translation
+      const nepaliText = await translateToNepali(generatedText);
+
+      return {
+        english: generatedText,
+        nepali: nepaliText
+      };
     } catch (error) {
       console.error('Error generating story:', error);
       throw new Error('Failed to generate story text');
     }
   };
 
-  // Generate image using Stability AI
   const generateImage = async (prompt) => {
     try {
       const response = await fetch('https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image', {
@@ -127,12 +260,7 @@ const InteractiveStory = () => {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          text_prompts: [
-            {
-              text: prompt,
-              weight: 1
-            }
-          ],
+          text_prompts: [{ text: prompt, weight: 1 }],
           cfg_scale: 7,
           height: 1024,
           width: 1024,
@@ -161,23 +289,31 @@ const InteractiveStory = () => {
     setStoryHistory([]);
 
     try {
-      // Get a random story seed
-      const storySeed = storySeeds[Math.floor(Math.random() * storySeeds.length)];
-      
-      // Generate initial story
-      const initialPrompt = `You are a creative storyteller. Using this story concept as inspiration: "${storySeed}"
-      Write a complete scene with beginning and choices in 60 words. Add "Choice A:" and "Choice B:" at the end.`;
+      const template = STORY_TEMPLATES[Math.floor(Math.random() * STORY_TEMPLATES.length)];
+      const setting = template.settings[Math.floor(Math.random() * template.settings.length)];
+      const situation = template.situations[Math.floor(Math.random() * template.situations.length)];
+      const shuffledElements = [...template.elements].sort(() => 0.5 - Math.random());
+      const selectedElements = shuffledElements.slice(0, 2 + Math.floor(Math.random() * 2));
+
+      const initialPrompt = `Create an immersive story opener in second-person perspective ("you") with 6th grade level English. 
+      The scene takes place in a ${setting} where you ${situation}. 
+      Include vivid details about ${selectedElements.join(' and ')}. 
+      Write 100-150 words.
+
+      Your story MUST end with a clear question presenting two distinct options for the reader.
+      Keep everything in second-person perspective with rich sensory details.
+
+      ### Response:`;
       
       const storyText = await generateStoryText(initialPrompt);
-      
-      // Generate image for the story
-      const imagePrompt = `Fantasy scene, digital art style: ${storyText.slice(0, 200)}`;
+      const imagePrompt = `Fantasy scene, digital art style: ${storyText.english.slice(0, 200)}`;
       const imageUrl = await generateImage(imagePrompt);
       
       setCurrentImage(imageUrl);
       setStoryHistory([{
         type: 'story',
-        content: storyText,
+        content: storyText.english,
+        nepaliContent: storyText.nepali,
         timestamp: new Date().toISOString()
       }]);
     } catch (err) {
@@ -198,30 +334,37 @@ const InteractiveStory = () => {
     setIsLoading(true);
 
     try {
-      // Add user input to history
+      const userActionNepali = await translateToNepali(userAction);
       const newHistory = [
         ...storyHistory,
-        { type: 'user', content: userAction, timestamp: new Date().toISOString() }
+        { 
+          type: 'user', 
+          content: userAction,
+          nepaliContent: userActionNepali,
+          timestamp: new Date().toISOString() 
+        }
       ];
       setStoryHistory(newHistory);
 
-      // Generate new story segment
-      const previousScene = storyHistory[storyHistory.length - 1].content;
-      const prompt = `Continue this story based on the user's choice.
-      Previous: "${previousScene}"
-      Action: "${userAction}"
-      Write a complete scene with beginning and choices in 60 words. Add "Choice A:" and "Choice B:" at the end.`;
+      const context = buildStoryContext(storyHistory);
+      const prompt = `Continue the story with 6th grade level English based on this action: "${userAction}"
+        Create a vivid scene that follows naturally from this choice. 
+        Keep everything in second-person perspective ("you") with rich sensory details.
+        ### Response:`;
 
-      const newStoryText = await generateStoryText(prompt);
-      
-      // Generate new image
-      const imagePrompt = `Fantasy scene, digital art style: ${newStoryText.slice(0, 200)}`;
+      const newStoryText = await generateStoryText(prompt, context);
+      const imagePrompt = `Fantasy scene, digital art style: ${newStoryText.english.slice(0, 200)}`;
       const imageUrl = await generateImage(imagePrompt);
       
       setCurrentImage(imageUrl);
       setStoryHistory([
         ...newHistory,
-        { type: 'story', content: newStoryText, timestamp: new Date().toISOString() }
+        { 
+          type: 'story', 
+          content: newStoryText.english,
+          nepaliContent: newStoryText.nepali,
+          timestamp: new Date().toISOString() 
+        }
       ]);
     } catch (err) {
       setError('Failed to continue story. Please try again.');
@@ -231,6 +374,29 @@ const InteractiveStory = () => {
     }
   };
 
+  const StoryEntry = ({ entry }) => (
+    <div className={`p-4 rounded-lg ${
+      entry.type === 'story' 
+        ? 'bg-white shadow' 
+        : 'bg-blue-50 ml-8'
+    }`}>
+      <div className="text-sm text-gray-500 mb-2">
+        {new Date(entry.timestamp).toLocaleTimeString()}
+      </div>
+      <div className="space-y-4">
+        <div className="whitespace-pre-line">
+          {entry.content}
+        </div>
+        <div className="mt-2 p-3 bg-gray-50 rounded border border-gray-200">
+          <div className="text-sm font-medium text-gray-500 mb-1">नेपाली अनुवाद:</div>
+          <div className="whitespace-pre-line font-nepali">
+            {entry.nepaliContent}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
@@ -238,7 +404,7 @@ const InteractiveStory = () => {
           Interactive AI Storyteller
         </CardTitle>
         <CardDescription className="text-center">
-          Embark on an AI-generated adventure
+          Embark on an AI-generated adventure in English and Nepali
         </CardDescription>
       </CardHeader>
 
@@ -258,21 +424,7 @@ const InteractiveStory = () => {
 
           <div className="story-history space-y-4 max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg">
             {storyHistory.map((entry, index) => (
-              <div
-                key={index}
-                className={`p-4 rounded-lg ${
-                  entry.type === 'story' 
-                    ? 'bg-white shadow' 
-                    : 'bg-blue-50 ml-8'
-                }`}
-              >
-                <div className="text-sm text-gray-500 mb-2">
-                  {new Date(entry.timestamp).toLocaleTimeString()}
-                </div>
-                <div className="whitespace-pre-line">
-                  {entry.content}
-                </div>
-              </div>
+              <StoryEntry key={index} entry={entry} />
             ))}
             
             {isLoading && (
