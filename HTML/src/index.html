@@ -98,15 +98,6 @@
         const bucketRegion = 'us-west-2';
         let currentPrefix = '';
 
-        // Format file size
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
         // Format last modified date
         function formatDate(date) {
             return new Date(date).toLocaleDateString('en-US', {
@@ -139,7 +130,6 @@
             fileList.innerHTML = '<div class="loading">Loading files...</div>';
             updateBreadcrumb(prefix);
 
-            // Removed delimiter to get all files
             const url = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/?list-type=2&prefix=${encodeURIComponent(prefix)}`;
 
             const xhr = new XMLHttpRequest();
@@ -160,15 +150,16 @@
 
         // Process entries and organize them by folder
         function processEntries(xmlDoc) {
-            const entries = new Map(); // Map to store folders and their contents
+            const entries = new Map();
             
-            // Process all Contents
             const contents = xmlDoc.getElementsByTagName('Contents');
             for (let i = 0; i < contents.length; i++) {
                 const key = contents[i].getElementsByTagName('Key')[0].textContent;
+                // console.log('Raw key from S3:', key);
+                // console.log('Key encoding:', encodeURIComponent(key));
                 
-                // Skip index.html at root
-                if (key === 'index.html') continue;
+                // Only process .html files (except index.html) and folders
+                if ((key === 'index.html' || !key.endsWith('.html')) && !key.endsWith('/')) continue;
                 
                 // Skip if it's exactly the current prefix
                 if (key === currentPrefix) continue;
@@ -183,7 +174,6 @@
                 const isFolder = parts.length > 1;
 
                 if (isFolder) {
-                    // This is a file in a subfolder
                     const folderName = parts[0];
                     if (!entries.has(folderName)) {
                         entries.set(folderName, {
@@ -193,21 +183,18 @@
                             contents: []
                         });
                     }
-                } else {
-                    // This is a file in the current directory
-                    const size = contents[i].getElementsByTagName('Size')[0].textContent;
+                } else if (key.endsWith('.html') && key !== 'index.html') {
+                    // Only process .html files that aren't index.html
                     const lastModified = contents[i].getElementsByTagName('LastModified')[0].textContent;
                     entries.set(relativePath, {
                         type: 'file',
                         name: relativePath,
                         key: key,
-                        size: parseInt(size),
                         lastModified: lastModified
                     });
                 }
             }
 
-            // Convert map to array and sort
             return Array.from(entries.values()).sort((a, b) => {
                 if (a.type === b.type) {
                     return a.name.localeCompare(b.name);
@@ -222,13 +209,12 @@
             const entries = processEntries(xmlDoc);
             
             if (entries.length === 0) {
-                fileList.innerHTML = '<div class="loading">No files found</div>';
+                fileList.innerHTML = '<div class="loading">No HTML files found</div>';
                 return;
             }
 
             let html = '';
             
-            // Generate HTML for all entries
             entries.forEach(entry => {
                 if (entry.type === 'folder') {
                     html += `
@@ -238,15 +224,15 @@
                             </a>
                         </div>
                     `;
-                } else {
-                    const fileUrl = `https://${bucketName}.net/${encodeURIComponent(entry.key)}`;
+                } else if (entry.key.endsWith('.html') && entry.key !== 'index.html') {
+                    // Keep the forward slashes intact
+                    const fileUrl = `https://${bucketName}.net/${entry.key}`;
                     html += `
                         <div class="file-item">
                             <a href="${fileUrl}" class="file-link" target="_blank">
                                 📄 ${entry.name}
                             </a>
                             <div class="file-meta">
-                                Size: ${formatBytes(entry.size)} | 
                                 Last modified: ${formatDate(entry.lastModified)}
                             </div>
                         </div>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.2.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const CalculusExplorer = () => {
+            const [selectedFunction, setSelectedFunction] = useState('x^2');
+            const [xValue, setXValue] = useState(2);
+            const [showDerivative, setShowDerivative] = useState(true);
+            const [showIntegral, setShowIntegral] = useState(true);
+            const [deltaX, setDeltaX] = useState(0.5);
+
+            const functions = {
+                'x^2': {
+                    fn: x => Math.pow(x, 2),
+                    derivative: x => 2 * x,
+                    integral: x => Math.pow(x, 3) / 3,
+                    text: 'f(x) = x²',
+                    derivativeText: "f'(x) = 2x",
+                    integralText: '∫f(x)dx = x³/3 + C'
+                },
+                'sin(x)': {
+                    fn: x => Math.sin(x),
+                    derivative: x => Math.cos(x),
+                    integral: x => -Math.cos(x),
+                    text: 'f(x) = sin(x)',
+                    derivativeText: "f'(x) = cos(x)",
+                    integralText: '∫f(x)dx = -cos(x) + C'
+                },
+                'e^x': {
+                    fn: x => Math.exp(x),
+                    derivative: x => Math.exp(x),
+                    integral: x => Math.exp(x),
+                    text: 'f(x) = eˣ',
+                    derivativeText: "f'(x) = eˣ",
+                    integralText: '∫f(x)dx = eˣ + C'
+                }
+            };
+
+            const FunctionPlot = () => {
+                const SVG_WIDTH = 400;
+                const SVG_HEIGHT = 400;
+                const SCALE = 40;
+                const CENTER_X = SVG_WIDTH / 2;
+                const CENTER_Y = SVG_HEIGHT / 2;
+
+                const plotPoints = [];
+                const derivativePoints = [];
+                const integralPoints = [];
+
+                // Generate points for plotting
+                for (let x = -5; x <= 5; x += 0.1) {
+                    const fn = functions[selectedFunction].fn;
+                    const derivative = functions[selectedFunction].derivative;
+                    const integral = functions[selectedFunction].integral;
+
+                    plotPoints.push({
+                        x: CENTER_X + x * SCALE,
+                        y: CENTER_Y - fn(x) * SCALE
+                    });
+
+                    derivativePoints.push({
+                        x: CENTER_X + x * SCALE,
+                        y: CENTER_Y - derivative(x) * SCALE
+                    });
+
+                    integralPoints.push({
+                        x: CENTER_X + x * SCALE,
+                        y: CENTER_Y - integral(x) * SCALE
+                    });
+                }
+
+                // Calculate tangent line at current x-value
+                const currentY = functions[selectedFunction].fn(xValue);
+                const slope = functions[selectedFunction].derivative(xValue);
+                const tangentX1 = xValue - 1;
+                const tangentY1 = currentY + slope * (-1);
+                const tangentX2 = xValue + 1;
+                const tangentY2 = currentY + slope;
+
+                return (
+                    <svg width={SVG_WIDTH} height={SVG_HEIGHT} className="border border-gray-300 bg-white">
+                        {/* Grid */}
+                        <line x1="0" y1={CENTER_Y} x2={SVG_WIDTH} y2={CENTER_Y} stroke="#e5e7eb" strokeWidth="1"/>
+                        <line x1={CENTER_X} y1="0" x2={CENTER_X} y2={SVG_HEIGHT} stroke="#e5e7eb" strokeWidth="1"/>
+
+                        {/* Original function */}
+                        <path
+                            d={`M ${plotPoints.map(p => `${p.x},${p.y}`).join(' L ')}`}
+                            fill="none"
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+
+                        {/* Derivative */}
+                        {showDerivative && (
+                            <path
+                                d={`M ${derivativePoints.map(p => `${p.x},${p.y}`).join(' L ')}`}
+                                fill="none"
+                                stroke="#48bb78"
+                                strokeWidth="2"
+                            />
+                        )}
+
+                        {/* Integral */}
+                        {showIntegral && (
+                            <path
+                                d={`M ${integralPoints.map(p => `${p.x},${p.y}`).join(' L ')}`}
+                                fill="none"
+                                stroke="#ed64a6"
+                                strokeWidth="2"
+                            />
+                        )}
+
+                        {/* Tangent line */}
+                        <line
+                            x1={CENTER_X + tangentX1 * SCALE}
+                            y1={CENTER_Y - tangentY1 * SCALE}
+                            x2={CENTER_X + tangentX2 * SCALE}
+                            y2={CENTER_Y - tangentY2 * SCALE}
+                            stroke="#e53e3e"
+                            strokeWidth="2"
+                            strokeDasharray="4"
+                        />
+
+                        {/* Point at current x-value */}
+                        <circle
+                            cx={CENTER_X + xValue * SCALE}
+                            cy={CENTER_Y - currentY * SCALE}
+                            r="4"
+                            fill="#000"
+                        />
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-4">
+                    <h1 className="text-3xl font-bold mb-4 text-center">Calculus Explorer</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Controls */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">Function Controls</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Select Function:</label>
+                                    <select
+                                        value={selectedFunction}
+                                        onChange={(e) => setSelectedFunction(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="x^2">f(x) = x²</option>
+                                        <option value="sin(x)">f(x) = sin(x)</option>
+                                        <option value="e^x">f(x) = eˣ</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">x value:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={xValue}
+                                        onChange={(e) => setXValue(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">x = {xValue}</span>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={showDerivative}
+                                            onChange={(e) => setShowDerivative(e.target.checked)}
+                                            className="mr-2"
+                                        />
+                                        Show Derivative (green)
+                                    </label>
+                                    <label className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={showIntegral}
+                                            onChange={(e) => setShowIntegral(e.target.checked)}
+                                            className="mr-2"
+                                        />
+                                        Show Integral (pink)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Values */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">Function Values</h2>
+                            <div className="space-y-2">
+                                <p>f({xValue}) = {functions[selectedFunction].fn(xValue).toFixed(3)}</p>
+                                <p>f'({xValue}) = {functions[selectedFunction].derivative(xValue).toFixed(3)}</p>
+                                <p>∫f({xValue}) = {functions[selectedFunction].integral(xValue).toFixed(3)} + C</p>
+                            </div>
+                            <div className="mt-4">
+                                <p className="font-semibold">Function: {functions[selectedFunction].text}</p>
+                                <p className="font-semibold">Derivative: {functions[selectedFunction].derivativeText}</p>
+                                <p className="font-semibold">Integral: {functions[selectedFunction].integralText}</p>
+                            </div>
+                        </div>
+
+                        {/* Visualization */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Function Visualization</h2>
+                            <div className="flex justify-center">
+                                <FunctionPlot />
+                            </div>
+                        </div>
+
+                        {/* Explanation Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Understanding Calculus</h2>
+                            
+                            <div className="space-y-6">
+                                <div className="bg-blue-50 p-6 rounded-lg mb-6">
+                                    <h3 className="font-medium mb-3">English</h3>
+                                    <p className="mb-4">
+                                        Calculus is the mathematical study of continuous change. The two main concepts in calculus are:
+                                    </p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>
+                                            <strong>Derivatives (Differentiation):</strong> Measure how a function changes at any given point. 
+                                            The derivative represents the slope of the tangent line at a point on the function's curve.
+                                        </li>
+                                        <li>
+                                            <strong>Integrals (Integration):</strong> Find the area under a curve and represent the accumulation 
+                                            of quantities over time or space. Integration is the inverse operation of differentiation.
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        Key applications include:
+                                        • Physics: Velocity (derivative of position) and acceleration (derivative of velocity)
+                                        • Economics: Marginal cost and revenue
+                                        • Engineering: Optimization and rate of change problems
+                                    </p>
+                                </div>
+
+                                <div className="bg-green-50 p-6 rounded-lg">
+                                    <h3 className="font-medium mb-3">नेपाली</h3>
+                                    <p className="mb-4">
+                                        क्यालकुलस निरन्तर परिवर्तनको गणितीय अध्ययन हो। क्यालकुलसका दुई मुख्य अवधारणाहरू छन्:
+                                    </p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>
+                                            <strong>डेरिभेटिभ्स (डिफरेन्सिएसन):</strong> कुनै फलन कुनै पनि बिन्दुमा कसरी परिवर्तन 
+                                            हुन्छ भन्ने मापन गर्छ। डेरिभेटिभले फलनको वक्रमा कुनै बिन्दुमा स्पर्श रेखाको ढाल प्रतिनिधित्व गर्छ।
+                                        </li>
+                                        <li>
+                                            <strong>इन्टिग्रल्स (इन्टिग्रेसन):</strong> वक्र मुनिको क्षेत्रफल पत्ता लगाउँछ र समय वा 
+                                            स्थान भरि परिमाणहरूको संचयन प्रतिनिधित्व गर्छ। इन्टिग्रेसन डिफरेन्सिएसनको विपरीत कार्य हो।
+                                        </li>
+                                    </ul>
+                                    <p>
+                                        मुख्य प्रयोगहरू:
+                                        • भौतिक विज्ञान: वेग (स्थितिको डेरिभेटिभ) र त्वरण (वेगको डेरिभेटिभ)
+                                        • अर्थशास्त्र: सीमान्त लागत र राजस्व
+                                        • इन्जिनियरिङ: अनुकूलन र परिवर्तन दरका समस्याहरू
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <CalculusExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+
+    <script>
+        // Add MathJax support for mathematical notation
+        window.MathJax = {
+            tex: {
+                inlineMath: [[', '], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Python Functions - English & Nepali</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .content-block {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nepali {
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #444;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .warning {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced Python Functions / उन्नत पाइथन फंक्शनहरू</h1>
+
+    <div class="content-block">
+        <h2>Default Argument Values / पूर्वनिर्धारित तर्क मानहरू</h2>
+        <p>Functions can have default values for arguments:</p>
+        <p class="nepali">फंक्शनहरूमा तर्कहरूको लागि पूर्वनिर्धारित मानहरू हुन सक्छन्:</p>
+        <pre>
+# Basic default arguments / आधारभूत पूर्वनिर्धारित तर्कहरू
+def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+print(greet("Ram"))           # Hello, Ram!
+print(greet("Sita", "Namaste"))  # Namaste, Sita!
+
+# Multiple default values / बहु पूर्वनिर्धारित मानहरू
+def create_profile(name, age=20, city="Kathmandu", occupation=None):
+    profile = {
+        "name": name,
+        "age": age,
+        "city": city,
+        "occupation": occupation
+    }
+    return profile</pre>
+        
+        <div class="warning">
+            <p><strong>Warning:</strong> Default values are evaluated once at function definition time.</p>
+            <p class="nepali"><strong>चेतावनी:</strong> पूर्वनिर्धारित मानहरू फंक्शन परिभाषा समयमा एक पटक मूल्यांकन गरिन्छ।</p>
+        </div>
+    </div>
+
+    <div class="content-block">
+        <h2>Keyword Arguments / कीवर्ड तर्कहरू</h2>
+        <p>Functions can be called using keyword arguments:</p>
+        <p class="nepali">फंक्शनहरूलाई कीवर्ड तर्कहरू प्रयोग गरेर कल गर्न सकिन्छ:</p>
+        <pre>
+def send_email(to, subject, body, cc=None, bcc=None):
+    # Function implementation
+    pass
+
+# Using keyword arguments / कीवर्ड तर्कहरू प्रयोग
+send_email(
+    to="user@example.com",
+    subject="Meeting",
+    body="Tomorrow at 10 AM",
+    cc="manager@example.com"
+)
+
+# Mix positional and keyword arguments
+send_email("user@example.com", body="Hello!", subject="Hi")</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Arbitrary Argument Lists (*args) / स्वेच्छिक तर्क सूची</h2>
+        <p>Functions can accept any number of positional arguments:</p>
+        <p class="nepali">फंक्शनहरूले जतिसुकै स्थिति तर्कहरू स्वीकार गर्न सक्छन्:</p>
+        <pre>
+# Function with *args / *args सहितको फंक्शन
+def calculate_sum(*numbers):
+    return sum(numbers)
+
+print(calculate_sum(1, 2, 3))       # 6
+print(calculate_sum(10, 20, 30, 40))  # 100
+
+# Combining with regular arguments / नियमित तर्कहरूसँग संयोजन
+def print_info(name, *hobbies):
+    print(f"Name: {name}")
+    print("Hobbies:", ", ".join(hobbies))
+
+print_info("Hari", "reading", "hiking", "photography")</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Keyword Arguments Dictionary (**kwargs) / कीवर्ड तर्क शब्दकोश</h2>
+        <p>Functions can accept any number of keyword arguments:</p>
+        <p class="nepali">फंक्शनहरूले जतिसुकै कीवर्ड तर्कहरू स्वीकार गर्न सक्छन्:</p>
+        <pre>
+# Function with **kwargs / **kwargs सहितको फंक्शन
+def create_user(**user_data):
+    return user_data
+
+user = create_user(
+    name="Ram",
+    age=25,
+    city="Pokhara",
+    email="ram@example.com"
+)
+
+# Combining *args and **kwargs / *args र **kwargs को संयोजन
+def process_data(*args, **kwargs):
+    print("Args:", args)
+    print("Kwargs:", kwargs)
+
+process_data(1, 2, 3, name="Test", value=42)</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Unpacking Argument Lists / तर्क सूची खोल्ने</h2>
+        <p>Lists and dictionaries can be unpacked into function arguments:</p>
+        <p class="nepali">सूची र शब्दकोशहरूलाई फंक्शन तर्कहरूमा खोल्न सकिन्छ:</p>
+        <pre>
+# List unpacking / सूची खोल्ने
+numbers = [1, 2, 3]
+print(calculate_sum(*numbers))  # Same as calculate_sum(1, 2, 3)
+
+# Dictionary unpacking / शब्दकोश खोल्ने
+user_data = {
+    "name": "Sita",
+    "age": 30,
+    "city": "Lalitpur"
+}
+user = create_user(**user_data)</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Lambda Expressions / लाम्बडा अभिव्यक्तिहरू</h2>
+        <p>Lambda creates small anonymous functions:</p>
+        <p class="nepali">लाम्बडाले साना बेनामी फंक्शनहरू सिर्जना गर्छ:</p>
+        <pre>
+# Simple lambda / सरल लाम्बडा
+square = lambda x: x**2
+print(square(5))  # 25
+
+# Lambda with multiple arguments / बहु तर्क सहितको लाम्बडा
+multiply = lambda x, y: x * y
+print(multiply(3, 4))  # 12
+
+# Lambda in higher-order functions / उच्च-क्रम फंक्शनहरूमा लाम्बडा
+numbers = [1, 2, 3, 4, 5]
+squared = list(map(lambda x: x**2, numbers))
+evens = list(filter(lambda x: x % 2 == 0, numbers))</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Documentation Strings / कागजात स्ट्रिङहरू</h2>
+        <p>Docstrings provide function documentation:</p>
+        <p class="nepali">डकस्ट्रिङहरूले फंक्शन कागजात प्रदान गर्छन्:</p>
+        <pre>
+def calculate_interest(principal, rate, time):
+    """
+    Calculate simple interest.
+
+    Args:
+        principal (float): The principal amount
+        rate (float): Annual interest rate (as decimal)
+        time (float): Time in years
+
+    Returns:
+        float: The calculated interest amount
+
+    Example:
+        >>> calculate_interest(1000, 0.05, 2)
+        100.0
+    """
+    return principal * rate * time
+
+# Accessing the docstring / डकस्ट्रिङ पहुँच
+print(calculate_interest.__doc__)
+
+# Complex function with detailed documentation
+def process_transaction(amount, transaction_type="credit", **details):
+    """
+    Process a financial transaction.
+
+    This function handles various types of financial transactions
+    and maintains a detailed log of all operations.
+
+    Args:
+        amount (decimal): Transaction amount
+        transaction_type (str, optional): Type of transaction
+            Defaults to "credit"
+        **details: Additional transaction details
+
+    Returns:
+        dict: Transaction receipt with all details
+
+    Raises:
+        ValueError: If amount is negative
+        TypeError: If transaction_type is invalid
+    """
+    if amount < 0:
+        raise ValueError("Amount cannot be negative")
+    
+    # Function implementation
+    return {
+        "amount": amount,
+        "type": transaction_type,
+        "details": details
+    }</pre>
+    </div>
+
+</body>
+</html>

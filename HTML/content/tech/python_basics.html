@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Programming Basics - English & Nepali</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .content-block {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nepali {
+            font-family: system-ui, -apple-system, sans-serif;
+            color: #444;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h1>Python Programming Basics / पाइथन प्रोग्रामिङ आधारभूत</h1>
+
+    <div class="content-block">
+        <h2>Variables / चरहरू</h2>
+        <p>In Python, you can declare variables without specifying their type:</p>
+        <p class="nepali">पाइथनमा, तपाईं चरहरूको प्रकार निर्दिष्ट नगरी घोषणा गर्न सक्नुहुन्छ:</p>
+        <pre>
+name = "Ram"
+age = 25
+height = 1.75
+is_student = True</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Numbers and Calculations / संख्याहरू र गणनाहरू</h2>
+        <p>Python supports various mathematical operations:</p>
+        <p class="nepali">पाइथनले विभिन्न गणितीय कार्यहरूलाई समर्थन गर्दछ:</p>
+        <pre>
+# Basic operations / आधारभूत कार्यहरू
+addition = 5 + 3        # 8
+subtraction = 10 - 4    # 6
+multiplication = 4 * 3  # 12
+division = 15 / 3       # 5.0
+floor_division = 17 // 3  # 5
+modulus = 17 % 3        # 2
+power = 2 ** 3         # 8
+
+# Float operations / दशमलव संख्या कार्यहरू
+pi = 3.14159
+rounded = round(pi, 2)  # 3.14</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Strings / स्ट्रिङहरू</h2>
+        <p>Strings are sequences of characters:</p>
+        <p class="nepali">स्ट्रिङहरू अक्षरहरूको अनुक्रम हुन्:</p>
+        <pre>
+# String declaration / स्ट्रिङ घोषणा
+greeting = "नमस्ते"
+message = 'Hello, World!'
+
+# String concatenation / स्ट्रिङ जोड्ने
+full_greeting = greeting + " " + message  # नमस्ते Hello, World!</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>F-strings and Variable Interpolation / एफ-स्ट्रिङ र चर अन्तर्वेशन</h2>
+        <p>F-strings make it easy to embed expressions inside string literals:</p>
+        <p class="nepali">एफ-स्ट्रिङले स्ट्रिङ भित्र चरहरू राख्न सजिलो बनाउँछ:</p>
+        <pre>
+name = "Sita"
+age = 30
+
+# Using f-strings / एफ-स्ट्रिङको प्रयोग
+message = f"My name is {name} and I am {age} years old"
+nepali_message = f"मेरो नाम {name} हो र म {age} वर्षको छु"</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Slices / स्लाइसहरू</h2>
+        <p>Slicing allows you to extract parts of sequences:</p>
+        <p class="nepali">स्लाइसिङले तपाईंलाई अनुक्रमको भागहरू निकाल्न अनुमति दिन्छ:</p>
+        <pre>
+text = "Python Programming"
+first_word = text[0:6]    # "Python"
+last_word = text[7:]      # "Programming"
+reversed = text[::-1]     # "gnimmargorP nohtyP"</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Lists / सूचीहरू</h2>
+        <p>Lists are ordered collections that can hold different types of data:</p>
+        <p class="nepali">सूचीहरू क्रमबद्ध संग्रह हुन् जसले विभिन्न प्रकारका डाटा राख्न सक्छन्:</p>
+        <pre>
+# Creating lists / सूची बनाउने
+fruits = ["Apple", "Banana", "Orange"]
+mixed = [1, "Hello", 3.14, True]
+
+# List operations / सूची कार्यहरू
+fruits.append("Mango")     # Add item / वस्तु थप्ने
+fruits.remove("Banana")    # Remove item / वस्तु हटाउने
+first_fruit = fruits[0]    # Access item / वस्तु पहुँच
+length = len(fruits)       # List length / सूचीको लम्बाई</pre>
+    </div>
+
+    <div class="content-block">
+        <h2>Dictionaries / शब्दकोशहरू</h2>
+        <p>Dictionaries store key-value pairs:</p>
+        <p class="nepali">शब्दकोशहरूले key-value जोडीहरू भण्डारण गर्छन्:</p>
+        <pre>
+# Creating dictionary / शब्दकोश बनाउने
+person = {
+    "name": "Hari",
+    "age": 28,
+    "city": "Kathmandu",
+    "is_student": False
+}
+
+# Dictionary operations / शब्दकोश कार्यहरू
+name = person["name"]          # Access value / मान पहुँच
+person["phone"] = "9841234567" # Add new pair / नयाँ जोडी थप्ने
+del person["age"]             # Remove pair / जोडी हटाउने
+keys = person.keys()          # Get all keys / सबै keys प्राप्त</pre>
+    </div>
+
+</body>
+</html>

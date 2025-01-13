@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Algebra Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.2.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const AlgebraExplorer = () => {
+            // State for function parameters
+            const [functionType, setFunctionType] = useState('quadratic');
+            const [a, setA] = useState(1);
+            const [b, setB] = useState(0);
+            const [c, setC] = useState(0);
+            const [d, setD] = useState(0);
+            
+            // State for transformations
+            const [horizontalShift, setHorizontalShift] = useState(0);
+            const [verticalShift, setVerticalShift] = useState(0);
+            const [verticalStretch, setVerticalStretch] = useState(1);
+            const [reflection, setReflection] = useState(false);
+
+            const FunctionVisualizer = () => {
+                const SVG_WIDTH = 400;
+                const SVG_HEIGHT = 300;
+                const SCALE = 30;
+                const CENTER_X = SVG_WIDTH / 2;
+                const CENTER_Y = SVG_HEIGHT / 2;
+
+                const generatePoints = () => {
+                    const points = [];
+                    for (let x = -10; x <= 10; x += 0.1) {
+                        let y;
+                        const transformedX = x - horizontalShift;
+                        
+                        switch(functionType) {
+                            case 'linear':
+                                y = a * transformedX + b;
+                                break;
+                            case 'quadratic':
+                                y = a * transformedX * transformedX + b * transformedX + c;
+                                break;
+                            case 'cubic':
+                                y = a * transformedX * transformedX * transformedX + 
+                                    b * transformedX * transformedX + 
+                                    c * transformedX + d;
+                                break;
+                            default:
+                                y = 0;
+                        }
+
+                        y = verticalStretch * (reflection ? -y : y) + verticalShift;
+                        
+                        const screenX = CENTER_X + x * SCALE;
+                        const screenY = CENTER_Y - y * SCALE;
+                        
+                        if (screenY >= 0 && screenY <= SVG_HEIGHT) {
+                            points.push({ x: screenX, y: screenY });
+                        }
+                    }
+                    return points;
+                };
+
+                return (
+                    <svg width={SVG_WIDTH} height={SVG_HEIGHT} className="border border-gray-300 bg-white">
+                        {/* Grid lines */}
+                        {Array.from({length: 21}, (_, i) => i - 10).map(i => (
+                            <React.Fragment key={`grid-${i}`}>
+                                <line 
+                                    x1={CENTER_X + i * SCALE} 
+                                    y1="0" 
+                                    x2={CENTER_X + i * SCALE} 
+                                    y2={SVG_HEIGHT} 
+                                    stroke="#e5e7eb" 
+                                    strokeWidth="1" 
+                                />
+                                <line 
+                                    x1="0" 
+                                    y1={CENTER_Y + i * SCALE} 
+                                    x2={SVG_WIDTH} 
+                                    y2={CENTER_Y + i * SCALE} 
+                                    stroke="#e5e7eb" 
+                                    strokeWidth="1" 
+                                />
+                            </React.Fragment>
+                        ))}
+
+                        {/* Axes */}
+                        <line x1="0" y1={CENTER_Y} x2={SVG_WIDTH} y2={CENTER_Y} stroke="#000" strokeWidth="2"/>
+                        <line x1={CENTER_X} y1="0" x2={CENTER_X} y2={SVG_HEIGHT} stroke="#000" strokeWidth="2"/>
+
+                        {/* Function curve */}
+                        <path
+                            d={`M ${generatePoints().map(p => `${p.x},${p.y}`).join(' L ')}`}
+                            fill="none"
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-4">
+                    <h1 className="text-3xl font-bold mb-4 text-center">Interactive Algebra Explorer</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Function Controls Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">Function Controls</h2>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-2">Function Type:</label>
+                                    <select
+                                        value={functionType}
+                                        onChange={(e) => setFunctionType(e.target.value)}
+                                        className="w-full p-2 border rounded"
+                                    >
+                                        <option value="linear">Linear (ax + b)</option>
+                                        <option value="quadratic">Quadratic (ax² + bx + c)</option>
+                                        <option value="cubic">Cubic (ax³ + bx² + cx + d)</option>
+                                    </select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">a:</label>
+                                        <input
+                                            type="range"
+                                            min="-5"
+                                            max="5"
+                                            step="0.1"
+                                            value={a}
+                                            onChange={(e) => setA(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                        <span className="text-sm text-gray-600">Value: {a}</span>
+                                    </div>
+                                    
+                                    <div>
+                                        <label className="block text-gray-700 mb-1">b:</label>
+                                        <input
+                                            type="range"
+                                            min="-5"
+                                            max="5"
+                                            step="0.1"
+                                            value={b}
+                                            onChange={(e) => setB(Number(e.target.value))}
+                                            className="w-full"
+                                        />
+                                        <span className="text-sm text-gray-600">Value: {b}</span>
+                                    </div>
+
+                                    {functionType !== 'linear' && (
+                                        <div>
+                                            <label className="block text-gray-700 mb-1">c:</label>
+                                            <input
+                                                type="range"
+                                                min="-5"
+                                                max="5"
+                                                step="0.1"
+                                                value={c}
+                                                onChange={(e) => setC(Number(e.target.value))}
+                                                className="w-full"
+                                            />
+                                            <span className="text-sm text-gray-600">Value: {c}</span>
+                                        </div>
+                                    )}
+
+                                    {functionType === 'cubic' && (
+                                        <div>
+                                            <label className="block text-gray-700 mb-1">d:</label>
+                                            <input
+                                                type="range"
+                                                min="-5"
+                                                max="5"
+                                                step="0.1"
+                                                value={d}
+                                                onChange={(e) => setD(Number(e.target.value))}
+                                                className="w-full"
+                                            />
+                                            <span className="text-sm text-gray-600">Value: {d}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Transformations Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">Transformations</h2>
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Horizontal Shift:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={horizontalShift}
+                                        onChange={(e) => setHorizontalShift(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">Value: {horizontalShift}</span>
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Vertical Shift:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={verticalShift}
+                                        onChange={(e) => setVerticalShift(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">Value: {verticalShift}</span>
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-700 mb-1">Vertical Stretch:</label>
+                                    <input
+                                        type="range"
+                                        min="0.1"
+                                        max="3"
+                                        step="0.1"
+                                        value={verticalStretch}
+                                        onChange={(e) => setVerticalStretch(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">Value: {verticalStretch}</span>
+                                </div>
+
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={reflection}
+                                        onChange={(e) => setReflection(e.target.checked)}
+                                    />
+                                    <label>Reflect across x-axis</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Visualization Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Function Visualization</h2>
+                            <FunctionVisualizer />
+                        </div>
+
+                        {/* Explanations Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Understanding Functions</h2>
+                            
+                            <div className="space-y-6">
+                                {/* Linear Functions */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Linear Functions (रैखिक फलन)</h3>
+                                    <p className="mb-2"><strong>English:</strong> A linear function is of the form f(x) = ax + b, where:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>'a' determines the slope (rate of change)</li>
+                                        <li>'b' determines the y-intercept</li>
+                                        <li>The graph is always a straight line</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> रैखिक फलन f(x) = ax + b को रूपमा हुन्छ, जहाँ:</p>
+                                    <ul className="list-disc ml-6">
+                                        <li>'a' ले भिरालोपन (परिवर्तनको दर) निर्धारण गर्छ</li>
+                                        <li>'b' ले y-अन्तःखण्ड निर्धारण गर्छ</li>
+                                        <li>यसको ग्राफ सधैं सीधा रेखा हुन्छ</li>
+                                    </ul>
+                                </div>
+
+                                {/* Quadratic Functions */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Quadratic Functions (वर्गीय फलन)</h3>
+                                    <p className="mb-2"><strong>English:</strong> A quadratic function is of the form f(x) = ax² + bx + c, where:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>'a' determines the opening direction and width of the parabola</li>
+                                        <li>'b' affects the axis of symmetry</li>
+                                        <li>'c' determines the y-intercept</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> वर्गीय फलन f(x) = ax² + bx + c को रूपमा हुन्छ, जहाँ:</p>
+                                    <ul className="list-disc ml-6">
+                                        <li>'a' ले परवलयको खुल्ने दिशा र चौडाइ निर्धारण गर्छ</li>
+                                        <li>'b' ले सममितिको अक्षमा प्रभाव पार्छ</li>
+                                        <li>'c' ले y-अन्तःखण्ड निर्धारण गर्छ</li>
+                                    </ul>
+                                </div>
+
+                                {/* Cubic Functions */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Cubic Functions (घनीय फलन)</h3>
+                                    <p className="mb-2"><strong>English:</strong> A cubic function is of the form f(x) = ax³ + bx² + cx + d, where:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>'a' determines the end behavior and steepness</li>
+                                        <li>'b' and 'c' affect the locations of turning points</li>
+                                        <li>'d' determines the y-intercept</li>
+                                        <li>The graph can have up to two turning points</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> घनीय फलन f(x) = ax³ + bx² + cx + d को रूपमा हुन्छ, जहाँ:</p>
+                                    <ul className="list-disc ml-6">
+                                        <li>'a' ले अन्त्य व्यवहार र भिरालोपन निर्धारण गर्छ</li>
+                                        <li>'b' र 'c' ले मोड़ने बिन्दुहरूको स्थान प्रभावित गर्छन्</li>
+                                        <li>'d' ले y-अन्तःखण्ड निर्धारण गर्छ</li>
+                                        <li>ग्राफमा बढीमा दुई मोड़ने बिन्दुहरू हुन सक्छन्</li>
+                                    </ul>
+                                </div>
+
+                                {/* Function Transformations */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Function Transformations (फलन रूपान्तरण)</h3>
+                                    <p className="mb-2"><strong>English:</strong> Functions can be transformed in several ways:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>Vertical shift: f(x) + k moves the graph up (k {'>'} 0) or down (k {'<'} 0)</li>
+                                        <li>Horizontal shift: f(x - h) moves the graph right (h {'>'} 0) or left (h {'<'} 0)</li>
+                                        <li>Vertical stretch: a·f(x) stretches (|a| {'>'} 1) or compresses (0 {'<'} |a| {'<'} 1)</li>
+                                        <li>Reflection: -f(x) reflects across x-axis, f(-x) reflects across y-axis</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> फलनहरूलाई विभिन्न तरिकाले रूपान्तरण गर्न सकिन्छ:</p>
+                                    <ul className="list-disc ml-6">
+                                                                                 <li>ठाडो सिफ्ट: f(x) + k ले ग्राफलाई माथि (k {'>'} 0) वा तल (k {'<'} 0) सार्छ</li>
+                                        <li>तेर्सो सिफ्ट: f(x - h) ले ग्राफलाई दायाँ (h {'>'} 0) वा बायाँ (h {'<'} 0) सार्छ</li>
+                                        <li>ठाडो तन्काइ: a·f(x) ले तन्काउँछ (|a| {'>'} 1) वा खुम्च्याउँछ (0 {'<'} |a| {'<'} 1)</li>
+                                        <li>प्रतिबिम्ब: -f(x) ले x-अक्षमा, f(-x) ले y-अक्षमा प्रतिबिम्बित गर्छ</li>
+                                    </ul>
+                                </div>
+
+                                {/* Practice Examples */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Practice Examples (अभ्यास उदाहरणहरू)</h3>
+                                    <div className="space-y-4">
+                                        <div className="bg-blue-50 p-4 rounded-lg">
+                                            <h4 className="font-medium mb-2">Try These Transformations:</h4>
+                                            <ol className="list-decimal ml-6">
+                                                <li>Start with f(x) = x²</li>
+                                                <li>Shift it 2 units right</li>
+                                                <li>Shift it 1 unit up</li>
+                                                <li>Make it twice as wide</li>
+                                                <li>Reflect it across the x-axis</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Application Examples */}
+                                <div>
+                                    <h3 className="font-semibold mb-2">Real-World Applications (वास्तविक प्रयोगहरू)</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-green-50 p-4 rounded-lg">
+                                            <h4 className="font-medium mb-2">Physics Examples:</h4>
+                                            <ul className="list-disc ml-6">
+                                                <li>Projectile motion (quadratic)</li>
+                                                <li>Velocity and position (linear)</li>
+                                                <li>Oscillation (cubic approximation)</li>
+                                            </ul>
+                                        </div>
+                                        <div className="bg-yellow-50 p-4 rounded-lg">
+                                            <h4 className="font-medium mb-2">Economics Examples:</h4>
+                                            <ul className="list-disc ml-6">
+                                                <li>Supply and demand (linear)</li>
+                                                <li>Profit optimization (quadratic)</li>
+                                                <li>Cost analysis (cubic)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <AlgebraExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

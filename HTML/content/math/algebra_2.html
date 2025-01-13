@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systems of Equations Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.2.0/math.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const SystemsExplorer = () => {
+            // State for equation 1
+            const [a1, setA1] = useState(1);
+            const [b1, setB1] = useState(1);
+            const [c1, setC1] = useState(0);
+            
+            // State for equation 2
+            const [a2, setA2] = useState(2);
+            const [b2, setB2] = useState(-1);
+            const [c2, setC2] = useState(0);
+
+            // System type and solution state
+            const [systemType, setSystemType] = useState('linear');
+            const [solution, setSolution] = useState(null);
+
+            useEffect(() => {
+                // Calculate intersection points
+                if (systemType === 'linear') {
+                    const determinant = a1 * b2 - a2 * b1;
+                    if (determinant !== 0) {
+                        const x = (b1 * c2 - b2 * c1) / determinant;
+                        const y = (a2 * c1 - a1 * c2) / determinant;
+                        setSolution({ x, y, type: 'unique' });
+                    } else if (a1/a2 === b1/b2 && b1/b2 === c1/c2) {
+                        setSolution({ type: 'infinite' });
+                    } else {
+                        setSolution({ type: 'none' });
+                    }
+                }
+            }, [a1, b1, c1, a2, b2, c2, systemType]);
+
+            const SystemVisualizer = () => {
+                const SVG_WIDTH = 400;
+                const SVG_HEIGHT = 300;
+                const SCALE = 30;
+                const CENTER_X = SVG_WIDTH / 2;
+                const CENTER_Y = SVG_HEIGHT / 2;
+
+                const getPointsForLine = (a, b, c) => {
+                    const points = [];
+                    for (let x = -10; x <= 10; x += 0.1) {
+                        if (b === 0) continue;
+                        const y = (-a * x - c) / b;
+                        const screenX = CENTER_X + x * SCALE;
+                        const screenY = CENTER_Y - y * SCALE;
+                        if (screenY >= 0 && screenY <= SVG_HEIGHT) {
+                            points.push({ x: screenX, y: screenY });
+                        }
+                    }
+                    return points;
+                };
+
+                const line1Points = getPointsForLine(a1, b1, c1);
+                const line2Points = getPointsForLine(a2, b2, c2);
+
+                return (
+                    <svg width={SVG_WIDTH} height={SVG_HEIGHT} className="border border-gray-300 bg-white">
+                        {/* Grid */}
+                        {Array.from({length: 21}, (_, i) => i - 10).map(i => (
+                            <React.Fragment key={`grid-${i}`}>
+                                <line 
+                                    x1={CENTER_X + i * SCALE} 
+                                    y1="0" 
+                                    x2={CENTER_X + i * SCALE} 
+                                    y2={SVG_HEIGHT} 
+                                    stroke="#e5e7eb" 
+                                    strokeWidth="1" 
+                                />
+                                <line 
+                                    x1="0" 
+                                    y1={CENTER_Y + i * SCALE} 
+                                    x2={SVG_WIDTH} 
+                                    y2={CENTER_Y + i * SCALE} 
+                                    stroke="#e5e7eb" 
+                                    strokeWidth="1" 
+                                />
+                            </React.Fragment>
+                        ))}
+
+                        {/* Axes */}
+                        <line x1="0" y1={CENTER_Y} x2={SVG_WIDTH} y2={CENTER_Y} stroke="#000" strokeWidth="2"/>
+                        <line x1={CENTER_X} y1="0" x2={CENTER_X} y2={SVG_HEIGHT} stroke="#000" strokeWidth="2"/>
+
+                        {/* Lines */}
+                        <path
+                            d={`M ${line1Points.map(p => `${p.x},${p.y}`).join(' L ')}`}
+                            fill="none"
+                            stroke="#4299e1"
+                            strokeWidth="2"
+                        />
+                        <path
+                            d={`M ${line2Points.map(p => `${p.x},${p.y}`).join(' L ')}`}
+                            fill="none"
+                            stroke="#48bb78"
+                            strokeWidth="2"
+                        />
+
+                        {/* Solution point if it exists */}
+                        {solution && solution.type === 'unique' && (
+                            <circle
+                                cx={CENTER_X + solution.x * SCALE}
+                                cy={CENTER_Y - solution.y * SCALE}
+                                r="4"
+                                fill="red"
+                            />
+                        )}
+                    </svg>
+                );
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto p-4">
+                    <h1 className="text-3xl font-bold mb-4 text-center">Systems of Equations Explorer</h1>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Equation 1 Controls */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">First Equation (Blue)</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-1">a₁:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={a1}
+                                        onChange={(e) => setA1(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">a₁x + b₁y = c₁ ({a1}x + {b1}y = {c1})</span>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">b₁:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={b1}
+                                        onChange={(e) => setB1(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">c₁:</label>
+                                    <input
+                                        type="range"
+                                        min="-10"
+                                        max="10"
+                                        step="0.1"
+                                        value={c1}
+                                        onChange={(e) => setC1(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Equation 2 Controls */}
+                        <div className="bg-white rounded-lg shadow-lg p-4">
+                            <h2 className="text-xl font-semibold mb-4">Second Equation (Green)</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-gray-700 mb-1">a₂:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={a2}
+                                        onChange={(e) => setA2(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                    <span className="text-sm text-gray-600">a₂x + b₂y = c₂ ({a2}x + {b2}y = {c2})</span>
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">b₂:</label>
+                                    <input
+                                        type="range"
+                                        min="-5"
+                                        max="5"
+                                        step="0.1"
+                                        value={b2}
+                                        onChange={(e) => setB2(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700 mb-1">c₂:</label>
+                                    <input
+                                        type="range"
+                                        min="-10"
+                                        max="10"
+                                        step="0.1"
+                                        value={c2}
+                                        onChange={(e) => setC2(Number(e.target.value))}
+                                        className="w-full"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Visualization */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">System Visualization</h2>
+                            <SystemVisualizer />
+                            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                                <h3 className="font-semibold mb-2">Solution:</h3>
+                                {solution && (
+                                    <p>
+                                        {solution.type === 'unique' && 
+                                            `Unique solution at (${solution.x.toFixed(2)}, ${solution.y.toFixed(2)})`}
+                                        {solution.type === 'infinite' && 
+                                            'Infinite solutions (lines are identical)'}
+                                        {solution.type === 'none' && 
+                                            'No solution (lines are parallel)'}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Explanation Section */}
+                        <div className="bg-white rounded-lg shadow-lg p-4 md:col-span-2">
+                            <h2 className="text-xl font-semibold mb-4">Understanding Systems of Equations</h2>
+                            
+                            <div className="space-y-6">
+                                <div>
+                                    <h3 className="font-semibold mb-2">Linear Systems (रैखिक प्रणाली)</h3>
+                                    <p className="mb-2"><strong>English:</strong> A system of linear equations can have:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>One solution (lines intersect at a point)</li>
+                                        <li>No solution (parallel lines)</li>
+                                        <li>Infinite solutions (same line)</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> रैखिक समीकरणको प्रणालीमा हुन सक्छ:</p>
+                                    <ul className="list-disc ml-6">
+                                        <li>एउटा समाधान (रेखाहरू एउटा बिन्दुमा काट्छन्)</li>
+                                        <li>कुनै समाधान छैन (समानान्तर रेखाहरू)</li>
+                                        <li>अनन्त समाधानहरू (एउटै रेखा)</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-semibold mb-2">Solution Methods (समाधान विधिहरू)</h3>
+                                    <p className="mb-2"><strong>English:</strong> Systems can be solved by:</p>
+                                    <ul className="list-disc ml-6 mb-4">
+                                        <li>Graphical method (finding intersection)</li>
+                                        <li>Substitution method</li>
+                                        <li>Elimination method</li>
+                                    </ul>
+                                    <p className="mb-2"><strong>नेपाली:</strong> प्रणालीहरू यसरी समाधान गर्न सकिन्छ:</p>
+                                    <ul className="list-disc ml-6">
+                                        <li>ग्राफीय विधि (काट्ने बिन्दु खोज्ने)</li>
+                                        <li>प्रतिस्थापन विधि</li>
+                                        <li>विलोपन विधि</li>
+                                    </ul>
+                                </div>
+
+                                <div className="border-t pt-6 mt-6">
+                                    <h3 className="font-semibold mb-4">Comprehensive Overview of Systems of Equations</h3>
+                                    
+                                    <div className="bg-blue-50 p-6 rounded-lg mb-6">
+                                        <h4 className="font-medium mb-3">English</h4>
+                                        <p className="mb-4">
+                                            Systems of equations represent mathematical situations where multiple equations must be satisfied simultaneously. These systems are fundamental to both theoretical mathematics and practical applications across various fields. In the simplest case, a system of two linear equations in two variables (x and y) represents two lines in a coordinate plane. The solution to such a system is the point (or points) where these lines intersect, representing values that satisfy both equations simultaneously.
+                                        </p>
+                                        <p className="mb-4">
+                                            The nature of solutions in linear systems falls into three categories: unique solution (one intersection point), no solution (parallel lines), or infinitely many solutions (identical lines). This classification is determined by the coefficients of the equations and reflects the geometric relationship between the lines they represent. The determinant of the coefficient matrix plays a crucial role in determining the solution type: a non-zero determinant indicates a unique solution, while a zero determinant suggests either no solution or infinitely many solutions.
+                                        </p>
+                                        <p>
+                                            Real-world applications of systems of equations are vast and varied. In economics, they model supply-demand relationships and market equilibrium. In physics, they describe force balances and motion equations. Engineering uses them for circuit analysis and structural design. The power of systems of equations lies in their ability to model complex relationships and find optimal solutions to real-world problems, making them an essential tool in mathematics and its applications.
+                                        </p>
+                                    </div>
+
+                                    <div className="bg-green-50 p-6 rounded-lg">
+                                        <h4 className="font-medium mb-3">नेपाली</h4>
+                                        <p className="mb-4">
+                                            समीकरण प्रणालीहरूले एकैसाथ सन्तुष्ट गर्नुपर्ने बहु समीकरणहरू भएको गणितीय परिस्थितिहरूलाई प्रतिनिधित्व गर्छन्। यी प्रणालीहरू सैद्धान्तिक गणित र विभिन्न क्षेत्रहरूमा व्यावहारिक अनुप्रयोगहरूको लागि आधारभूत छन्। सबैभन्दा सरल अवस्थामा, दुई चरहरू (x र y) भएको दुई रैखिक समीकरणहरूको प्रणालीले निर्देशांक तलमा दुई रेखाहरूलाई प्रतिनिधित्व गर्छ। यस्तो प्रणालीको समाधान ती रेखाहरू काटिने बिन्दु (वा बिन्दुहरू) हो, जसले दुवै समीकरणहरूलाई एकैसाथ सन्तुष्ट गर्ने मानहरूलाई प्रतिनिधित्व गर्छ।
+                                        </p>
+                                        <p className="mb-4">
+                                            रैखिक प्रणालीहरूमा समाधानको प्रकृति तीन वर्गमा पर्छ: एकल समाधान (एउटा काट्ने बिन्दु), समाधान छैन (समानान्तर रेखाहरू), वा अनन्त धेरै समाधानहरू (एउटै रेखाहरू)। यो वर्गीकरण समीकरणहरूका गुणांकहरूद्वारा निर्धारित हुन्छ र तिनीहरूले प्रतिनिधित्व गर्ने रेखाहरू बीचको ज्यामितीय सम्बन्धलाई प्रतिबिम्बित गर्छ। गुणांक म्याट्रिक्सको डिटर्मिनेन्टले समाधानको प्रकार निर्धारण गर्नमा महत्वपूर्ण भूमिका खेल्छ: शून्य नभएको डिटर्मिनेन्टले एकल समाधान संकेत गर्छ, जबकि शून्य डिटर्मिनेन्टले या त कुनै समाधान छैन वा अनन्त धेरै समाधानहरू छन् भन्ने सुझाव दिन्छ।
+                                        </p>
+                                        <p>
+                                            समीकरण प्रणालीहरूका वास्तविक जगतका अनुप्रयोगहरू विशाल र विविध छन्। अर्थशास्त्रमा, तिनीहरूले आपूर्ति-माग सम्बन्धहरू र बजार सन्तुलनलाई मोडल गर्छन्। भौतिक विज्ञानमा, तिनीहरूले बल सन्तुलन र गति समीकरणहरूको वर्णन गर्छन्। इन्जिनियरिङले तिनीहरूलाई सर्किट विश्लेषण र संरचनात्मक डिजाइनको लागि प्रयोग गर्छ। समीकरण प्रणालीहरूको शक्ति जटिल सम्बन्धहरूलाई मोडल गर्न र वास्तविक समस्याहरूको इष्टतम समाधान फेला पार्न सक्ने क्षमतामा निहित छ, जसले तिनीहरूलाई गणित र यसका अनुप्रयोगहरूमा एक आवश्यक उपकरण बनाउँछ।
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-gray-100 py-4">
+                    <SystemsExplorer />
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
