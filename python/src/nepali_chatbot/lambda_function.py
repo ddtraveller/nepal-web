@@ -29,13 +29,11 @@ def get_huggingface_key():
 
 def format_response(chain_output: str) -> Dict:
     """Format the chain output for the API response"""
+    # Removed CORS headers here - let Lambda URL handle it
     return {
         'statusCode': 200,
         'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': '*',
-            'Access-Control-Allow-Methods': '*'
+            'Content-Type': 'application/json'
         },
         'body': json.dumps({
             'response': chain_output,
@@ -127,16 +125,14 @@ Response:"""
 def lambda_handler(event, context):
     """Handle incoming Lambda requests"""
     logger.info(f"Received event: {json.dumps(event)}")
+    logger.info(f"Incoming headers: {json.dumps(event.get('headers', {}))}")
     
-    # Handle OPTIONS requests for CORS
+    # Handle OPTIONS requests - removed CORS headers
     if event.get('requestContext', {}).get('http', {}).get('method') == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Allow-Methods': '*'
+                'Content-Type': 'application/json'
             }
         }
 
@@ -153,10 +149,13 @@ def lambda_handler(event, context):
             logger.error("Missing session_id or message")
             return {
                 'statusCode': 400,
+                'headers': {
+                    'Content-Type': 'application/json'
+                },
                 'body': json.dumps({'error': 'Missing session_id or message'})
             }
 
-        # Initialize chat history with correct schema
+        # Initialize chat history
         history = DynamoDBChatMessageHistory(
             table_name=os.environ['DYNAMODB_TABLE'],
             session_id=session_id,
@@ -166,19 +165,17 @@ def lambda_handler(event, context):
         # Add user message to history
         history.add_user_message(message)
 
-        # Prepare messages for Hugging Face API
+        # Get messages for API
         messages = []
-        
-        # Convert history messages to the correct format
         for msg in history.messages:
             if msg.type == "human":
                 messages.append({"role": "user", "content": msg.content})
             elif msg.type == "ai":
                 messages.append({"role": "assistant", "content": msg.content})
 
-        logger.info(f"Prepared messages: {json.dumps(messages, indent=2)}")
+        logger.info(f"Prepared messages for API: {json.dumps(messages)}")
 
-        # Get Hugging Face API key
+        # Get API key
         api_key = get_huggingface_key()
 
         # Generate response
@@ -189,7 +186,9 @@ def lambda_handler(event, context):
         history.add_ai_message(ai_response)
 
         # Return formatted response
-        return format_response(ai_response)
+        response = format_response(ai_response)
+        logger.info(f"Final response being sent: {json.dumps(response)}")
+        return response
 
     except Exception as e:
         logger.error(f"Error processing request: {str(e)}")
@@ -197,6 +196,9 @@ def lambda_handler(event, context):
         logger.error(f"Traceback: {traceback.format_exc()}")
         return {
             'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json'
+            },
             'body': json.dumps({
                 'error': 'Internal server error',
                 'details': str(e)
