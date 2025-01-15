@@ -1,183 +1,204 @@
 import json
-import boto3
-import time
 import os
+import time
+import requests
+import logging
+from typing import Dict, List
+import boto3
+from langchain_community.chat_message_histories import DynamoDBChatMessageHistory
 
-# Set environment variables for cache directories
-os.environ['TRANSFORMERS_CACHE'] = '/tmp/cache'
-os.environ['HF_HOME'] = '/tmp/cache'
+# Configure logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-# Create cache directory
-os.makedirs('/tmp/cache', exist_ok=True)
-
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-
-# Initialize DynamoDB
+# Initialize AWS services
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('ChatSessions')
 
-def init_models():
-    """Initialize models with explicit cache paths"""
+def get_huggingface_key():
+    """Get Hugging Face API key from Parameter Store"""
+    ssm = boto3.client('ssm', region_name='us-west-2')
     try:
-        # Initialize simple dialogue model
-        tokenizer = AutoTokenizer.from_pretrained(
-            "facebook/blenderbot-400M-distill",
-            cache_dir='/tmp/cache'
+        response = ssm.get_parameter(
+            Name='HUGGINGFACE_KEY',
+            WithDecryption=True
         )
-        model = AutoModelForCausalLM.from_pretrained(
-            "facebook/blenderbot-400M-distill",
-            cache_dir='/tmp/cache'
-        )
-        
-        # Initialize translator
-        translator = pipeline(
-            "translation",
-            model="Helsinki-NLP/opus-mt-mul-en",
-            cache_dir='/tmp/cache'
-        )
-        
-        return tokenizer, model, translator
+        return response['Parameter']['Value']
     except Exception as e:
-        print(f"Error initializing models: {str(e)}")
+        logger.error(f"Error getting API key: {str(e)}")
         raise
 
-# Initialize models (will be cached between invocations if container is reused)
-tokenizer, model, translator = init_models()
-
-def get_conversation_history(session_id):
-    """Retrieve conversation history from DynamoDB"""
-    try:
-        response = table.get_item(Key={'session_id': session_id})
-        return response.get('Item', {}).get('history', [])
-    except Exception as e:
-        print(f"Error retrieving history: {str(e)}")
-        return []
-
-def save_conversation_history(session_id, history):
-    """Save conversation history to DynamoDB"""
-    try:
-        table.put_item(Item={
-            'session_id': session_id,
-            'history': history,
-            'last_updated': int(time.time()),
-            'ttl': int(time.time()) + (60 * 60)  # 1 hour TTL
+def format_response(chain_output: str) -> Dict:
+    """Format the chain output for the API response"""
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Methods': '*'
+        },
+        'body': json.dumps({
+            'response': chain_output,
+            'timestamp': int(time.time())
         })
-    except Exception as e:
-        print(f"Error saving history: {str(e)}")
+    }
 
-def generate_response(prompt, history_text="", max_length=150):
-    """Generate a response using the model"""
+def generate_huggingface_response(messages: List[Dict], api_key: str) -> str:
+    """
+    Generate response using Hugging Face API with enhanced debugging
+    """
+    # Create a detailed conversation history
+    conversation_history = ""
+    for msg in messages:
+        role = msg.get('role', '').capitalize()
+        content = msg.get('content', '')
+        conversation_history += f"{role}: {content}\n"
+    
+    # Get the last user message for context
+    last_user_message = messages[-1]['content'] if messages else ""
+    
+    # Prepare a comprehensive prompt
+    prompt = f"""You are a helpful AI assistant. Engage in a conversation and provide helpful, contextual responses.
+
+Conversation History:
+{conversation_history}
+
+Last User Message: {last_user_message}
+
+Respond directly and helpfully to the last message. If no specific response is possible, provide a general, friendly response.
+
+Response:"""
+
+    # Attempt to generate response with multiple fallback mechanisms
     try:
-        full_prompt = f"{history_text}\nHuman: {prompt}\nAssistant:"
-        inputs = tokenizer(full_prompt, return_tensors="pt", max_length=512, truncation=True)
-        outputs = model.generate(
-            inputs["input_ids"],
-            max_length=max_length,
-            num_return_sequences=1,
-            no_repeat_ngram_size=2,
-            temperature=0.7
+        # First attempt with full parameters
+        response = requests.post(
+            'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
+            headers={
+                'Authorization': f'Bearer {api_key}',
+                'Content-Type': 'application/json',
+            },
+            json={
+                'inputs': prompt,
+                'parameters': {
+                    'max_new_tokens': 150,
+                    'min_new_tokens': 20,
+                    'temperature': 0.7,
+                    'top_p': 0.9,
+                    'repetition_penalty': 1.1
+                }
+            }
         )
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return response.split("Assistant:")[-1].strip()
-    except Exception as e:
-        print(f"Error generating response: {str(e)}")
-        return "I apologize, but I'm having trouble generating a response."
+        
+        # Log raw response for debugging
+        logger.info(f"Raw HuggingFace Response Status: {response.status_code}")
+        logger.info(f"Raw HuggingFace Response Content: {response.text}")
 
-def detect_language(text):
-    """Detect if text is in Nepali"""
-    nepali_chars = set('कखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसहअआइईउऊएऐओऔ')
-    text_chars = set(text)
-    return 'ne' if len(text_chars.intersection(nepali_chars)) > 0 else 'en'
+        # Validate response
+        if response.status_code != 200:
+            logger.error(f"HuggingFace API Error: {response.text}")
+            return f"I'm having trouble responding. Status code: {response.status_code}"
 
-def translate_text(text, source_lang):
-    """Translate between English and Nepali"""
-    try:
-        if source_lang == 'ne':
-            # Translate Nepali to English
-            translation = translator(text)[0]['translation_text']
-            return translation
-        return text  # Return original text if English
+        # Parse response
+        result = response.json()
+        
+        # Extract generated text
+        if isinstance(result, list):
+            generated_text = result[0].get('generated_text', '')
+        elif isinstance(result, dict):
+            generated_text = result.get('generated_text', '')
+        else:
+            generated_text = str(result)
+        
+        # Clean up the response
+        cleaned_response = generated_text.replace(prompt, '').strip()
+        
+        # Fallback if response is empty
+        if not cleaned_response:
+            logger.warning("Empty response generated. Using fallback.")
+            cleaned_response = "I'm here and ready to help. Could you please repeat your message?"
+        
+        return cleaned_response
+
     except Exception as e:
-        print(f"Translation error: {str(e)}")
-        return text
+        logger.error(f"Error generating response: {str(e)}")
+        return f"I encountered an error: {str(e)}. Could you please try again?"
 
 def lambda_handler(event, context):
-    # Handle CORS preflight
+    """Handle incoming Lambda requests"""
+    logger.info(f"Received event: {json.dumps(event)}")
+    
+    # Handle OPTIONS requests for CORS
     if event.get('requestContext', {}).get('http', {}).get('method') == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
+                'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS'
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Methods': '*'
             }
         }
 
     try:
-        # Parse request
+        # Parse the request body
         body = json.loads(event.get('body', '{}'))
-        message = body.get('message', '')
-        session_id = body.get('session_id', '')
+        logger.info(f"Parsed body: {json.dumps(body)}")
+        
+        session_id = body.get('session_id')
+        message = body.get('message')
 
-        if not message or not session_id:
+        # Validate input
+        if not session_id or not message:
+            logger.error("Missing session_id or message")
             return {
                 'statusCode': 400,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                },
-                'body': json.dumps({'error': 'Message and session_id are required'})
+                'body': json.dumps({'error': 'Missing session_id or message'})
             }
 
-        # Get conversation history
-        history = get_conversation_history(session_id)
-        history_text = "\n".join([f"Human: {h['human']}\nAssistant: {h['ai']}" for h in history])
+        # Initialize chat history with correct schema
+        history = DynamoDBChatMessageHistory(
+            table_name=os.environ['DYNAMODB_TABLE'],
+            session_id=session_id,
+            primary_key_name="SessionId"
+        )
 
-        # Process message
-        lang = detect_language(message)
+        # Add user message to history
+        history.add_user_message(message)
+
+        # Prepare messages for Hugging Face API
+        messages = []
         
-        # Translate to English if needed
-        if lang == 'ne':
-            eng_message = translate_text(message, 'ne')
-        else:
-            eng_message = message
+        # Convert history messages to the correct format
+        for msg in history.messages:
+            if msg.type == "human":
+                messages.append({"role": "user", "content": msg.content})
+            elif msg.type == "ai":
+                messages.append({"role": "assistant", "content": msg.content})
+
+        logger.info(f"Prepared messages: {json.dumps(messages, indent=2)}")
+
+        # Get Hugging Face API key
+        api_key = get_huggingface_key()
 
         # Generate response
-        response = generate_response(eng_message, history_text)
+        ai_response = generate_huggingface_response(messages, api_key)
+        logger.info(f"Generated AI response: {ai_response}")
 
-        # Update history
-        history.append({
-            'human': message,
-            'ai': response,
-            'language': lang,
-            'timestamp': int(time.time())
-        })
+        # Add AI response to history
+        history.add_ai_message(ai_response)
 
-        # Save updated history
-        save_conversation_history(session_id, history)
-
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({
-                'session_id': session_id,
-                'message': message,
-                'response': response,
-                'language': lang,
-                'history': history
-            })
-        }
+        # Return formatted response
+        return format_response(ai_response)
 
     except Exception as e:
-        print(f"Error in handler: {str(e)}")
+        logger.error(f"Error processing request: {str(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
         return {
             'statusCode': 500,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            'body': json.dumps({'error': str(e)})
+            'body': json.dumps({
+                'error': 'Internal server error',
+                'details': str(e)
+            })
         }
