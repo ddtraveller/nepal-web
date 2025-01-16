@@ -29,7 +29,6 @@ def get_huggingface_key():
 
 def format_response(chain_output: str) -> Dict:
     """Format the chain output for the API response"""
-    # Removed CORS headers here - let Lambda URL handle it
     return {
         'statusCode': 200,
         'headers': {
@@ -41,9 +40,9 @@ def format_response(chain_output: str) -> Dict:
         })
     }
 
-def generate_huggingface_response(messages: List[Dict], api_key: str) -> str:
+def generate_huggingface_response(messages: List[Dict], api_key: str, context: Dict = None) -> str:
     """
-    Generate response using Hugging Face API with enhanced debugging
+    Generate response using Hugging Face API with enhanced debugging and context support
     """
     # Create a detailed conversation history
     conversation_history = ""
@@ -55,21 +54,33 @@ def generate_huggingface_response(messages: List[Dict], api_key: str) -> str:
     # Get the last user message for context
     last_user_message = messages[-1]['content'] if messages else ""
     
+    # Prepare context section if available
+    context_section = ""
+    if context:
+        context_section = f"""
+Context Document:
+Filename: {context.get('filename', 'unknown')}
+Content:
+{context.get('content', '')}
+
+Use the above context document to help answer questions when relevant.
+"""
+    
     # Prepare a comprehensive prompt
     prompt = f"""You are a helpful AI assistant. Engage in a conversation and provide helpful, contextual responses.
 
+{context_section}
 Conversation History:
 {conversation_history}
 
 Last User Message: {last_user_message}
 
-Respond directly and helpfully to the last message. If no specific response is possible, provide a general, friendly response.
+Respond directly and helpfully to the last message, using the context document when relevant. If no specific response is possible, provide a general, friendly response.
 
 Response:"""
 
     # Attempt to generate response with multiple fallback mechanisms
     try:
-        # First attempt with full parameters
         response = requests.post(
             'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
             headers={
@@ -88,19 +99,15 @@ Response:"""
             }
         )
         
-        # Log raw response for debugging
         logger.info(f"Raw HuggingFace Response Status: {response.status_code}")
         logger.info(f"Raw HuggingFace Response Content: {response.text}")
 
-        # Validate response
         if response.status_code != 200:
             logger.error(f"HuggingFace API Error: {response.text}")
             return f"I'm having trouble responding. Status code: {response.status_code}"
 
-        # Parse response
         result = response.json()
         
-        # Extract generated text
         if isinstance(result, list):
             generated_text = result[0].get('generated_text', '')
         elif isinstance(result, dict):
@@ -108,10 +115,8 @@ Response:"""
         else:
             generated_text = str(result)
         
-        # Clean up the response
         cleaned_response = generated_text.replace(prompt, '').strip()
         
-        # Fallback if response is empty
         if not cleaned_response:
             logger.warning("Empty response generated. Using fallback.")
             cleaned_response = "I'm here and ready to help. Could you please repeat your message?"
@@ -125,9 +130,7 @@ Response:"""
 def lambda_handler(event, context):
     """Handle incoming Lambda requests"""
     logger.info(f"Received event: {json.dumps(event)}")
-    logger.info(f"Incoming headers: {json.dumps(event.get('headers', {}))}")
     
-    # Handle OPTIONS requests - removed CORS headers
     if event.get('requestContext', {}).get('http', {}).get('method') == 'OPTIONS':
         return {
             'statusCode': 200,
@@ -137,16 +140,12 @@ def lambda_handler(event, context):
         }
 
     try:
-        # Parse the request body
         body = json.loads(event.get('body', '{}'))
-        logger.info(f"Parsed body: {json.dumps(body)}")
-        
         session_id = body.get('session_id')
         message = body.get('message')
+        document_context = body.get('context')  # Get document context if provided
 
-        # Validate input
         if not session_id or not message:
-            logger.error("Missing session_id or message")
             return {
                 'statusCode': 400,
                 'headers': {
@@ -162,10 +161,8 @@ def lambda_handler(event, context):
             primary_key_name="SessionId"
         )
 
-        # Add user message to history
         history.add_user_message(message)
 
-        # Get messages for API
         messages = []
         for msg in history.messages:
             if msg.type == "human":
@@ -173,22 +170,13 @@ def lambda_handler(event, context):
             elif msg.type == "ai":
                 messages.append({"role": "assistant", "content": msg.content})
 
-        logger.info(f"Prepared messages for API: {json.dumps(messages)}")
-
-        # Get API key
         api_key = get_huggingface_key()
 
-        # Generate response
-        ai_response = generate_huggingface_response(messages, api_key)
-        logger.info(f"Generated AI response: {ai_response}")
-
-        # Add AI response to history
+        # Pass document context to response generator if available
+        ai_response = generate_huggingface_response(messages, api_key, document_context)
         history.add_ai_message(ai_response)
 
-        # Return formatted response
-        response = format_response(ai_response)
-        logger.info(f"Final response being sent: {json.dumps(response)}")
-        return response
+        return format_response(ai_response)
 
     except Exception as e:
         logger.error(f"Error processing request: {str(e)}")

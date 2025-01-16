@@ -3,153 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nepali-English Chatbot</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <title>AI Chatbot</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <div id="root"></div>
-    <script type="text/babel">
-        const LAMBDA_URL = 'https://xfwphs7u5dqqdfflz6xjyyauhy0kquzm.lambda-url.us-west-2.on.aws/';
+<body class="bg-gray-100 p-4">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4 text-center">AI Chatbot</h1>
+        
+        <!-- File Upload Section -->
+        <div class="mb-4 p-4 bg-white rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-2">Upload Context Document</h2>
+            <div class="mb-3 text-sm text-gray-600">
+                <p>File requirements:</p>
+                <ul class="list-disc ml-5">
+                    <li>Text files only (.txt)</li>
+                    <li>Maximum file size: 2MB</li>
+                </ul>
+            </div>
+            <div class="flex items-center gap-2">
+                <input 
+                    type="file" 
+                    id="fileInput"
+                    class="flex-1 p-2 border rounded"
+                    accept=".txt"
+                >
+                <button 
+                    id="uploadButton"
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                    Upload
+                </button>
+            </div>
+            <div id="uploadStatus" class="mt-2 text-sm"></div>
+        </div>
+        
+        <!-- Messages Container -->
+        <div id="messages" class="bg-white p-4 rounded-lg shadow mb-4 min-h-[400px] max-h-[600px] overflow-y-auto space-y-4"></div>
+        
+        <!-- Error Display -->
+        <div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 hidden"></div>
+        
+        <!-- Input Form -->
+        <form id="chatForm" class="flex gap-2">
+            <input 
+                type="text" 
+                id="messageInput"
+                class="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Type your message..."
+            >
+            <button 
+                type="submit"
+                class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+            </button>
+        </form>
+    </div>
 
-        function App() {
-            const [messages, setMessages] = useState([]);
-            const [input, setInput] = useState('');
-            const [loading, setLoading] = useState(false);
-            const [error, setError] = useState('');
-            const messagesEndRef = useRef(null);
-            const [sessionId] = useState(`session-${Date.now()}`);
+    <script>
+        const LAMBDA_URL = 'https://2eibpywtaxca2v323fgbjafj6a0bltkh.lambda-url.us-west-2.on.aws/';
+        const SESSION_ID = `session-${Date.now()}`;
+        const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+        let currentUploadedFile = null;
 
-            const scrollToBottom = () => {
-                messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-            };
+        // DOM Elements
+        const messagesContainer = document.getElementById('messages');
+        const chatForm = document.getElementById('chatForm');
+        const messageInput = document.getElementById('messageInput');
+        const errorDisplay = document.getElementById('error');
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const uploadStatus = document.getElementById('uploadStatus');
 
-            useEffect(() => {
-                scrollToBottom();
-            }, [messages]);
+        function createMessageElement(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'}`;
+            
+            const innerDiv = document.createElement('div');
+            innerDiv.className = `max-w-[80%] p-3 rounded-lg ${
+                isUser 
+                    ? 'bg-blue-500 text-white rounded-br-none' 
+                    : 'bg-gray-200 text-gray-800 rounded-bl-none'
+            }`;
+            innerDiv.textContent = content;
+            
+            messageDiv.appendChild(innerDiv);
+            return messageDiv;
+        }
 
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                if (!input.trim()) return;
+        function validateFile(file) {
+            // Check file size
+            if (file.size > MAX_FILE_SIZE) {
+                throw new Error(`File size exceeds 2MB limit (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+            }
 
-                const userMessage = input;
-                setInput('');
-                setLoading(true);
-                setError('');
+            // Check file type
+            if (!file.name.toLowerCase().endsWith('.txt')) {
+                throw new Error('Only .txt files are allowed');
+            }
 
-                setMessages(prev => [...prev, { type: 'user', content: userMessage }]);
+            // Check if file is empty
+            if (file.size === 0) {
+                throw new Error('File is empty');
+            }
+        }
 
-                try {
-                    const response = await fetch(LAMBDA_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: userMessage,
-                            session_id: sessionId
-                        }),
-                    });
-                
-                    console.log('Response status:', response.status);
-                    console.log('Response headers:', Object.fromEntries(response.headers));
-                
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('Error response:', errorText);
-                        throw new Error(`HTTP error! status: ${response.status}`);
+        // Handle file upload
+        uploadButton.addEventListener('click', async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                uploadStatus.textContent = 'Please select a file first.';
+                uploadStatus.className = 'mt-2 text-sm text-red-500';
+                return;
+            }
+
+            try {
+                // Validate file before proceeding
+                validateFile(file);
+
+                uploadStatus.textContent = 'Uploading...';
+                uploadStatus.className = 'mt-2 text-sm text-blue-500';
+
+                // Read file content
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    try {
+                        const fileContent = e.target.result;
+                        
+                        // Validate content is text
+                        if (typeof fileContent !== 'string') {
+                            throw new Error('Invalid file content');
+                        }
+
+                        currentUploadedFile = {
+                            name: file.name,
+                            content: fileContent,
+                            type: 'text/plain',
+                            size: file.size
+                        };
+                        
+                        uploadStatus.textContent = `File "${file.name}" (${(file.size / 1024).toFixed(1)}KB) uploaded successfully!`;
+                        uploadStatus.className = 'mt-2 text-sm text-green-500';
+                        
+                        // Add system message about uploaded file
+                        messagesContainer.appendChild(createMessageElement(
+                            `File "${file.name}" has been uploaded as context.`, 
+                            false
+                        ));
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    } catch (error) {
+                        uploadStatus.textContent = `Upload failed: ${error.message}`;
+                        uploadStatus.className = 'mt-2 text-sm text-red-500';
                     }
-                
-                    const data = await response.json();
-                    console.log('Received data:', data);
-                    
-                    setMessages(prev => [...prev, { 
-                        type: 'bot', 
-                        content: data.response 
-                    }]);
-                } catch (err) {
-                    console.error('Full error:', err);
-                    setError(`Failed to send message: ${err.message}`);
-                } finally {
-                    setLoading(false);
+                };
+
+                reader.onerror = () => {
+                    uploadStatus.textContent = 'Error reading file';
+                    uploadStatus.className = 'mt-2 text-sm text-red-500';
+                };
+
+                reader.readAsText(file);
+            } catch (error) {
+                uploadStatus.textContent = `Upload failed: ${error.message}`;
+                uploadStatus.className = 'mt-2 text-sm text-red-500';
+            }
+        });
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            messagesContainer.appendChild(createMessageElement(message, true));
+            messageInput.value = '';
+            errorDisplay.classList.add('hidden');
+
+            // Create request
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', LAMBDA_URL);
+            
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Accept', 'application/json');
+            
+            xhr.timeout = 30000;
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response && response.response) {
+                                messagesContainer.appendChild(createMessageElement(response.response, false));
+                            }
+                        } catch (error) {
+                            console.error('Failed to parse response:', error);
+                            errorDisplay.textContent = 'Failed to parse server response';
+                            errorDisplay.classList.remove('hidden');
+                        }
+                    } else {
+                        errorDisplay.textContent = `Server returned status ${xhr.status}`;
+                        errorDisplay.classList.remove('hidden');
+                    }
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }
             };
 
-            return (
-                <div className="flex flex-col h-screen max-w-4xl mx-auto p-4">
-                    <div className="text-2xl font-bold mb-4 text-center">
-                        Nepali-English Chatbot
-                        <div className="text-sm font-normal text-gray-600">
-                            Chat in English or नेपाली भाषामा कुरा गर्नुहोस्
-                        </div>
-                    </div>
+            xhr.onerror = function() {
+                console.error('Request failed');
+                errorDisplay.textContent = 'Request failed';
+                errorDisplay.classList.remove('hidden');
+            };
 
-                    {/* Messages Container */}
-                    <div className="flex-1 overflow-y-auto mb-4 space-y-4 bg-gray-50 p-4 rounded-lg">
-                        {messages.map((message, index) => (
-                            <div
-                                key={index}
-                                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                            >
-                                <div
-                                    className={`max-w-[80%] p-3 rounded-lg ${
-                                        message.type === 'user'
-                                            ? 'bg-blue-500 text-white rounded-br-none'
-                                            : 'bg-gray-200 text-gray-800 rounded-bl-none'
-                                    }`}
-                                >
-                                    {message.content}
-                                </div>
-                            </div>
-                        ))}
-                        {loading && (
-                            <div className="flex justify-start">
-                                <div className="bg-gray-200 p-3 rounded-lg rounded-bl-none">
-                                    <svg className="animate-spin h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
+            xhr.ontimeout = function() {
+                console.error('Request timed out');
+                errorDisplay.textContent = 'Request timed out';
+                errorDisplay.classList.remove('hidden');
+            };
 
-                    {/* Error Alert */}
-                    {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                            {error}
-                        </div>
-                    )}
+            // Prepare payload with file context if available
+            const payload = {
+                session_id: SESSION_ID,
+                message: message
+            };
 
-                    {/* Input Form */}
-                    <form onSubmit={handleSubmit} className="flex gap-2">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="मलाई सन्देश पठाउनुहोस् / Type your message..."
-                            className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            disabled={loading}
-                        />
-                        <button
-                            type="submit"
-                            disabled={loading || !input.trim()}
-                            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-            );
-        }
+            if (currentUploadedFile) {
+                payload.context = {
+                    filename: currentUploadedFile.name,
+                    content: currentUploadedFile.content,
+                    type: currentUploadedFile.type,
+                    size: currentUploadedFile.size
+                };
+            }
 
-        const { useState, useRef, useEffect } = React;
-        ReactDOM.render(<App />, document.getElementById('root'));
+            xhr.send(JSON.stringify(payload));
+        });
     </script>
 </body>
 </html>
