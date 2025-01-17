@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Learning Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .css-tutorial {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .live-example {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            min-height: 300px;
+        }
+        .css-controls {
+            flex: 1;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            font-family: monospace;
+            padding: 0.5rem;
+        }
+        .example-box {
+            width: 200px;
+            height: 200px;
+            background-color: blue;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [language, setLanguage] = React.useState('en');
+            const [cssCode, setCssCode] = React.useState(`
+.example-box {
+    background-color: blue;
+    color: white;
+    border-radius: 0;
+}
+            `.trim());
+
+            const content = {
+                en: {
+                    title: "Interactive CSS Learning Tutorial",
+                    tutorial: "Modify the CSS in the text area and see how it affects the box in real-time!",
+                    cssLabel: "Edit CSS Here:",
+                    toggleLanguage: "नेपालीमा हेर्नुहोस्"
+                },
+                ne: {
+                    title: "अन्तर्क्रियात्मक CSS सिक्ने ट्युटोरियल",
+                    tutorial: "टेक्स्ट क्षेत्रमा CSS परिमार्जन गर्नुहोस् र यसले बक्समा कसरी असर गर्छ रियल-टाइममा हेर्नुहोस्!",
+                    cssLabel: "यहाँ CSS सम्पादन गर्नुहोस्:",
+                    toggleLanguage: "View in English"
+                }
+            };
+
+            const handleCssChange = (e) => {
+                setCssCode(e.target.value);
+            };
+
+            return (
+                <div className="container">
+                    <div>
+                        <button onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')}>
+                            {content[language].toggleLanguage}
+                        </button>
+                    </div>
+                    
+                    <h1>{content[language].title}</h1>
+                    
+                    <p>{content[language].tutorial}</p>
+
+                    <div className="css-tutorial">
+                        <div className="live-example">
+                            <style>{cssCode}</style>
+                            <div className="example-box">
+                                CSS Example Box
+                            </div>
+                        </div>
+
+                        <div className="css-controls">
+                            <label>{content[language].cssLabel}</label>
+                            <textarea 
+                                value={cssCode} 
+                                onChange={handleCssChange}
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

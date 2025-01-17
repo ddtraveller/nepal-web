@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expression Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .regex-tester {
+            margin: 2rem 0;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .match {
+            background: #e3f2fd;
+            padding: 0.2rem;
+            border-radius: 2px;
+        }
+        .language-toggle {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [language, setLanguage] = React.useState('en');
+            const [text, setText] = React.useState('');
+            const [regex, setRegex] = React.useState('');
+            const [matches, setMatches] = React.useState([]);
+
+            const content = {
+                en: {
+                    title: "Regular Expressions Tutorial and Tester",
+                    tutorial: `Regular expressions (regex) are powerful patterns used to match character combinations in strings. They are essential tools for text processing, validation, and search operations.
+
+Understanding Regular Expressions:
+Regular expressions consist of two types of characters: literal characters that match themselves and special metacharacters with special meanings. Here's a comprehensive guide to using regex effectively:
+
+Basic Patterns:
+1. Literal Characters: Simple letters and numbers match themselves
+2. Character Classes: [] matches any single character within the brackets
+3. Ranges: [a-z] matches any lowercase letter, [0-9] matches any digit
+
+Special Characters:
+• . (dot) - Matches any character except newline
+• ^ - Matches start of string
+• $ - Matches end of string
+• * - Matches 0 or more occurrences
+• + - Matches 1 or more occurrences
+• ? - Makes the preceding pattern optional
+• \w - Matches word characters (letters, numbers, underscore)
+• \d - Matches digits
+• \s - Matches whitespace characters
+
+Common Patterns:
+• Email: [\\w.-]+@[\\w.-]+\\.\\w+
+• Phone Numbers: \\d{3}[-.\\s]\\d{3}[-.\\s]\\d{4}
+• URLs: https?://[\\w\\d.-]+\\.\\w{2,}
+
+Best Practices:
+1. Start Simple: Build patterns gradually and test each addition
+2. Use Character Classes: They're more flexible than literal characters
+3. Be Specific: Avoid overly broad patterns that might match unwanted text
+4. Test Thoroughly: Use various input cases to verify your pattern
+5. Consider Performance: Complex patterns can be computationally expensive
+
+Regular expressions are invaluable for data validation, text parsing, and search operations. Practice and experimentation are key to mastering them.`,
+                    inputLabel: "Enter text to test:",
+                    regexLabel: "Enter regular expression:",
+                    results: "Results:",
+                    toggleLanguage: "नेपालीमा हेर्नुहोस्"
+                },
+                ne: {
+                    title: "रेगुलर एक्सप्रेसन ट्युटोरियल र टेस्टर",
+                    tutorial: `रेगुलर एक्सप्रेसन (regex) स्ट्रिङहरूमा क्यारेक्टर संयोजनहरू मिलाउन प्रयोग गरिने शक्तिशाली प्याटर्नहरू हुन्। यी टेक्स्ट प्रोसेसिङ, भेलिडेसन र खोज कार्यहरूका लागि अत्यावश्यक टूलहरू हुन्।
+
+रेगुलर एक्सप्रेसन बुझ्ने:
+रेगुलर एक्सप्रेसनहरूमा दुई प्रकारका क्यारेक्टरहरू हुन्छन्: आफैंलाई मिलाउने लिटरल क्यारेक्टरहरू र विशेष अर्थ भएका विशेष मेटाक्यारेक्टरहरू। यहाँ regex प्रभावकारी रूपमा प्रयोग गर्ने व्यापक गाइड छ:
+
+आधारभूत प्याटर्नहरू:
+१. लिटरल क्यारेक्टरहरू: साधारण अक्षर र नम्बरहरूले आफैंलाई मिलाउँछन्
+२. क्यारेक्टर क्लासहरू: [] ब्राकेटभित्रको कुनै एक क्यारेक्टरसँग मिल्छ
+३. रेन्जहरू: [a-z] कुनै पनि सानो अक्षरसँग मिल्छ, [0-9] कुनै पनि अंकसँग मिल्छ
+
+विशेष क्यारेक्टरहरू:
+• . (डट) - नयाँ लाइन बाहेक कुनै पनि क्यारेक्टरसँग मिल्छ
+• ^ - स्ट्रिङको सुरुवातसँग मिल्छ
+• $ - स्ट्रिङको अन्त्यसँग मिल्छ
+• * - ० वा बढी पटक मिल्छ
+• + - १ वा बढी पटक मिल्छ
+• ? - अघिल्लो प्याटर्नलाई वैकल्पिक बनाउँछ
+• \w - वर्ड क्यारेक्टरहरूसँग मिल्छ (अक्षरहरू, नम्बरहरू, अन्डरस्कोर)
+• \d - अंकहरूसँग मिल्छ
+• \s - खाली स्पेस क्यारेक्टरहरूसँग मिल्छ
+
+सामान्य प्याटर्नहरू:
+• इमेल: [\\w.-]+@[\\w.-]+\\.\\w+
+• फोन नम्बरहरू: \\d{3}[-.\\s]\\d{3}[-.\\s]\\d{4}
+• URLs: https?://[\\w\\d.-]+\\.\\w{2,}
+
+उत्तम अभ्यासहरू:
+१. सरल सुरु गर्नुहोस्: प्याटर्नहरू क्रमशः बनाउनुहोस् र प्रत्येक थपलाई जाँच्नुहोस्
+२. क्यारेक्टर क्लासहरू प्रयोग गर्नुहोस्: तिनीहरू लिटरल क्यारेक्टरहरू भन्दा बढी लचिला हुन्छन्
+३. विशिष्ट बन्नुहोस्: अनावश्यक टेक्स्टसँग मिल्न सक्ने धेरै व्यापक प्याटर्नहरू नप्रयोग गर्नुहोस्
+४. राम्रोसँग जाँच्नुहोस्: तपाईंको प्याटर्न प्रमाणित गर्न विभिन्न इनपुट केसहरू प्रयोग गर्नुहोस्
+५. प्रदर्शन विचार गर्नुहोस्: जटिल प्याटर्नहरू कम्प्युटेशनल रूपमा महंगो हुन सक्छन्
+
+रेगुलर एक्सप्रेसनहरू डाटा भेलिडेसन, टेक्स्ट पार्सिङ र खोज कार्यहरूका लागि अत्यन्त महत्त्वपूर्ण छन्। अभ्यास र प्रयोग तिनीहरूलाई मास्टर गर्ने कुञ्जी हो।`,
+                    inputLabel: "परीक्षण गर्न टेक्स्ट लेख्नुहोस्:",
+                    regexLabel: "रेगुलर एक्सप्रेसन लेख्नुहोस्:",
+                    results: "नतिजाहरू:",
+                    toggleLanguage: "View in English"
+                }
+            };
+
+            const handleTest = () => {
+                try {
+                    const re = new RegExp(regex, 'g');
+                    const found = Array.from(text.matchAll(re), m => ({
+                        match: m[0],
+                        index: m.index
+                    }));
+                    setMatches(found);
+                } catch (e) {
+                    setMatches([{ error: e.message }]);
+                }
+            };
+
+            return (
+                <div className="container">
+                    <div className="language-toggle">
+                        <button onClick={() => setLanguage(language === 'en' ? 'ne' : 'en')}>
+                            {content[language].toggleLanguage}
+                        </button>
+                    </div>
+                    
+                    <h1>{content[language].title}</h1>
+                    
+                    <div className="tutorial">
+                        <pre style={{whiteSpace: 'pre-wrap'}}>{content[language].tutorial}</pre>
+                    </div>
+                    
+                    <div className="regex-tester">
+                        <div className="input-group">
+                            <label>{content[language].inputLabel}</label>
+                            <textarea 
+                                rows="4" 
+                                value={text} 
+                                onChange={(e) => setText(e.target.value)} 
+                            />
+                        </div>
+                        
+                        <div className="input-group">
+                            <label>{content[language].regexLabel}</label>
+                            <input 
+                                type="text" 
+                                value={regex} 
+                                onChange={(e) => setRegex(e.target.value)} 
+                            />
+                            <button onClick={handleTest}>Test</button>
+                        </div>
+                        
+                        <div className="results">
+                            <h3>{content[language].results}</h3>
+                            {matches.map((m, i) => (
+                                <div key={i}>
+                                    {m.error ? (
+                                        <div className="error">{m.error}</div>
+                                    ) : (
+                                        <div>
+                                            Match {i + 1}: <span className="match">{m.match}</span> at index {m.index}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

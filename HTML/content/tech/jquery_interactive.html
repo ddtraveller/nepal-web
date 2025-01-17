@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive jQuery Learning Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .jquery-tutorial {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .live-example {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .suggestions {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .suggestion-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+        .suggestion-item h4 {
+            margin-top: 0;
+            color: #333;
+        }
+        .suggestion-item pre {
+            background-color: #f1f1f1;
+            padding: 0.5rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .code-controls {
+            flex: 1;
+        }
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            font-family: monospace;
+            padding: 0.5rem;
+        }
+        #interactive-box {
+            width: 200px;
+            height: 200px;
+            background-color: blue;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [language, setLanguage] = React.useState('en');
+            const [jqueryCode, setJqueryCode] = React.useState(`$(document).ready(function() {
+    $('#interactive-box').on('click', function() {
+        $(this).animate({
+            width: '250px',
+            opacity: 0.7,
+            borderRadius: '50%'
+        }, 500);
+    });
+
+    $('#reset-btn').on('click', function() {
+        $('#interactive-box').animate({
+            width: '200px',
+            opacity: 1,
+            borderRadius: '0%'
+        }, 500, function() {
+            $(this).css('background-color', 'blue')
+                   .text('jQuery Interaction Box');
+        });
+    });
+
+    $('#color-btn').on('click', function() {
+        $('#interactive-box').css('background-color', 
+            '#' + Math.floor(Math.random()*16777215).toString(16)
+        );
+    });
+}`);
+
+            const content = {
+                en: {
+                    title: "Interactive jQuery Learning Tutorial",
+                    tutorial: "Write jQuery code to interact with the example box. Click buttons or the box to see different interactions!",
+                    codeLabel: "Edit jQuery Code Here:",
+                    resetBtn: "Reset Box",
+                    colorBtn: "Random Color",
+                    toggleLanguage: "Switch to Nepali",
+                    runCode: "Run Code",
+                    helpText: "Note: After modifying the code, press 'Run Code' to apply custom interactions.",
+                    interfaceHelp: "How to Use:",
+                    interfaceInstructions: [
+                        "Interactive Box: Click to animate",
+                        "Reset Button: Return box to original state",
+                        "Random Color: Change box background color",
+                        "Run Code: Apply your custom jQuery script"
+                    ],
+                    suggestionTitle: "Suggested Modifications",
+                    suggestions: [
+                        {
+                            title: "Click Interactions: Text Transformation",
+                            description: "Change box text when clicked",
+                            code: `$('#interactive-box').on('click', function() {
+    let currentText = $(this).text();
+    $(this).text(currentText === 'jQuery Interaction Box' 
+        ? 'Clicked!' 
+        : 'jQuery Interaction Box');
+}`
+                        },
+                        {
+                            title: "Hover Effects: Scale Transformation",
+                            description: "Add scale effect when mouse hovers",
+                            code: `$('#interactive-box').hover(
+    function() {
+        $(this).css('transform', 'scale(1.1)')
+               .css('transition', 'transform 0.3s ease');
+    },
+    function() {
+        $(this).css('transform', 'scale(1)')
+               .css('transition', 'transform 0.3s ease');
+    }
+)`
+                        },
+                        {
+                            title: "Multiple Event Handling",
+                            description: "Combine click, double-click, and hover events",
+                            code: `$('#interactive-box')
+    .on('click', function() {
+        $(this).css('background-color', 'red');
+    })
+    .on('dblclick', function() {
+        $(this).css('background-color', 'green');
+    })
+    .on('mouseenter', function() {
+        $(this).text('Hover!');
+    })
+    .on('mouseleave', function() {
+        $(this).text('jQuery Interaction Box');
+    });`
+                        },
+                        {
+                            title: "Chained Animations",
+                            description: "Create a complex animation sequence",
+                            code: `$('#interactive-box').on('click', function() {
+    $(this)
+        .animate({ opacity: 0.5 }, 300)
+        .animate({ width: '300px' }, 500)
+        .animate({ borderRadius: '50%' }, 400)
+        .animate({ opacity: 1 }, 300);
+}`
+                        }
+                    ]
+                }
+            };
+
+            const handleCodeChange = (e) => {
+                setJqueryCode(e.target.value);
+            };
+
+            const runCode = () => {
+                $('#interactive-box').off();
+                $('#reset-btn').off();
+                $('#color-btn').off();
+                
+                try {
+                    const customFunction = new Function(jqueryCode);
+                    customFunction();
+                } catch (error) {
+                    console.error('Error running custom code:', error);
+                    alert('Error in jQuery code: ' + error.message);
+                }
+            };
+
+            React.useEffect(() => {
+                $('#interactive-box').on('click', function() {
+                    $(this).animate({
+                        width: '250px',
+                        opacity: 0.7,
+                        borderRadius: '50%'
+                    }, 500);
+                });
+
+                $('#reset-btn').on('click', function() {
+                    $('#interactive-box').animate({
+                        width: '200px',
+                        opacity: 1,
+                        borderRadius: '0%'
+                    }, 500, function() {
+                        $(this).css('background-color', 'blue')
+                               .text('jQuery Interaction Box');
+                    });
+                });
+
+                $('#color-btn').on('click', function() {
+                    $('#interactive-box').css('background-color', 
+                        '#' + Math.floor(Math.random()*16777215).toString(16)
+                    );
+                });
+            }, []);
+
+            return (
+                <div className="container">
+
+                    <h1>{content[language].title}</h1>
+                    
+                    <div className="help-text">
+                        <strong>{content[language].interfaceHelp}</strong>
+                        <ul>
+                            {content[language].interfaceInstructions.map((instruction, index) => (
+                                <li key={index}>{instruction}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    <p>{content[language].tutorial}</p>
+
+                    <div className="jquery-tutorial">
+                        <div className="live-example">
+                            <div className="button-container">
+                                <button id="reset-btn">{content[language].resetBtn}</button>
+                                <button id="color-btn">{content[language].colorBtn}</button>
+                                <button onClick={runCode}>{content[language].runCode}</button>
+                            </div>
+                            <div id="interactive-box">
+                                jQuery Interaction Box
+                            </div>
+                            
+                            <div className="suggestions">
+                                <h3>{content[language].suggestionTitle}</h3>
+                                {content[language].suggestions.map((suggestion, index) => (
+                                    <div key={index} className="suggestion-item">
+                                        <h4>{suggestion.title}</h4>
+                                        <p>{suggestion.description}</p>
+                                        <pre><code>{suggestion.code}</code></pre>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="code-controls">
+                            <label>{content[language].codeLabel}</label>
+                            <textarea 
+                                value={jqueryCode} 
+                                onChange={handleCodeChange}
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
