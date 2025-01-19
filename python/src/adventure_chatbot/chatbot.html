@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Story</title>
+    
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .story-content {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s;
+        }
+
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #b91c1c;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+<script type="text/babel">
+        function Adventure() {
+            const [story, setStory] = React.useState('');
+            const [input, setInput] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
+            const [error, setError] = React.useState(null);
+            const [image, setImage] = React.useState(null);
+            const sessionId = React.useMemo(() => `session-${Date.now()}`, []);
+            const LAMBDA_URL = 'https://hutcbbitwm5yzzth6lgbeamzuq0eaxjj.lambda-url.us-west-2.on.aws/';
+
+            React.useEffect(() => {
+                startNewStory();
+            }, []);
+
+            function startNewStory() {
+                setLoading(true);
+                setError(null);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', LAMBDA_URL);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        try {
+                            console.log('Response received:', xhr.responseText);
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                console.log('Parsed response:', response);
+                                
+                                if (response?.body) {
+                                    const body = JSON.parse(response.body);
+                                    console.log('Parsed body:', body);
+                                    
+                                    if (body?.response) {
+                                        setStory(body.response.text);
+                                        if (body.response.image) {
+                                            setImage(body.response.image);
+                                        }
+                                    } else {
+                                        setError('Invalid response format from server');
+                                    }
+                                } else {
+                                    setError('Invalid response format from server');
+                                }
+                            } else {
+                                setError(`Server error (${xhr.status}): ${xhr.statusText}`);
+                            }
+                        } catch (error) {
+                            console.error('Error processing response:', error);
+                            setError('Failed to process server response');
+                        }
+                        setLoading(false);
+                    }
+                };
+
+                xhr.onerror = function() {
+                    console.error('XHR Error occurred');
+                    setError('Failed to connect to server');
+                    setLoading(false);
+                };
+
+                const payload = {
+                    action: 'start_new',
+                    session_id: sessionId,
+                    story_type: 'adventure'
+                };
+
+                console.log('Sending payload:', payload);
+                try {
+                    xhr.send(JSON.stringify(payload));
+                } catch (e) {
+                    console.error('Send error:', e);
+                    setError('Failed to send request');
+                    setLoading(false);
+                }
+            }
+
+            function continueStory(userInput) {
+                setLoading(true);
+                setError(null);
+
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', LAMBDA_URL);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        try {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                const body = JSON.parse(response.body);
+                                
+                                if (body?.response) {
+                                    setStory(prev => `${prev}\n\nYou: ${userInput}\n\n${body.response.text}`);
+                                    if (body.response.image) {
+                                        setImage(body.response.image);
+                                    }
+                                } else {
+                                    setError('Invalid response format from server');
+                                }
+                            } else {
+                                setError(`Server error (${xhr.status}): ${xhr.statusText}`);
+                            }
+                        } catch (error) {
+                            console.error('Error processing response:', error);
+                            setError('Failed to process server response');
+                        }
+                        setLoading(false);
+                    }
+                };
+
+                xhr.onerror = function() {
+                    console.error('XHR Error occurred');
+                    setError('Failed to connect to server');
+                    setLoading(false);
+                };
+
+                const payload = {
+                    action: 'continue',
+                    session_id: sessionId,
+                    input: userInput
+                };
+
+                console.log('Sending continuation payload:', payload);
+                try {
+                    xhr.send(JSON.stringify(payload));
+                } catch (e) {
+                    console.error('Send error:', e);
+                    setError('Failed to send request');
+                    setLoading(false);
+                }
+            }
+
+            function handleSubmit(e) {
+                e.preventDefault();
+                if (!input.trim() || loading) return;
+
+                continueStory(input);
+                setInput('');
+            }
+
+            return (
+                <div className="story-container">
+                    <h1 className="title">Adventure Story</h1>
+                    
+                    {error && (
+                        <div className="error">
+                            {error}
+                        </div>
+                    )}
+
+                    {image && (
+                        <div className="image-container" style={{ marginBottom: '1rem' }}>
+                            <img 
+                                src={image} 
+                                alt="Story scene" 
+                                style={{ 
+                                    width: '100%',
+                                    maxHeight: '400px',
+                                    objectFit: 'contain',
+                                    borderRadius: '0.5rem',
+                                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+                                }} 
+                            />
+                        </div>
+                    )}
+
+                    <div className="story-content">
+                        {story || (loading ? "Loading your adventure..." : "Your adventure begins here...")}
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="input-container">
+                        <input
+                            type="text"
+                            className="input"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="What would you like to do?"
+                            disabled={loading}
+                        />
+                        <button 
+                            type="submit" 
+                            className="button"
+                            disabled={loading || !input.trim()}
+                        >
+                            {loading ? "Thinking..." : "Submit"}
+                        </button>
+                    </form>
+
+                    <div className="input-container">
+                        <button 
+                            onClick={startNewStory}
+                            className="button"
+                            disabled={loading}
+                            style={{width: '100%'}}
+                        >
+                            Start New Story
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <React.StrictMode>
+                <Adventure />
+            </React.StrictMode>
+        );
+    </script>
+</body>
+</html>

@@ -1,4 +1,3 @@
-langchain-core
 langchain-community
 boto3
 requests

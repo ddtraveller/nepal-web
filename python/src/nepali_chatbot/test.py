@@ -6,7 +6,6 @@ from datetime import datetime
 def verify_lambda_url(url):
     """Test if the Lambda URL is accessible"""
     try:
-        # Try a HEAD request first
         print(f"Testing Lambda URL accessibility: {url}")
         head_response = requests.head(url, timeout=5)
         print(f"HEAD response status code: {head_response.status_code}")
@@ -24,46 +23,49 @@ def test_chatbot():
         "Accept": "application/json"
     }
 
-    # List of messages to test conversation memory
+    # Reduced test messages - 2 per language
     test_messages = [
-        "My name is Alice.",
-        "What's my name?", 
-        "What is 2+2?",
-        "What was my question before asking about 2+2?"
+        # English tests - simple introduction and follow-up
+        {"message": "Hi, my name is Alice.", "language": "en"},
+        {"message": "What's my name?", "language": "en"},
+        
+        # Nepali tests - greeting and simple question
+        {"message": "नमस्ते, म राम हुँ।", "language": "ne"},
+        {"message": "तपाईंलाई कस्तो छ?", "language": "ne"}
     ]
 
-    print(f"\nStarting Chatbot Test at {datetime.now().isoformat()}")
+    print(f"\nStarting Bilingual Chatbot Test at {datetime.now().isoformat()}")
     print("=" * 50)
     print(f"Request URL: {url}")
     print(f"Session ID: {session_id}")
     print(f"Headers: {json.dumps(headers, indent=2)}")
     print("=" * 50)
 
-    # Verify Lambda URL is accessible
     if not verify_lambda_url(url):
         print("Failed to verify Lambda URL accessibility. Continuing anyway...")
 
-    # Test conversation chain
-    for i, message in enumerate(test_messages, 1):
+    for i, test_case in enumerate(test_messages, 1):
+        message = test_case["message"]
+        language = test_case["language"]
+        
         print(f"\nTest Message {i}/{len(test_messages)}")
         print(f"Message: '{message}'")
+        print(f"Language: {language}")
         print("-" * 30)
 
         try:
-            # Prepare request payload
             payload = {
                 "session_id": session_id,
-                "message": message
+                "message": message,
+                "language": language
             }
 
-            # Print full request details
             print("\nRequest Details:")
             print(f"URL: {url}")
             print(f"Method: POST")
             print(f"Headers: {json.dumps(headers, indent=2)}")
             print(f"Payload: {json.dumps(payload, indent=2)}")
 
-            # Send POST request
             print("\nSending request...")
             response = requests.post(
                 url, 
@@ -72,41 +74,39 @@ def test_chatbot():
                 timeout=30
             )
             
-            print(f"\nRaw Response Status: {response.status_code}")
-            print(f"Raw Response Headers: {dict(response.headers)}")
-            print(f"Raw Response Content: {response.text[:1000]}")  # First 1000 chars
+            print(f"\nResponse Status: {response.status_code}")
+            print(f"Response Headers: {dict(response.headers)}")
             
             try:
                 response_data = response.json()
-                print("\nParsed Response Data:")
+                print("\nResponse Data:")
                 print(json.dumps(response_data, indent=2))
                 
                 if response.status_code == 200:
                     try:
                         response_body = json.loads(response_data.get('body', '{}'))
                         print("\nBot Response:")
-                        print(response_body.get('response', 'No response found in body'))
+                        print(f"Content: {response_body.get('response', 'No response found')}")
+                        print(f"Language: {response_body.get('language', 'Not specified')}")
                     except json.JSONDecodeError as e:
-                        print(f"\nFailed to parse response body as JSON: {str(e)}")
+                        print(f"\nError parsing response body: {str(e)}")
                         print(f"Raw body: {response_data.get('body')}")
                 else:
-                    print(f"\nError Response Body: {response.text}")
+                    print(f"\nError Response: {response.text}")
                     
             except json.JSONDecodeError as e:
-                print(f"\nFailed to parse response as JSON: {str(e)}")
-                print(f"Raw response text: {response.text}")
+                print(f"\nError parsing response: {str(e)}")
+                print(f"Raw response: {response.text}")
                 
         except requests.exceptions.RequestException as e:
             print(f"\nRequest Failed: {str(e)}")
-            print(f"Exception type: {type(e)}")
             if hasattr(e, 'response'):
                 print(f"Error Response: {e.response.text}")
         except Exception as e:
             print(f"\nUnexpected Error: {str(e)}")
-            print(f"Exception type: {type(e)}")
         
-        print("\nWaiting 2 seconds before next message...")
-        time.sleep(2)
+        print("\nWaiting 3 seconds before next message...")
+        time.sleep(3)
 
 if __name__ == "__main__":
     test_chatbot()
