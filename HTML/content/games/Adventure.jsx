@@ -100,25 +100,76 @@ const Adventure = () => {
   };
 
   // Start a new story
-  const startNewStory = async (locationData) => {
-    try {
-      setIsLoading(true);
-      const currentLocationData = (locationData || locations)?.[currentLocation];
-      if (!currentLocationData) throw new Error('Invalid location');
-      
-      const initialStory = `You find yourself at ${currentLocationData.name}.\n\n${currentLocationData.description}`;
-      setStory(initialStory);
-      setStoryHistory([{ 
-        type: 'start',
-        location: currentLocation
-      }]);
-    } catch (error) {
-      setError('Failed to start a new story. Please try refreshing the page.');
-      console.error('Start story error:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const startNewStory = async (locationData, startLocation) => {
+      try {
+          setIsLoading(true);
+          const locationToUse = startLocation || currentLocation;
+          const location = locationData[locationToUse];
+          
+          const data = await makeRequest({
+              action: 'start_new',
+              session_id: sessionId,
+              story_type: 'fantasy',
+              location: location.name,
+              location_description: location.description,
+              prompt_instructions: `CRITICAL INSTRUCTION: The story MUST begin DIRECTLY in the Eternal Snow Realm. 
+  
+  Describe the opening scene in vivid detail:
+  - Location: Eternal Snow Realm - A mystical dimension where time stands still
+  - Initial scene: Capture the unique characteristics of snow spirits weaving intricate patterns of frost and memory
+  - Atmosphere: Emphasize the timeless, magical nature of this realm
+  - Protagonist: Introduce a character who finds themselves in this extraordinary, frozen dimension
+  
+  The first paragraph MUST immerse the reader in the Eternal Snow Realm, showcasing its mystical and otherworldly essence.`
+          });
+  
+          if (data?.response) {
+              const newText = data.response.text || 
+                  (typeof data.response === 'string' ? data.response : '');
+              
+              setStory(newText);
+              
+              if (data.response.image) {
+                  setImage(data.response.image);
+              }
+          }
+      } catch (error) {
+          console.error('Start story error:', error);
+          setError('Failed to start story');
+      } finally {
+          setIsLoading(false);
+      }
   };
+    
+              React.useEffect(() => {
+                  const loadLocations = async () => {
+                      try {
+                          setIsLoading(true);
+                          console.log('Loading locations...');
+                          const response = await fetch('https://nepal-web.s3.us-west-2.amazonaws.com/games/public/locations.json');
+                          if (!response.ok) throw new Error('Failed to load locations');
+                          
+                          const data = await response.json();
+                          console.log('Raw locations data:', data);
+  
+                          if (!data.locations) {
+                              throw new Error('Invalid locations data format');
+                          }
+  
+                          // Set locations and select random starting point
+                          const startingLocation = selectRandomLocation(data.locations);
+                          console.log('Selected starting location:', startingLocation);
+                          
+                          setLocations(data.locations);
+                          setCurrentLocation(startingLocation);
+                          await startNewStory(data.locations, startingLocation);
+                      } catch (err) {
+                          setError('Failed to load game data. Please try refreshing the page.');
+                          console.error('Error loading locations:', err);
+                      } finally {
+                          setIsLoading(false);
+                      }
+                  };
 
   // Loading state
   if (isLoading && !story) {

@@ -43,14 +43,16 @@ def format_response(response_data: Dict) -> Dict:
     }
     
 def generate_story_text(prompt: str, huggingface_key: str) -> Dict[str, str]:
-    """Generate story text and translation using Hugging Face"""
     try:
+        # Wrap the prompt in the Mistral instruction format
+        formatted_prompt = f"<s>[INST] {prompt} [/INST]"
+        
         # Generate English story
         response = requests.post(
             'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2',
             headers={'Authorization': f'Bearer {huggingface_key}'},
             json={
-                'inputs': prompt,
+                'inputs': formatted_prompt,
                 'parameters': {
                     'max_new_tokens': 500,
                     'min_new_tokens': 100,
@@ -67,6 +69,9 @@ def generate_story_text(prompt: str, huggingface_key: str) -> Dict[str, str]:
 
         result = response.json()
         english_text = result[0]['generated_text'] if isinstance(result, list) else result['generated_text']
+        
+        # Remove the instruction format from the generated text
+        english_text = english_text.replace(formatted_prompt, '').strip()
         english_text = clean_text(english_text)
 
         # Generate Nepali translation
@@ -146,26 +151,18 @@ def clean_text(text: str) -> str:
    text = re.sub(r'^\s*[\r\n]', '', text, flags=re.MULTILINE)
    text = re.sub(r'\n\s*\n', '\n', text)
    return text.strip()
-
-def lambda_handler(event, context):
-    """Handle Lambda requests"""
-    logger.info(f"Received event: {json.dumps(event)}")
     
-    # Handle CORS preflight
-    if event.get('requestContext', {}).get('http', {}).get('method') == 'OPTIONS':
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json'
-            }
-        }
-
+def lambda_handler(event, context):
     try:
         # Parse request
         body = json.loads(event.get('body', '{}'))
         session_id = body.get('session_id')
         action = body.get('action')
         story_type = body.get('story_type')
+        
+        # Extract location details
+        location = body.get('location', 'Unknown Location')
+        location_description = body.get('location_description', '')
 
         if not session_id:
             return format_response({'error': 'Missing session_id'})
@@ -184,77 +181,31 @@ def lambda_handler(event, context):
             # Clear existing history
             history.clear()
             
-            # Get random elements
-            setting, situation, elements = get_random_elements(story_type)
-            
-            # Generate story prompt
-            prompt = get_story_prompt(story_type, setting, situation, elements)
+            # Create a prompt that focuses on the location
+            prompt = f"""
+            Create a fantasy story that begins in {location}: {location_description}
+
+            Craft a compelling narrative that explores the unique magical characteristics of this location. 
+            Describe the environment, its mystical essence, and potential adventures that could unfold in this extraordinary setting.
+
+            Ensure the first paragraph vividly describes the location, immersing the reader in its distinctive atmosphere.
+            """
 
             # Generate story content
             story_text = generate_story_text(prompt, huggingface_key)
             
             # Generate image prompt and image
-            image_prompt = get_image_prompt(story_type, story_text['english'])
+            image_prompt = get_image_prompt('fantasy', story_text['english'])
             image_url = generate_image(image_prompt, stability_key)
 
             # Store just the English text in history
             history.add_user_message("START_NEW_STORY")
             history.add_ai_message(story_text['english'])
-            
-            # Log history for debugging
-            logger.info(f"History after start_new: {history.messages}")
 
             response_data = {
                 'text': story_text['english'],
                 'nepaliText': story_text['nepali'],
-                'image': image_url,
-                'setting': setting,
-                'situation': situation,
-                'elements': elements
-            }
-
-            return format_response(response_data)
-
-        elif action == 'continue':
-            user_input = body.get('input')
-            if not user_input:
-                return format_response({'error': 'Missing user input'})
-
-            try:
-                # Get previous AI message
-                previous_content = history.messages[-1].content
-                logger.info(f"Previous content retrieved: {previous_content}")
-            except Exception as e:
-                logger.error(f"Error accessing history: {str(e)}")
-                logger.error(f"Falling back to empty previous content")
-                previous_content = ""
-
-            # Get translation of user input
-            nepali_input = translate_to_nepali(user_input, huggingface_key)
-            
-            # Generate continuation prompt
-            prompt = get_continuation_prompt(story_type, previous_content, user_input)
-
-            # Generate story content
-            story_text = generate_story_text(prompt, huggingface_key)
-            
-            # Generate image prompt and image
-            image_prompt = get_image_prompt(story_type, story_text['english'])
-            image_url = generate_image(image_prompt, stability_key)
-            
-            # Store the interaction in history
-            history.add_user_message(user_input)
-            history.add_ai_message(story_text['english'])
-            
-            # Log history for debugging
-            logger.info(f"History after continue: {history.messages}")
-
-            response_data = {
-                'text': story_text['english'],
-                'nepaliText': story_text['nepali'],
-                'image': image_url,
-                'input': user_input,
-                'nepaliInput': nepali_input
+                'image': image_url
             }
 
             return format_response(response_data)

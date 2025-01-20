@@ -12,29 +12,28 @@ def load_templates():
     with open(template_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def get_story_prompt(story_type, setting, situation, elements):
+def get_story_prompt(story_type, setting, situation, elements, location=None, location_description=None):
+    # Create a location-specific opening if details are provided
+    location_intro = f"""
+    STORY SETTING: {location}
+    LOCATION DESCRIPTION: {location_description}
+
+    Your story MUST begin in this exact location. The first paragraph must vividly describe the scene, capturing the essence of the location.
+    """ if location and location_description else ""
+
+    # Combine location intro with existing prompt generation
+    prompt = f"""
+    Create a {story_type} story with the following elements:
+    Setting: {setting}
+    Situation: {situation}
+    Additional Elements: {elements}
+
+    {location_intro}
+
+    Craft a compelling narrative that incorporates these elements.
     """
-    Generate a story prompt based on selected template elements.
-    
-    Args:
-        story_type (str): The type of story (e.g., 'himalayan', 'fantasy')
-        setting (str): The story setting
-        situation (str): The initial situation
-        elements (list): List of story elements to incorporate
-        
-    Returns:
-        str: Formatted story prompt
-    """
-    templates = load_templates()
-    template = templates[story_type]
-    
-    return f"""Create an immersive story opener in second-person perspective ("you") with 6th grade level English. 
-    The scene takes place in a {setting} where you {situation}. 
-    Include vivid details about {' and '.join(elements)}. 
-    Write 100-150 words.
-    Keep everything in second-person perspective with rich sensory details.
-    Maintain a {template['tone']} tone throughout the narrative.
-    ### Response:"""
+
+    return prompt
 
 def get_continuation_prompt(story_type, previous_content, user_action):
     """
