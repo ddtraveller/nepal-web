@@ -1,0 +1,148 @@
+{
+  "locations": {
+    "swayambhu_stupa": {
+      "name": "Swayambhu Crystal Stupa",
+      "description": "An ancient stupa atop a hill, radiating mystical energy. The crystal dome captures moonlight and transforms it into healing waves.",
+      "connections": ["thamel_bazaar", "monkey_temple", "maru_tole"],
+      "coordinates": { "x": 200, "y": 100 }
+    },
+    "celestial_gardens": {
+      "name": "Celestial Gardens",
+      "description": "Floating gardens where starflowers bloom and cosmic butterflies dance through ethereal mists.",
+      "connections": ["crystal_pavilion", "astral_observatory", "dream_pools"],
+      "coordinates": { "x": 650, "y": 150 }
+    },
+    "crystal_pavilion": {
+      "name": "Crystal Pavilion of Echoes",
+      "description": "A structure made entirely of singing crystals that resonate with ancient melodies.",
+      "connections": ["celestial_gardens", "harmony_bridge", "mystic_forge"],
+      "coordinates": { "x": 700, "y": 200 }
+    },
+    "astral_observatory": {
+      "name": "Astral Observatory",
+      "description": "Where celestial monks map the movements of cosmic bodies and predict otherworldly events.",
+      "connections": ["celestial_gardens", "starweaver_sanctum", "void_gate"],
+      "coordinates": { "x": 750, "y": 250 }
+    },
+    "dream_pools": {
+      "name": "Dream Pools",
+      "description": "Shimmering pools where dreams take physical form and can be walked through like mist.",
+      "connections": ["celestial_gardens", "memory_maze", "twilight_court"],
+      "coordinates": { "x": 600, "y": 300 }
+    },
+    "harmony_bridge": {
+      "name": "Harmony Bridge",
+      "description": "A bridge woven from light and sound, where every step creates musical notes.",
+      "connections": ["crystal_pavilion", "resonance_tower", "echo_gardens"],
+      "coordinates": { "x": 650, "y": 350 }
+    },
+    "mystic_forge": {
+      "name": "Mystic Forge",
+      "description": "Where elemental smiths craft items using pure magical energies and stardust.",
+      "connections": ["crystal_pavilion", "artificer_quarter", "phoenix_spire"],
+      "coordinates": { "x": 700, "y": 400 }
+    },
+    "starweaver_sanctum": {
+      "name": "Starweaver Sanctum",
+      "description": "A dome where cosmic energies are woven into powerful enchantments and blessings.",
+      "connections": ["astral_observatory", "celestial_library", "moonlight_pavilion"],
+      "coordinates": { "x": 750, "y": 450 }
+    },
+    "void_gate": {
+      "name": "Void Gate",
+      "description": "An ancient portal said to connect to other realms and dimensions.",
+      "connections": ["astral_observatory", "gateway_district", "shadow_market"],
+      "coordinates": { "x": 800, "y": 500 }
+    },
+    "memory_maze": {
+      "name": "Memory Maze",
+      "description": "A labyrinth where past events replay themselves in misty apparitions.",
+      "connections": ["dream_pools", "time_weavers_hall", "reflection_pools"],
+      "coordinates": { "x": 850, "y": 550 }
+    },
+    "twilight_court": {
+      "name": "Twilight Court",
+      "description": "Where day and night exist simultaneously, and twilight beings hold their revels.",
+      "connections": ["dream_pools", "dusk_gardens", "astral_plaza"],
+      "coordinates": { "x": 900, "y": 600 }
+    },
+    "resonance_tower": {
+      "name": "Resonance Tower",
+      "description": "A tower that channels and amplifies magical energies through musical vibrations.",
+      "connections": ["harmony_bridge", "song_smith_quarter", "bell_district"],
+      "coordinates": { "x": 950, "y": 650 }
+    },
+    "echo_gardens": {
+      "name": "Echo Gardens",
+      "description": "Gardens where whispered secrets from centuries past can still be heard.",
+      "connections": ["harmony_bridge", "whisper_grove", "sound_forge"],
+      "coordinates": { "x": 1000, "y": 700 }
+    },
+    "artificer_quarter": {
+      "name": "Artificer Quarter",
+      "description": "Where magical inventors create impossible devices and enchanted machines.",
+      "connections": ["mystic_forge", "gear_works", "invention_plaza"],
+      "coordinates": { "x": 1050, "y": 750 }
+    },
+    "phoenix_spire": {
+      "name": "Phoenix Spire",
+      "description": "A tower perpetually wreathed in magical flames where fire mages study.",
+      "connections": ["mystic_forge", "flame_gardens", "ash_district"],
+      "coordinates": { "x": 1100, "y": 800 }
+    },
+    "celestial_library": {
+      "name": "Celestial Library",
+      "description": "Where stories write themselves in starlight and books float through constellation-lit halls.",
+      "connections": ["starweaver_sanctum", "scroll_haven", "wisdom_court"],
+      "coordinates": { "x": 1150, "y": 850 }
+    },
+    "moonlight_pavilion": {
+      "name": "Moonlight Pavilion",
+      "description": "A gathering place where moonlight is collected and used to brew magical elixirs.",
+      "connections": ["starweaver_sanctum", "lunar_gardens", "silver_market"],
+      "coordinates": { "x": 1200, "y": 900 }
+    },
+    "gateway_district": {
+      "name": "Gateway District",
+      "description": "A maze of smaller portals connecting different parts of the city instantaneously.",
+      "connections": ["void_gate", "portal_plaza", "nexus_square"],
+      "coordinates": { "x": 1250, "y": 950 }
+    },
+    "shadow_market": {
+      "name": "Shadow Market",
+      "description": "A market that only appears in shadows, where rare and mysterious items are traded.",
+      "connections": ["void_gate", "umbral_bazaar", "twilight_exchange"],
+      "coordinates": { "x": 1300, "y": 1000 }
+    },
+    "time_weavers_hall": {
+      "name": "Time Weavers Hall",
+      "description": "Where chronománcers study and maintain the flows of time throughout the city.",
+      "connections": ["memory_maze", "temporal_gardens", "clock_tower"],
+      "coordinates": { "x": 1350, "y": 1050 }
+    },
+    "reflection_pools": {
+      "name": "Reflection Pools",
+      "description": "Pools that show not your reflection, but glimpses of other times and places.",
+      "connections": ["memory_maze", "mirror_gardens", "vision_court"],
+      "coordinates": { "x": 1400, "y": 1100 }
+    },
+    "dusk_gardens": {
+      "name": "Dusk Gardens",
+      "description": "Gardens that exist in perpetual sunset, where shadow flowers bloom eternally.",
+      "connections": ["twilight_court", "shade_grove", "evening_plaza"],
+      "coordinates": { "x": 1450, "y": 1150 }
+    },
+    "astral_plaza": {
+      "name": "Astral Plaza",
+      "description": "A grand plaza where the ground reflects the stars above, creating the illusion of walking through space.",
+      "connections": ["twilight_court", "constellation_court", "meteor_gardens"],
+      "coordinates": { "x": 1500, "y": 1200 }
+    },
+    "song_smith_quarter": {
+      "name": "Song Smith Quarter",
+      "description": "Where magical instruments are crafted and music takes physical form.",
+      "connections": ["resonance_tower", "melody_forge", "harmony_square"],
+      "coordinates": { "x": 1550, "y": 1250 }
+    }
+  }
+}

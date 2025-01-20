@@ -58,22 +58,74 @@
         <h1>Human Body Tensegrity: Complete Analysis</h1>
         
         <div class="diagram-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
-    <!-- Background -->
-    <rect width="400" height="600" fill="#ffffff"/>
-    
-    <!-- Legend -->
-    <g transform="translate(20,20)">
-        <circle cx="10" cy="10" r="6" fill="#ff0000"/>
-        <text x="25" y="15" font-family="Arial" font-size="12">Compression Elements (Bones)</text>
-        <line x1="10" y1="35" x2="40" y2="35" stroke="#005b96" stroke-width="3"/>
-        <text x="50" y="40" font-family="Arial" font-size="12">Tension Elements (Muscles/Fascia)</text>
-    </g>
-
-    <!-- Fascial Lines -->
-    <g stroke="#005b96" stroke-width="2" stroke-dasharray="5,5" fill="none">
-        <!-- Central axis -->
-        <line x1="200" y1="80" x2=
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+            <!-- Background -->
+            <rect width="400" height="600" fill="#ffffff"/>
+            
+            <!-- Legend -->
+            <g transform="translate(20,20)">
+                <circle cx="10" cy="10" r="6" fill="#ff0000"/>
+                <text x="25" y="15" font-family="Arial" font-size="12">Compression Elements (Bones)</text>
+                <line x1="10" y1="35" x2="40" y2="35" stroke="#005b96" stroke-width="3"/>
+                <text x="50" y="40" font-family="Arial" font-size="12">Tension Elements (Muscles/Fascia)</text>
+            </g>
+        
+            <!-- Central Skeletal Structure (Compression) -->
+            <g fill="#ff0000">
+                <!-- Skull -->
+                <circle cx="200" cy="100" r="25"/>
+                <!-- Vertebrae -->
+                <circle cx="200" cy="160" r="8"/>
+                <circle cx="200" cy="200" r="8"/>
+                <circle cx="200" cy="240" r="8"/>
+                <circle cx="200" cy="280" r="8"/>
+                <circle cx="200" cy="320" r="8"/>
+                <!-- Pelvis -->
+                <ellipse cx="200" cy="380" rx="40" ry="20"/>
+                <!-- Shoulder joints -->
+                <circle cx="140" cy="160" r="10"/>
+                <circle cx="260" cy="160" r="10"/>
+                <!-- Hip joints -->
+                <circle cx="160" cy="380" r="10"/>
+                <circle cx="240" cy="380" r="10"/>
+                <!-- Knees -->
+                <circle cx="160" cy="480" r="8"/>
+                <circle cx="240" cy="480" r="8"/>
+                <!-- Ankles -->
+                <circle cx="160" cy="550" r="6"/>
+                <circle cx="240" cy="550" r="6"/>
+            </g>
+        
+            <!-- Fascial Lines (Tension) -->
+            <g stroke="#005b96" stroke-width="2" fill="none">
+                <!-- Vertical lines -->
+                <path d="M200,125 C200,160 200,200 200,360" stroke-dasharray="5,5"/>
+                <!-- Superficial Front Line -->
+                <path d="M200,100 C180,200 160,300 160,550" stroke-dasharray="5,5"/>
+                <path d="M200,100 C220,200 240,300 240,550" stroke-dasharray="5,5"/>
+                <!-- Lateral Lines -->
+                <path d="M140,160 C140,250 160,350 160,480" stroke-dasharray="5,5"/>
+                <path d="M260,160 C260,250 240,350 240,480" stroke-dasharray="5,5"/>
+                <!-- Spiral Lines -->
+                <path d="M140,160 C180,240 220,320 240,480" stroke-dasharray="5,5"/>
+                <path d="M260,160 C220,240 180,320 160,480" stroke-dasharray="5,5"/>
+                <!-- Functional Lines -->
+                <path d="M140,160 C180,280 200,320 240,380" stroke-dasharray="5,5"/>
+                <path d="M260,160 C220,280 200,320 160,380" stroke-dasharray="5,5"/>
+            </g>
+        
+            <!-- Labels -->
+            <g font-family="Arial" font-size="10" text-anchor="middle">
+                <text x="200" y="85">Skull</text>
+                <text x="120" y="150">Shoulder</text>
+                <text x="280" y="150">Shoulder</text>
+                <text x="200" y="410">Pelvis</text>
+                <text x="140" y="480">Knee</text>
+                <text x="260" y="480">Knee</text>
+                <text x="140" y="570">Ankle</text>
+                <text x="260" y="570">Ankle</text>
+            </g>
+        </svg>
         </div>
 
         <div class="section">
