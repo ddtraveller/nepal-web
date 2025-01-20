@@ -11,9 +11,25 @@ const Adventure = () => {
   const [error, setError] = useState(null);
   const [currentLocation, setCurrentLocation] = useState('swayambhu_stupa');
   const [storyHistory, setStoryHistory] = useState([]);
+  const [image, setImage] = useState(null);
   
   const sessionId = useMemo(() => `session-${Date.now()}`, []);
+  const STORY_LAMBDA_URL = 'https://hutcbbitwm5yzzth6lgbeamzuq0eaxjj.lambda-url.us-west-2.on.aws/';
   
+  // Make request to Lambda function
+  const makeRequest = async (payload) => {
+    const response = await fetch(STORY_LAMBDA_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const responseText = await response.text();
+    if (!responseText) throw new Error('Empty response from server');
+    return JSON.parse(responseText);
+  };
+
   // Load locations data when component mounts
   useEffect(() => {
     const loadLocations = async () => {
@@ -23,7 +39,6 @@ const Adventure = () => {
         if (!response.ok) throw new Error('Failed to load locations');
         const data = await response.json();
         setLocations(data.locations);
-        // Start new story after locations are loaded
         await startNewStory(data.locations);
       } catch (err) {
         setError('Failed to load game data. Please try refreshing the page.');
@@ -54,7 +69,21 @@ const Adventure = () => {
 
     try {
       setIsLoading(true);
-      const newStoryText = `You decided to ${input}...`;
+      const data = await makeRequest({
+        action: 'continue',
+        session_id: sessionId,
+        input: input.trim(),
+        location: locations[currentLocation].name,
+        story_type: 'fantasy'
+      });
+
+      if (data?.response) {
+        const newText = data.response.text || '';
+        setStory(prev => `${prev}\n\nYou: ${input}\n\n${newText}`);
+        if (data.response.image) {
+          setImage(data.response.image);
+        }
+      }
       
       setStoryHistory(prev => [...prev, { 
         type: 'action', 
@@ -62,7 +91,6 @@ const Adventure = () => {
         location: currentLocation 
       }]);
       
-      setStory(prev => `${prev}\n\n${newStoryText}`);
       setInput('');
     } catch (error) {
       setError('Failed to process your action. Please try again.');
@@ -80,17 +108,50 @@ const Adventure = () => {
       setIsLoading(true);
       const destination = locations[destinationId];
       const travelTime = calculateTravelTime(currentLocation, destinationId);
-      const travelText = `You travel to ${destination.name}. The journey takes ${travelTime} minutes.`;
+      const travelAction = `I want to travel to ${destination.name}`;
+
+      console.log('Sending travel request:', {
+        action: 'continue',
+        session_id: sessionId,
+        input: travelAction,
+        location: destination.name
+      });
       
-      setStoryHistory(prev => [...prev, { 
-        type: 'travel',
-        from: currentLocation,
-        to: destinationId,
-        time: travelTime
-      }]);
-      
-      setCurrentLocation(destinationId);
-      setStory(prev => `${prev}\n\n${travelText}\n\n${destination.description}`);
+      // First make the request to the story generation service
+      const data = await makeRequest({
+        action: 'continue',
+        session_id: sessionId,
+        input: travelAction,
+        location: destination.name,
+        story_type: 'fantasy',
+        location_description: destination.description
+      });
+
+      console.log('Received response:', data);
+
+      // Only update the UI if we got a successful response
+      if (data?.response) {
+        // Update the story text
+        const newText = data.response.text || '';
+        setStory(prev => `${prev}\n\nYou: ${travelAction}\n\n${newText}`);
+        
+        // Update the image if one was returned
+        if (data.response.image) {
+          setImage(data.response.image);
+        }
+
+        // Only after successful story generation, update the location and history
+        setStoryHistory(prev => [...prev, { 
+          type: 'travel',
+          from: currentLocation,
+          to: destinationId,
+          time: travelTime
+        }]);
+        
+        setCurrentLocation(destinationId);
+      } else {
+        throw new Error('No response data from story generation service');
+      }
     } catch (error) {
       setError('Failed to travel to the new location. Please try again.');
       console.error('Travel error:', error);
@@ -100,76 +161,35 @@ const Adventure = () => {
   };
 
   // Start a new story
-  const startNewStory = async (locationData, startLocation) => {
-      try {
-          setIsLoading(true);
-          const locationToUse = startLocation || currentLocation;
-          const location = locationData[locationToUse];
-          
-          const data = await makeRequest({
-              action: 'start_new',
-              session_id: sessionId,
-              story_type: 'fantasy',
-              location: location.name,
-              location_description: location.description,
-              prompt_instructions: `CRITICAL INSTRUCTION: The story MUST begin DIRECTLY in the Eternal Snow Realm. 
-  
-  Describe the opening scene in vivid detail:
-  - Location: Eternal Snow Realm - A mystical dimension where time stands still
-  - Initial scene: Capture the unique characteristics of snow spirits weaving intricate patterns of frost and memory
-  - Atmosphere: Emphasize the timeless, magical nature of this realm
-  - Protagonist: Introduce a character who finds themselves in this extraordinary, frozen dimension
-  
-  The first paragraph MUST immerse the reader in the Eternal Snow Realm, showcasing its mystical and otherworldly essence.`
-          });
-  
-          if (data?.response) {
-              const newText = data.response.text || 
-                  (typeof data.response === 'string' ? data.response : '');
-              
-              setStory(newText);
-              
-              if (data.response.image) {
-                  setImage(data.response.image);
-              }
-          }
-      } catch (error) {
-          console.error('Start story error:', error);
-          setError('Failed to start story');
-      } finally {
-          setIsLoading(false);
+  const startNewStory = async (locationData) => {
+    try {
+      setIsLoading(true);
+      const location = locationData[currentLocation];
+      
+      const data = await makeRequest({
+        action: 'start_new',
+        session_id: sessionId,
+        story_type: 'fantasy',
+        location: location.name,
+        location_description: location.description
+      });
+
+      if (data?.response) {
+        const newText = data.response.text || '';
+        setStory(newText);
+        if (data.response.image) {
+          setImage(data.response.image);
+        }
       }
+
+      setStoryHistory([]);
+    } catch (error) {
+      setError('Failed to start a new story. Please try refreshing the page.');
+      console.error('Start story error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
-    
-              React.useEffect(() => {
-                  const loadLocations = async () => {
-                      try {
-                          setIsLoading(true);
-                          console.log('Loading locations...');
-                          const response = await fetch('https://nepal-web.s3.us-west-2.amazonaws.com/games/public/locations.json');
-                          if (!response.ok) throw new Error('Failed to load locations');
-                          
-                          const data = await response.json();
-                          console.log('Raw locations data:', data);
-  
-                          if (!data.locations) {
-                              throw new Error('Invalid locations data format');
-                          }
-  
-                          // Set locations and select random starting point
-                          const startingLocation = selectRandomLocation(data.locations);
-                          console.log('Selected starting location:', startingLocation);
-                          
-                          setLocations(data.locations);
-                          setCurrentLocation(startingLocation);
-                          await startNewStory(data.locations, startingLocation);
-                      } catch (err) {
-                          setError('Failed to load game data. Please try refreshing the page.');
-                          console.error('Error loading locations:', err);
-                      } finally {
-                          setIsLoading(false);
-                      }
-                  };
 
   // Loading state
   if (isLoading && !story) {
@@ -196,6 +216,16 @@ const Adventure = () => {
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       <h1 className="text-3xl font-bold text-center">Magical Kathmandu Adventure</h1>
       
+      {image && (
+        <div className="w-full">
+          <img 
+            src={image} 
+            alt="Story scene" 
+            className="w-full max-h-96 object-contain rounded shadow"
+          />
+        </div>
+      )}
+
       <div className="bg-white p-4 rounded shadow whitespace-pre-wrap">
         {story}
       </div>
@@ -268,7 +298,7 @@ const Adventure = () => {
       </div>
 
       <button 
-        onClick={() => startNewStory()}
+        onClick={() => startNewStory(locations)}
         className="w-full bg-purple-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
         disabled={isLoading}
       >

@@ -1,15 +1,18 @@
+"""
+Lambda function for the Adventure Chatbot.
+"""
 import json
 import os
 import time
 import requests
 import logging
-from typing import Dict, List
+from typing import Dict, List, Any
 import boto3
 import re
 import random
 import traceback
 from langchain_community.chat_message_histories import DynamoDBChatMessageHistory
-from story_templates import get_story_prompt, get_random_elements, get_image_prompt, get_continuation_prompt
+from story_templates import get_story_prompt, get_image_prompt, get_continuation_prompt
 
 # Configure logging
 logger = logging.getLogger()
@@ -195,7 +198,7 @@ def lambda_handler(event, context):
             story_text = generate_story_text(prompt, huggingface_key)
             
             # Generate image prompt and image
-            image_prompt = get_image_prompt('fantasy', story_text['english'])
+            image_prompt = get_image_prompt(location, location_description, story_text['english'])
             image_url = generate_image(image_prompt, stability_key)
 
             # Store just the English text in history
@@ -208,6 +211,38 @@ def lambda_handler(event, context):
                 'image': image_url
             }
 
+            return format_response(response_data)
+
+        elif action == 'continue':
+            user_input = body.get('input', '')
+            
+            if not user_input:
+                return format_response({'error': 'Missing input for continuation'})
+                
+            # Create a prompt for the continuation
+            prompt = get_continuation_prompt(
+                history.messages[-1].content if history.messages else '',
+                user_input,
+                location
+            )
+            
+            # Generate story continuation
+            story_text = generate_story_text(prompt, huggingface_key)
+            
+            # Generate new image
+            image_prompt = get_image_prompt(location, location_description, story_text['english'])
+            image_url = generate_image(image_prompt, stability_key)
+            
+            # Update history
+            history.add_user_message(user_input)
+            history.add_ai_message(story_text['english'])
+            
+            response_data = {
+                'text': story_text['english'],
+                'nepaliText': story_text['nepali'],
+                'image': image_url
+            }
+            
             return format_response(response_data)
 
     except Exception as e:
