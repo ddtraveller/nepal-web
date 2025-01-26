@@ -1,0 +1,389 @@
+// Use the window.debug function
+window.gameDebug = window.debug || console.log;
+
+window.gameDebug('Game script started loading');
+
+/// Constants and state
+const TILE_SIZE = 32;
+const MAP_WIDTH = 20;
+const MAP_HEIGHT = 15;
+
+let ICONS = null;
+let gameMap = null;
+let playerX = 0;
+let playerY = 0;
+let currentCharacter = null;
+let currentMapId = 'forest_entrance';
+let maps = null;
+let currentMap = null;
+
+// Base terrain types
+const TERRAIN_TYPES = {
+    0: { type: 'grass', char: '·', passable: true },
+    1: { type: 'water', char: '~', passable: false },
+    2: { type: 'mountain', char: '▲', passable: false },
+    3: { type: 'forest', char: '♣', passable: true },
+    'terrain-icon': { type: 'terrain-icon', char: '', passable: true }
+};
+
+async function loadMaps() {
+    try {
+        const response = await fetch('https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/maps.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        maps = data.maps;
+        return true;
+    } catch (error) {
+        console.error('Error loading maps:', error);
+        return false;
+    }
+}
+
+function getTerrainType(value) {
+    if (typeof value === 'number') {
+        if (value >= 4) {
+            return TERRAIN_TYPES['terrain-icon'];
+        }
+        return TERRAIN_TYPES[value] || TERRAIN_TYPES[0];
+    }
+    return TERRAIN_TYPES[0];
+}
+
+function changeMap(newMapId) {
+    if (!maps) return false;
+    
+    const newMap = maps.find(map => map.id === newMapId);
+    if (!newMap) return false;
+
+    currentMapId = newMapId;
+    gameMap = generateMap();
+    
+    // Find default spawn in current map or use first map's default
+    const spawn = newMap.defaultSpawn || maps[0].defaultSpawn || { x: 1, y: 1 };
+    playerX = spawn.x;
+    playerY = spawn.y;
+
+    renderMap();
+    updatePlayerPosition();
+    return true;
+}
+
+function move(dx, dy) {
+    const newX = playerX + dx;
+    const newY = playerY + dy;
+    
+    if (newX >= 0 && newX < MAP_WIDTH && 
+        newY >= 0 && newY < MAP_HEIGHT) {
+        
+        if (isTilePassable(newX, newY)) {
+            playerX = newX;
+            playerY = newY;
+            updatePlayerPosition();
+
+            // Check for map exit
+            if (currentMap?.exit && 
+                currentMap.exit.x === newX && 
+                currentMap.exit.y === newY) {
+                changeMap(currentMap.exit.to);
+                return;
+            }
+
+            // Check for terrain icon interaction
+            const cellValue = gameMap[newY][newX];
+            if (cellValue >= 4 && gameMap.selectedTerrainIcons) {
+                const icon = gameMap.selectedTerrainIcons.find(icon => 
+                    icon.mapValue === cellValue
+                );
+                if (icon && window.dialogueManager) {
+                    window.dialogueManager.showDialogue(
+                        icon.description, 
+                        currentMap?.name || 'this magical realm'
+                    );
+                }
+            }
+        }
+    }
+}
+
+async function loadIcons() {
+    gameDebug('Starting to load icons...');
+    const optionsContainer = document.getElementById('characterOptions');
+    
+    try {
+        const response = await fetch(`https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/game-icons.json?v=${Date.now()}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        gameDebug('Icons loaded successfully');
+        ICONS = data;
+        initializeCharacterSelect();
+    } catch (error) {
+        const errorMsg = 'Error loading icons: ' + error.message;
+        gameDebug(errorMsg);
+        optionsContainer.innerHTML = errorMsg;
+    }
+}
+
+function getRandomItems(array, count) {
+    const shuffled = [...array].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+}
+
+function initializeCharacterSelect() {
+    gameDebug('Initializing character select...');
+    const optionsContainer = document.getElementById('characterOptions');
+    optionsContainer.innerHTML = '';
+    
+    if (!ICONS || !ICONS.characters) {
+        gameDebug('No icons data available');
+        return;
+    }
+    
+    const characters = getRandomItems(ICONS.characters, 3);
+    
+    characters.forEach(char => {
+        const option = document.createElement('div');
+        option.className = 'character-option';
+        
+        const img = document.createElement('img');
+        const imgUrl = `${ICONS.baseUrls.characters}${char.file}`;
+        gameDebug('Loading image: ' + imgUrl);
+        img.src = imgUrl;
+        img.alt = char.description;
+        
+        const desc = document.createElement('span');
+        desc.textContent = char.description;
+        
+        option.appendChild(img);
+        option.appendChild(desc);
+        option.onclick = () => selectCharacter(char);
+        optionsContainer.appendChild(option);
+    });
+}
+
+function selectCharacter(character) {
+    gameDebug('Character selected: ' + character.file);
+    currentCharacter = character;
+    document.getElementById('characterSelect').classList.add('hidden');
+    document.querySelector('.game-container').classList.add('visible');
+    startGame();
+}
+
+function generateMap() {
+    if (!maps) {
+        console.error('Maps not loaded');
+        return generateRandomMap(); // Fallback to random map
+    }
+
+    currentMap = maps.find(map => map.id === currentMapId);
+    if (!currentMap) {
+        console.error('Map not found:', currentMapId);
+        return generateRandomMap();
+    }
+
+    const map = currentMap.layout.map(row => [...row]); // Create copy of layout
+    
+    // Add terrain icons
+    const terrainIcons = ICONS.terrain.map((icon, index) => ({
+        ...icon,
+        mapValue: 4 + index
+    }));
+    
+    const numIcons = Math.floor(Math.random() * 6) + 1;
+    const selectedIcons = terrainIcons
+        .sort(() => 0.5 - Math.random())
+        .slice(0, numIcons);
+    
+    selectedIcons.forEach(icon => {
+        let placed = false;
+        while (!placed) {
+            const x = Math.floor(Math.random() * MAP_WIDTH);
+            const y = Math.floor(Math.random() * MAP_HEIGHT);
+            if (map[y][x] === 0) {
+                map[y][x] = icon.mapValue;
+                placed = true;
+            }
+        }
+    });
+
+    map.selectedTerrainIcons = selectedIcons;
+    return map;
+}
+
+function generateRandomMap() {
+    const map = Array(MAP_HEIGHT).fill().map(() => 
+        Array(MAP_WIDTH).fill(0)
+    );
+
+    // Ensure the four corners and center are accessible
+    map[0][0] = 0;
+    map[0][MAP_WIDTH-1] = 0;
+    map[MAP_HEIGHT-1][0] = 0;
+    map[MAP_HEIGHT-1][MAP_WIDTH-1] = 0;
+    map[Math.floor(MAP_HEIGHT/2)][Math.floor(MAP_WIDTH/2)] = 0;
+
+    let openPathCount = 5;
+
+    for (let y = 0; y < MAP_HEIGHT; y++) {
+        for (let x = 0; x < MAP_WIDTH; x++) {
+            if (x === 0 && y === 0) continue;
+            else if (x === MAP_WIDTH - 1 && y === 0) continue;
+            else if (x === 0 && y === MAP_HEIGHT - 1) continue;
+            else if (x === MAP_WIDTH - 1 && y === MAP_HEIGHT - 1) continue;
+            else if (x === Math.floor(MAP_WIDTH/2) && y === Math.floor(MAP_HEIGHT/2)) continue;
+
+            const rand = Math.random();
+            if (rand < 0.15) {
+                map[y][x] = 1;
+            } else if (rand < 0.3) {
+                map[y][x] = 2;
+            } else if (rand < 0.45) {
+                map[y][x] = 3;
+            } else {
+                map[y][x] = 0;
+                openPathCount++;
+            }
+        }
+    }
+
+    if (openPathCount < (MAP_WIDTH * MAP_HEIGHT) * 0.25) {
+        return generateRandomMap();
+    }
+
+    return map;
+}
+
+function renderMap() {
+    const mapElement = document.getElementById('gameMap');
+    mapElement.innerHTML = '<div id="player" class="player"></div>';
+    mapElement.style.width = MAP_WIDTH * TILE_SIZE + 'px';
+    mapElement.style.height = MAP_HEIGHT * TILE_SIZE + 'px';
+
+    gameMap.forEach((row, y) => {
+        row.forEach((cell, x) => {
+            const tile = document.createElement('div');
+            const isTerrainIcon = cell >= 4;
+            const terrainType = isTerrainIcon ? 'terrain-icon' : TERRAIN_TYPES[cell]?.type || 'unknown';
+            const terrainChar = isTerrainIcon ? '' : TERRAIN_TYPES[cell]?.char || '';
+            
+            tile.className = `tile ${terrainType}`;
+            tile.style.left = x * TILE_SIZE + 'px';
+            tile.style.top = y * TILE_SIZE + 'px';
+            tile.textContent = terrainChar;
+
+            if (isTerrainIcon) {
+                const icon = gameMap.selectedTerrainIcons.find(icon => icon.mapValue === cell);
+                if (icon) {
+                    const imgUrl = `${ICONS.baseUrls.terrain}${icon.file}`;
+                    tile.style.backgroundImage = `url('${imgUrl}')`;
+                    tile.style.backgroundSize = 'contain';
+                    tile.style.backgroundRepeat = 'no-repeat';
+                }
+            }
+            
+            // Mark exit tile
+            if (currentMap?.exit && currentMap.exit.x === x && currentMap.exit.y === y) {
+                tile.style.border = '2px solid gold';
+                tile.style.boxSizing = 'border-box';
+                tile.title = `Exit to ${currentMap.exit.to}`;
+            }
+
+            mapElement.appendChild(tile);
+        });
+    });
+
+    if (currentCharacter) {
+        const player = document.getElementById('player');
+        const imgUrl = `${ICONS.baseUrls.characters}${currentCharacter.file}`;
+        player.style.backgroundImage = `url('${imgUrl}')`;
+        player.style.backgroundSize = 'contain';
+        player.style.backgroundRepeat = 'no-repeat';
+        player.style.backgroundColor = 'transparent';
+    }
+}
+
+function isTilePassable(x, y) {
+    if (!gameMap || !gameMap[y] || typeof gameMap[y][x] === 'undefined') {
+        return false;
+    }
+    return gameMap[y][x] >= 4 || TERRAIN_TYPES[gameMap[y][x]]?.passable || false;
+}
+
+function updatePlayerPosition() {
+    const player = document.getElementById('player');
+    if (!player) return;
+    
+    player.style.left = playerX * TILE_SIZE + 'px';
+    player.style.top = playerY * TILE_SIZE + 'px';
+    
+    const positionDisplay = document.getElementById('position');
+    const terrainDisplay = document.getElementById('terrain');
+    if (positionDisplay) positionDisplay.textContent = `${playerX}, ${playerY}`;
+    
+    const cellValue = gameMap[playerY][playerX];
+    const terrainType = cellValue >= 4 ? TERRAIN_TYPES['terrain-icon'] : TERRAIN_TYPES[cellValue];
+    if (terrainDisplay && terrainType) {
+        terrainDisplay.textContent = terrainType.type.charAt(0).toUpperCase() + terrainType.type.slice(1);
+    }
+}
+
+async function startGame() {
+    const mapsLoaded = await loadMaps();
+    if (!mapsLoaded) {
+        console.error('Failed to load maps');
+    }
+    gameMap = generateMap();
+    renderMap();
+    updatePlayerPosition();
+    
+    window.addEventListener('keydown', (event) => {
+        switch(event.key) {
+            case 'ArrowLeft':  move(-1, 0); break;
+            case 'ArrowRight': move(1, 0);  break;
+            case 'ArrowUp':    move(0, -1); break;
+            case 'ArrowDown':  move(0, 1);  break;
+        }
+    });
+}
+
+// Expose functions globally
+window.loadIcons = loadIcons;
+window.move = move;
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    gameDebug('DOM Content Loaded');
+    
+    // Global click event listener as fallback
+    document.addEventListener('click', (event) => {
+        gameDebug(`Global click detected on: ${event.target.id}`);
+    });
+    
+    // Attach event listeners with verbose logging
+    ['moveLeft', 'moveUp', 'moveRight', 'moveDown'].forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+            gameDebug(`Adding click listener to ${buttonId}`);
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                gameDebug(`${buttonId} button clicked`);
+                switch(buttonId) {
+                    case 'moveLeft':  move(-1, 0); break;
+                    case 'moveUp':    move(0, -1); break;
+                    case 'moveRight': move(1, 0);  break;
+                    case 'moveDown':  move(0, 1);  break;
+                }
+            });
+        } else {
+            gameDebug(`Button ${buttonId} NOT FOUND`);
+        }
+    });
+
+    // Attempt to load icons
+    loadIcons();
+});
