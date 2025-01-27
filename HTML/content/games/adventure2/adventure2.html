@@ -42,6 +42,7 @@
         
         <div class="stats">
             <h2>Player Stats</h2>
+            <p>Location: <span id="mapName">Forest Entrance</span></p>
             <p>Position: <span id="position">0, 0</span></p>
             <p>Terrain: <span id="terrain">Grass</span></p>
             
@@ -64,7 +65,6 @@
             }
         };
         window.debug('Page loaded, attempting to load scripts...');
-
         async function loadScripts() {
             try {
                 // Load dialogue.js first
@@ -76,7 +76,6 @@
                     document.body.appendChild(dialogueScript);
                 });
                 window.debug('Dialogue script loaded successfully');
-
                 // Then load game.js
                 const gameScript = document.createElement('script');
                 gameScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/games.js?v=' + Date.now();
@@ -93,7 +92,6 @@
                 window.debug('Error loading scripts: ' + error);
             }
         }
-
         loadScripts();
     </script>
 </body>

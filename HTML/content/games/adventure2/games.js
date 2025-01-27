@@ -28,11 +28,13 @@ const TERRAIN_TYPES = {
 
 async function loadMaps() {
     try {
-        const response = await fetch('https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/maps.json');
+        const response = await fetch(`https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/maps.json?v=${Date.now()}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.json();
+        const text = await response.text();
+        gameDebug('Maps JSON:', text); // Debug the raw JSON
+        const data = JSON.parse(text);
         maps = data.maps;
         return true;
     } catch (error) {
@@ -70,7 +72,8 @@ function changeMap(newMapId) {
     return true;
 }
 
-function move(dx, dy) {
+// Original move function
+function originalMove(dx, dy) {
     const newX = playerX + dx;
     const newY = playerY + dy;
     
@@ -107,17 +110,27 @@ function move(dx, dy) {
     }
 }
 
+// Wrap move function to include sound
+window.move = function(dx, dy) {
+    //window.debug('Move called with sound');
+    const sound = new Audio('https://nepal-web.s3.us-west-2.amazonaws.com/audio/click.mp3');
+    sound.volume = 0.3;
+    sound.play()
+        //.then(() => window.debug('Sound played'))
+        .catch(err => window.debug('Sound error:', err));
+    
+    originalMove(dx, dy);
+};
+
 async function loadIcons() {
     gameDebug('Starting to load icons...');
     const optionsContainer = document.getElementById('characterOptions');
     
     try {
-        const response = await fetch(`https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/game-icons.json?v=${Date.now()}`);
-        
+        const response = await fetch('https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/game-icons.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
         const data = await response.json();
         gameDebug('Icons loaded successfully');
         ICONS = data;
@@ -151,10 +164,9 @@ function initializeCharacterSelect() {
         option.className = 'character-option';
         
         const img = document.createElement('img');
-        const imgUrl = `${ICONS.baseUrls.characters}${char.file}`;
-        gameDebug('Loading image: ' + imgUrl);
-        img.src = imgUrl;
-        img.alt = char.description;
+        img.src = `${ICONS.baseUrls.characters}${char.file}`;
+        img.alt = char.file;
+        gameDebug('Full URL being accessed:', `${ICONS.baseUrls.characters}${char.file}`);
         
         const desc = document.createElement('span');
         desc.textContent = char.description;
@@ -177,7 +189,7 @@ function selectCharacter(character) {
 function generateMap() {
     if (!maps) {
         console.error('Maps not loaded');
-        return generateRandomMap(); // Fallback to random map
+        return generateRandomMap();
     }
 
     currentMap = maps.find(map => map.id === currentMapId);
@@ -186,9 +198,8 @@ function generateMap() {
         return generateRandomMap();
     }
 
-    const map = currentMap.layout.map(row => [...row]); // Create copy of layout
+    const map = currentMap.layout.map(row => [...row]);
     
-    // Add terrain icons
     const terrainIcons = ICONS.terrain.map((icon, index) => ({
         ...icon,
         mapValue: 4 + index
@@ -220,7 +231,6 @@ function generateRandomMap() {
         Array(MAP_WIDTH).fill(0)
     );
 
-    // Ensure the four corners and center are accessible
     map[0][0] = 0;
     map[0][MAP_WIDTH-1] = 0;
     map[MAP_HEIGHT-1][0] = 0;
@@ -286,7 +296,6 @@ function renderMap() {
                 }
             }
             
-            // Mark exit tile
             if (currentMap?.exit && currentMap.exit.x === x && currentMap.exit.y === y) {
                 tile.style.border = '2px solid gold';
                 tile.style.boxSizing = 'border-box';
@@ -299,8 +308,7 @@ function renderMap() {
 
     if (currentCharacter) {
         const player = document.getElementById('player');
-        const imgUrl = `${ICONS.baseUrls.characters}${currentCharacter.file}`;
-        player.style.backgroundImage = `url('${imgUrl}')`;
+        player.style.backgroundImage = `url('${ICONS.baseUrls.characters}${currentCharacter.file}')`;
         player.style.backgroundSize = 'contain';
         player.style.backgroundRepeat = 'no-repeat';
         player.style.backgroundColor = 'transparent';
@@ -323,7 +331,10 @@ function updatePlayerPosition() {
     
     const positionDisplay = document.getElementById('position');
     const terrainDisplay = document.getElementById('terrain');
+    const mapNameDisplay = document.getElementById('mapName');
+    
     if (positionDisplay) positionDisplay.textContent = `${playerX}, ${playerY}`;
+    if (mapNameDisplay && currentMap) mapNameDisplay.textContent = currentMap.name;
     
     const cellValue = gameMap[playerY][playerX];
     const terrainType = cellValue >= 4 ? TERRAIN_TYPES['terrain-icon'] : TERRAIN_TYPES[cellValue];
@@ -343,47 +354,16 @@ async function startGame() {
     
     window.addEventListener('keydown', (event) => {
         switch(event.key) {
-            case 'ArrowLeft':  move(-1, 0); break;
-            case 'ArrowRight': move(1, 0);  break;
-            case 'ArrowUp':    move(0, -1); break;
-            case 'ArrowDown':  move(0, 1);  break;
+            case 'ArrowLeft':  window.move(-1, 0); break;
+            case 'ArrowRight': window.move(1, 0);  break;
+            case 'ArrowUp':    window.move(0, -1); break;
+            case 'ArrowDown':  window.move(0, 1);  break;
         }
     });
 }
 
-// Expose functions globally
-window.loadIcons = loadIcons;
-window.move = move;
-
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     gameDebug('DOM Content Loaded');
-    
-    // Global click event listener as fallback
-    document.addEventListener('click', (event) => {
-        gameDebug(`Global click detected on: ${event.target.id}`);
-    });
-    
-    // Attach event listeners with verbose logging
-    ['moveLeft', 'moveUp', 'moveRight', 'moveDown'].forEach(buttonId => {
-        const button = document.getElementById(buttonId);
-        if (button) {
-            gameDebug(`Adding click listener to ${buttonId}`);
-            button.addEventListener('click', (event) => {
-                event.preventDefault();
-                gameDebug(`${buttonId} button clicked`);
-                switch(buttonId) {
-                    case 'moveLeft':  move(-1, 0); break;
-                    case 'moveUp':    move(0, -1); break;
-                    case 'moveRight': move(1, 0);  break;
-                    case 'moveDown':  move(0, 1);  break;
-                }
-            });
-        } else {
-            gameDebug(`Button ${buttonId} NOT FOUND`);
-        }
-    });
-
-    // Attempt to load icons
     loadIcons();
 });
