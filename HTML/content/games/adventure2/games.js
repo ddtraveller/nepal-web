@@ -13,7 +13,7 @@ let gameMap = null;
 let playerX = 0;
 let playerY = 0;
 let currentCharacter = null;
-let currentMapId = 'forest_entrance';
+let currentMapId = null;
 let maps = null;
 let currentMap = null;
 
@@ -60,6 +60,7 @@ function changeMap(newMapId) {
     if (!newMap) return false;
 
     currentMapId = newMapId;
+    currentMap = newMap;
     gameMap = generateMap();
     
     // Find default spawn in current map or use first map's default
@@ -73,53 +74,61 @@ function changeMap(newMapId) {
 }
 
 // Original move function
-function originalMove(dx, dy) {
+async function originalMove(dx, dy) {
     const newX = playerX + dx;
     const newY = playerY + dy;
     
-    if (newX >= 0 && newX < MAP_WIDTH && 
-        newY >= 0 && newY < MAP_HEIGHT) {
+    // Early return if out of bounds or no map
+    if (!gameMap || newX < 0 || newX >= MAP_WIDTH || newY < 0 || newY >= MAP_HEIGHT) {
+        return;
+    }
+    
+    // Check if the move is possible
+    if (isTilePassable(newX, newY)) {
+        // Get the cell value before moving
+        const cellValue = gameMap[newY][newX];
         
-        if (isTilePassable(newX, newY)) {
-            playerX = newX;
-            playerY = newY;
-            updatePlayerPosition();
+        // Update position
+        playerX = newX;
+        playerY = newY;
+        updatePlayerPosition();
 
-            // Check for map exit
-            if (currentMap?.exit && 
-                currentMap.exit.x === newX && 
-                currentMap.exit.y === newY) {
-                changeMap(currentMap.exit.to);
-                return;
-            }
+        // Check for map exit
+        if (currentMap?.exit && 
+            currentMap.exit.x === newX && 
+            currentMap.exit.y === newY) {
+            changeMap(currentMap.exit.to);
+            return;
+        }
 
-            // Check for terrain icon interaction
-            const cellValue = gameMap[newY][newX];
-            if (cellValue >= 4 && gameMap.selectedTerrainIcons) {
-                const icon = gameMap.selectedTerrainIcons.find(icon => 
-                    icon.mapValue === cellValue
+        // Check for terrain icon interaction
+        if (cellValue >= 4 && gameMap.selectedTerrainIcons) {
+            const icon = gameMap.selectedTerrainIcons.find(icon => 
+                icon.mapValue === cellValue
+            );
+            if (icon && window.dialogueManager) {
+                window.dialogueManager.showDialogue(
+                    icon.description,
+                    icon
                 );
-                if (icon && window.dialogueManager) {
-                    window.dialogueManager.showDialogue(
-                        icon.description, 
-                        currentMap?.name || 'this magical realm'
-                    );
-                }
             }
         }
     }
 }
 
 // Wrap move function to include sound
-window.move = function(dx, dy) {
-    //window.debug('Move called with sound');
+window.move = async function(dx, dy) {
+    // If dialogue is active, close it first
+    if (window.dialogueManager?.isDialogueActive()) {
+        window.dialogueManager.hideDialogue();
+        return; // Don't move on the same keypress that closes dialogue
+    }
+
     const sound = new Audio('https://nepal-web.s3.us-west-2.amazonaws.com/audio/click.mp3');
     sound.volume = 0.3;
-    sound.play()
-        //.then(() => window.debug('Sound played'))
-        .catch(err => window.debug('Sound error:', err));
+    sound.play().catch(err => window.debug('Sound error:', err));
     
-    originalMove(dx, dy);
+    await originalMove(dx, dy);
 };
 
 async function loadIcons() {
@@ -189,6 +198,11 @@ function selectCharacter(character) {
 function generateMap() {
     if (!maps) {
         console.error('Maps not loaded');
+        return generateRandomMap();
+    }
+
+    if (!currentMapId) {
+        console.error('Current map ID not set');
         return generateRandomMap();
     }
 
@@ -348,6 +362,9 @@ async function startGame() {
     if (!mapsLoaded) {
         console.error('Failed to load maps');
     }
+    
+    // Set the initial map ID
+    currentMapId = 'forest_entrance';
     gameMap = generateMap();
     renderMap();
     updatePlayerPosition();

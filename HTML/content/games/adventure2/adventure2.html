@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Ultima-Style Game</title>
-    <link rel="stylesheet" href="https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/styles.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="icon" href="data:,">
     <style>
         #debugOutput {
@@ -21,20 +23,13 @@
     </style>
 </head>
 <body>
-    <div id="debugOutput"></div>
-    <div id="dialoguePane" class="fixed bottom-4 left-4 right-4 bg-white p-4 rounded-lg shadow-lg transform transition-transform duration-300 translate-y-full" style="max-width: 600px; margin: 0 auto; display: none;">
-        <div class="space-y-4">
-            <p id="dialogueText" class="text-gray-800"></p>
-            <button id="dialogueContinue" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Continue
-            </button>
-        </div>
-    </div>
+    <!--<div id="debugOutput"></div>-->
     
     <div id="characterSelect" class="character-select">
         <h2>Choose Your Character</h2>
         <div id="characterOptions">Loading characters...</div>
     </div>
+    
     <div class="game-container">
         <div id="gameMap" class="game-map">
             <div id="player" class="player"></div>
@@ -56,6 +51,7 @@
             </div>
         </div>
     </div>
+
     <script>
         window.debug = function(msg) {
             const debugEl = document.getElementById('debugOutput');
@@ -64,7 +60,23 @@
                 console.log(msg);
             }
         };
+        
+        // Dynamic CSS loading with version
+        function loadStylesheet() {
+            const date = new Date();
+            const version = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}`;
+            
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = `https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/styles.css?v=${version}`;
+            document.head.appendChild(link);
+            
+            window.debug('Loading CSS with version: ' + version);
+        }
+        
+        loadStylesheet();
         window.debug('Page loaded, attempting to load scripts...');
+        
         async function loadScripts() {
             try {
                 // Load dialogue.js first
@@ -76,6 +88,7 @@
                     document.body.appendChild(dialogueScript);
                 });
                 window.debug('Dialogue script loaded successfully');
+
                 // Then load game.js
                 const gameScript = document.createElement('script');
                 gameScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/games.js?v=' + Date.now();

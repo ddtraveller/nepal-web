@@ -677,8 +677,15 @@ async function generateCharacterText(characterInfo) {
         }
     }
 
-    // Save Character
+// Save Character
     function saveCharacter() {
+        // Check if character name is provided
+        const characterName = document.getElementById('characterName').value.trim();
+        if (!characterName) {
+            alert('Please enter a character name before saving! / कृपया सेभ गर्नु अघि पात्रको नाम प्रविष्ट गर्नुहोस्!');
+            document.getElementById('characterName').focus();
+            return;
+        }
         const character = {
             name: document.getElementById('characterName').value,
             race: document.getElementById('race').value,
@@ -698,8 +705,35 @@ async function generateCharacterText(characterInfo) {
             characterDescription: document.getElementById('characterDescription').value
         };
 
-        localStorage.setItem('dndCharacter', JSON.stringify(character));
-        alert('Character saved! / पात्र सेभ गरियो!');
+        // Get character image if it exists
+        const imageContainer = document.getElementById('characterImageContainer');
+        const characterImage = imageContainer.querySelector('img');
+        if (characterImage) {
+            character.imageData = characterImage.src;
+        }
+
+        // Create blob from character data
+        const characterBlob = new Blob([JSON.stringify(character, null, 2)], { type: 'application/json' });
+        
+        // Generate filename using character name or default name
+        const filename = character.name ? 
+            `${character.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json` : 
+            'dnd_character.json';
+
+        // Create download link
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(characterBlob);
+        downloadLink.download = filename;
+        
+        // Trigger download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        // Clean up
+        URL.revokeObjectURL(downloadLink.href);
+        
+        //alert('Character saved to file! / पात्र फाइलमा सेभ गरियो!');
     }
 
     // Load Character

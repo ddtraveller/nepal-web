@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal: Comprehensive Country Profile</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">
+            Nepal: A Comprehensive Country Profile
+        </h1>
+
+        <!-- Country Overview -->
+        <div id="country-overview" class="bg-white shadow-lg rounded-lg p-6 mb-8">
+            <div class="grid md:grid-cols-2 gap-6 items-center">
+                <div>
+                    <h2 id="country-name" class="text-3xl font-bold mb-4">Nepal</h2>
+                    <div id="basic-info" class="space-y-3 text-gray-700">
+                        <p><strong>Official Name:</strong> <span id="official-name">Loading...</span></p>
+                        <p><strong>Region:</strong> <span id="region">Loading...</span></p>
+                        <p><strong>Subregion:</strong> <span id="subregion">Loading...</span></p>
+                        <p><strong>Capital:</strong> <span id="capital">Loading...</span></p>
+                        <p><strong>Population:</strong> <span id="population">Loading...</span></p>
+                    </div>
+                </div>
+                <div>
+                    <img id="flag" src="" alt="Flag of Nepal" class="w-full h-auto shadow-lg rounded-lg">
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Information Grid -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Geographical Information -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Geographical Details</h2>
+                <div id="geo-info" class="space-y-3 text-gray-700">
+                    <p><strong>Area:</strong> <span id="area">Loading...</span></p>
+                    <p><strong>Borders:</strong> <span id="borders">Loading...</span></p>
+                    <p><strong>Latitude/Longitude:</strong> <span id="latlng">Loading...</span></p>
+                    <p><strong>Timezone:</strong> <span id="timezone">Loading...</span></p>
+                    <p><strong>Driving Side:</strong> <span id="driving-side">Loading...</span></p>
+                </div>
+            </div>
+
+            <!-- Language and Culture -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Languages and Identifiers</h2>
+                <div id="language-info" class="space-y-3 text-gray-700">
+                    <p><strong>Official Languages:</strong> <span id="languages">Loading...</span></p>
+                    <p><strong>Demonym:</strong> <span id="demonym">Loading...</span></p>
+                    <p><strong>Currency:</strong> <span id="currency">Loading...</span></p>
+                    <p><strong>Country Codes:</strong> <span id="country-codes">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information Sections -->
+        <div class="grid md:grid-cols-2 gap-6 mt-6">
+            <!-- Translations -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Translations</h2>
+                <div id="translations" class="space-y-2 text-gray-700">
+                    Loading translations...
+                </div>
+            </div>
+
+            <!-- International Affiliations -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">International Status</h2>
+                <div id="international-info" class="space-y-3 text-gray-700">
+                    <p><strong>UN Member:</strong> <span id="un-member">Loading...</span></p>
+                    <p><strong>Regional Blocs:</strong> <span id="regional-blocs">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Context -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mt-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Additional Context</h2>
+            <div id="additional-info" class="prose text-gray-700 space-y-4">
+                <p>Nepal is a landlocked country located in South Asia, nestled in the Himalayan mountain range. Known for its rich cultural heritage, diverse geography, and historical significance, Nepal is home to eight of the world's ten tallest mountains, including Mount Everest.</p>
+                <p>The country has a unique blend of Hindu and Buddhist traditions, with a fascinating history that includes being the world's only Hindu kingdom until 2008 and transitioning to a federal democratic republic.</p>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center text-sm text-gray-500">
+            <p>Data sourced from REST Countries API</p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch country data from REST Countries API
+        async function fetchNepalData() {
+            try {
+                const response = await fetch('https://restcountries.com/v3.1/name/nepal');
+                const data = await response.json();
+                const nepal = data[0];
+
+                // Basic Information
+                document.getElementById('official-name').textContent = nepal.name.official;
+                document.getElementById('region').textContent = nepal.region;
+                document.getElementById('subregion').textContent = nepal.subregion;
+                document.getElementById('capital').textContent = nepal.capital[0];
+                document.getElementById('population').textContent = nepal.population.toLocaleString();
+                
+                // Flag
+                document.getElementById('flag').src = nepal.flags.svg;
+                document.getElementById('flag').alt = `Flag of ${nepal.name.common}`;
+
+                // Geographical Information
+                document.getElementById('area').textContent = `${nepal.area.toLocaleString()} km²`;
+                document.getElementById('borders').textContent = nepal.borders 
+                    ? nepal.borders.join(', ') 
+                    : 'No land borders';
+                document.getElementById('latlng').textContent = nepal.latlng.join(', ');
+                document.getElementById('timezone').textContent = nepal.timezones.join(', ');
+                document.getElementById('driving-side').textContent = 
+                    nepal.car.side.charAt(0).toUpperCase() + nepal.car.side.slice(1);
+
+                // Language and Identifiers
+                const languageNames = Object.values(nepal.languages).join(', ');
+                document.getElementById('languages').textContent = languageNames;
+                document.getElementById('demonym').textContent = nepal.demonym;
+                
+                // Currency
+                const currencyNames = Object.values(nepal.currencies)
+                    .map(currency => `${currency.name} (${currency.symbol})`)
+                    .join(', ');
+                document.getElementById('currency').textContent = currencyNames;
+
+                // Country Codes
+                const countryCodesList = [
+                    `Alpha-2: ${nepal.cca2}`,
+                    `Alpha-3: ${nepal.cca3}`,
+                    `Numeric: ${nepal.ccn3}`
+                ].join(' | ');
+                document.getElementById('country-codes').textContent = countryCodesList;
+
+                // Translations
+                const translationsHtml = Object.entries(nepal.translations)
+                    .map(([lang, translation]) => 
+                        `<p><strong>${lang.toUpperCase()}:</strong> ${translation.common}</p>`
+                    ).join('');
+                document.getElementById('translations').innerHTML = translationsHtml;
+
+                // International Status
+                document.getElementById('un-member').textContent = 
+                    nepal.unMember ? 'Yes' : 'No';
+                
+                // Regional Blocs
+                const regionalBlocsText = nepal.regionalBlocs && nepal.regionalBlocs.length > 0
+                    ? nepal.regionalBlocs.map(bloc => `${bloc.acronym} (${bloc.name})`).join(', ')
+                    : 'None';
+                document.getElementById('regional-blocs').textContent = regionalBlocsText;
+
+            } catch (error) {
+                console.error('Error fetching Nepal data:', error);
+                document.getElementById('country-overview').innerHTML = `
+                    <div class="text-center text-red-600">
+                        Error loading country data: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Call the function to fetch and display data
+        fetchNepalData();
+    </script>
+</body>
+</html>

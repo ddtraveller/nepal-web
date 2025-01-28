@@ -11,11 +11,20 @@ body {
     display: none;
     padding: 20px;
     gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.game-container.visible {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .game-map {
     border: 2px solid #666;
     position: relative;
+    flex: 1;
+    min-width: 300px;
 }
 
 .tile {
@@ -130,39 +139,88 @@ button:hover {
     display: none;
 }
 
-.visible {
-    display: flex;
-}
-
+/* Updated Dialogue System */
 #dialoguePane {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
+    background: #222;
     padding: 20px;
     border-radius: 8px;
-    width: 80%;
-    max-width: 600px;
-    z-index: 1000;
-    display: none;
+    flex: 1 1 100%;
+    margin-top: 20px;
+    order: 3;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
-.dialogue-text {
+#dialogueConversation {
+    flex: 1;
+    overflow-y: auto;
     margin-bottom: 15px;
-    line-height: 1.5;
+    padding: 10px;
+    background: #333;
+    border-radius: 4px;
+    min-height: 200px;
 }
 
-.dialogue-button {
-    background: #4a5568;
-    color: white;
+.input-container {
+    display: flex;
+    gap: 8px;
+}
+
+#dialogueInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background: #333;
+    color: #fff;
+    font-family: monospace;
+}
+
+#dialogueSubmit {
     padding: 8px 16px;
-    border: none;
+    background: #444;
+    color: white;
+    border: 1px solid #666;
     border-radius: 4px;
     cursor: pointer;
+    font-family: monospace;
 }
 
-.dialogue-button:hover {
-    background: #2d3748;
+.message {
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.message.player {
+    background: #1a3a1a;
+}
+
+.message.npc {
+    background: #2a2a3a;
+}
+
+/* Responsive layout */
+@media (min-width: 1200px) {
+    .game-container {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    .game-map {
+        flex: 0 1 auto;
+    }
+    
+    .stats {
+        order: 2;
+        min-width: 250px;
+    }
+    
+    #dialoguePane {
+        flex: 1 1 300px;
+        margin-left: 20px;
+        margin-top: 0;
+        max-width: 400px;
+    }
 }
