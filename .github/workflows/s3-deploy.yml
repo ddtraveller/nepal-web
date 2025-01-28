@@ -24,8 +24,10 @@ jobs:
 
       - name: Sync content directory to S3
         run: |
-          aws s3 sync HTML/content/ s3://nepal-web/ --delete
+          aws s3 sync HTML/content/ s3://nepal-web/ --delete --exclude "icons/*" --exclude "audio/*"
 
       - name: Copy index.html to S3
         run: |
           aws s3 cp HTML/src/index.html s3://nepal-web/
+          
+          
