@@ -33,7 +33,7 @@ async function loadMaps() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const text = await response.text();
-        gameDebug('Maps JSON:', text); // Debug the raw JSON
+        gameDebug('Maps JSON:', text);
         const data = JSON.parse(text);
         maps = data.maps;
         return true;
@@ -63,7 +63,6 @@ function changeMap(newMapId) {
     currentMap = newMap;
     gameMap = generateMap();
     
-    // Find default spawn in current map or use first map's default
     const spawn = newMap.defaultSpawn || maps[0].defaultSpawn || { x: 1, y: 1 };
     playerX = spawn.x;
     playerY = spawn.y;
@@ -73,27 +72,21 @@ function changeMap(newMapId) {
     return true;
 }
 
-// Original move function
 async function originalMove(dx, dy) {
     const newX = playerX + dx;
     const newY = playerY + dy;
     
-    // Early return if out of bounds or no map
     if (!gameMap || newX < 0 || newX >= MAP_WIDTH || newY < 0 || newY >= MAP_HEIGHT) {
         return;
     }
     
-    // Check if the move is possible
     if (isTilePassable(newX, newY)) {
-        // Get the cell value before moving
         const cellValue = gameMap[newY][newX];
         
-        // Update position
         playerX = newX;
         playerY = newY;
         updatePlayerPosition();
 
-        // Check for map exit
         if (currentMap?.exit && 
             currentMap.exit.x === newX && 
             currentMap.exit.y === newY) {
@@ -101,7 +94,6 @@ async function originalMove(dx, dy) {
             return;
         }
 
-        // Check for terrain icon interaction
         if (cellValue >= 4 && gameMap.selectedTerrainIcons) {
             const icon = gameMap.selectedTerrainIcons.find(icon => 
                 icon.mapValue === cellValue
@@ -116,12 +108,10 @@ async function originalMove(dx, dy) {
     }
 }
 
-// Wrap move function to include sound
 window.move = async function(dx, dy) {
-    // If dialogue is active, close it first
     if (window.dialogueManager?.isDialogueActive()) {
         window.dialogueManager.hideDialogue();
-        return; // Don't move on the same keypress that closes dialogue
+        return;
     }
 
     const sound = new Audio('https://nepal-web.s3.us-west-2.amazonaws.com/audio/click.mp3');
@@ -175,7 +165,6 @@ function initializeCharacterSelect() {
         const img = document.createElement('img');
         img.src = `${ICONS.baseUrls.characters}${char.file}`;
         img.alt = char.file;
-        gameDebug('Full URL being accessed:', `${ICONS.baseUrls.characters}${char.file}`);
         
         const desc = document.createElement('span');
         desc.textContent = char.description;
@@ -363,7 +352,6 @@ async function startGame() {
         console.error('Failed to load maps');
     }
     
-    // Set the initial map ID
     currentMapId = 'forest_entrance';
     gameMap = generateMap();
     renderMap();
@@ -379,8 +367,39 @@ async function startGame() {
     });
 }
 
-// Initialize when DOM is ready
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     gameDebug('DOM Content Loaded');
     loadIcons();
 });
+
+// Make move function globally available
+window.loadIcons = loadIcons;
+
+// Hook into dialogue system after it's loaded
+if (window.dialogueManager) {
+    const originalShowDialogue = window.dialogueManager.showDialogue;
+    window.dialogueManager.showDialogue = function(message, npc) {
+        gameDebug('Intercepting dialogue:', message);
+        if (window.parseMessage) {
+            window.parseMessage(message);
+        }
+        return originalShowDialogue.call(this, message, npc);
+    };
+}
+
+// Check dialogue manager again after a delay
+setTimeout(() => {
+    if (window.dialogueManager && !window.dialogueManager._hooked) {
+        const originalShowDialogue = window.dialogueManager.showDialogue;
+        window.dialogueManager.showDialogue = function(message, npc) {
+            gameDebug('Intercepting dialogue (delayed):', message);
+            if (window.parseMessage) {
+                window.parseMessage(message);
+            }
+            return originalShowDialogue.call(this, message, npc);
+        };
+        window.dialogueManager._hooked = true;
+        gameDebug('Dialogue hooks installed (delayed)');
+    }
+}, 1000);

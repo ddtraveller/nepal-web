@@ -41,6 +41,14 @@
             <p>Position: <span id="position">0, 0</span></p>
             <p>Terrain: <span id="terrain">Grass</span></p>
             
+            <!-- Adding inventory section -->
+            <div class="inventory-section">
+                <h3>Inventory</h3>
+                <div id="inventoryList" class="inventory-list">
+                    <!-- Items will be added here dynamically -->
+                </div>
+            </div>            
+                
             <div class="controls">
                 <button id="moveLeft" onclick="window.move(-1, 0)">←</button>
                 <button id="moveUp" onclick="window.move(0, -1)">↑</button>
@@ -52,6 +60,11 @@
         </div>
     </div>
 
+    <!-- Load React first -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Add base game functionality -->
     <script>
         window.debug = function(msg) {
             const debugEl = document.getElementById('debugOutput');
@@ -76,14 +89,37 @@
         
         loadStylesheet();
         window.debug('Page loaded, attempting to load scripts...');
-        
+    </script>
+
+    <!-- Load game scripts -->
+    <script>
         async function loadScripts() {
             try {
-                // Load dialogue.js first
+                // Load inventory.js first
+                const inventoryScript = document.createElement('script');
+                inventoryScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/inventory.js?v=' + Date.now();
+                await new Promise((resolve, reject) => {
+                    inventoryScript.onload = resolve;
+                    inventoryScript.onerror = reject;
+                    document.body.appendChild(inventoryScript);
+                });
+                window.debug('Inventory script loaded successfully');
+
+                // Load dialogue.js second
                 const dialogueScript = document.createElement('script');
                 dialogueScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/dialogue.js?v=' + Date.now();
                 await new Promise((resolve, reject) => {
-                    dialogueScript.onload = resolve;
+                    dialogueScript.onload = () => {
+                        // Hook into dialogue manager after it loads
+                        if (window.dialogueManager) {
+                            const originalShowDialogue = window.dialogueManager.showDialogue;
+                            window.dialogueManager.showDialogue = function(message, npc) {
+                                window.parseMessage(message);
+                                return originalShowDialogue.call(this, message, npc);
+                            };
+                        }
+                        resolve();
+                    };
                     dialogueScript.onerror = reject;
                     document.body.appendChild(dialogueScript);
                 });
