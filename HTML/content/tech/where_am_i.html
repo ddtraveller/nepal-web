@@ -72,12 +72,6 @@
             border-radius: 4px;
         }
     </style>
-    <script>
-        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-            key: "AIzaSyBMp-3KiKTU1y77NbCH-kagMj8rysG2xiU",
-            v: "weekly"
-        });
-    </script>
 </head>
 <body>
     <div class="controls">
@@ -123,8 +117,9 @@
     </div>
 
     <div id="map"></div>
-    <div id="markerList"></div>            
-<script>
+    <div id="markerList"></div>
+
+    <script>
         let map;
         let markers = [];
         const markerList = document.getElementById('markerList');
@@ -132,49 +127,78 @@
         const latInput = document.getElementById('lat');
         const lngInput = document.getElementById('lng');
 
+        // Function to fetch API key from Lambda
+        async function getApiKeys() {
+            try {
+                const response = await fetch('https://zuqaonnjhyobeljlum4m6gclae0gdxsp.lambda-url.us-west-2.on.aws/');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch API keys');
+                }
+                const data = await response.json();
+                return data.google_maps_key;
+            } catch (error) {
+                console.error('Error fetching API key:', error);
+                throw error;
+            }
+        }
+
+        // Load Google Maps script with API key
+        async function loadGoogleMapsScript(apiKey) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+                script.async = true;
+                script.defer = true;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Initialize map
         async function initMap() {
             try {
-                const { Map } = await google.maps.importLibrary("maps");
+                const apiKey = await getApiKeys();
+                await loadGoogleMapsScript(apiKey);
                 
-                map = new Map(document.getElementById('map'), {
+                // Create the map
+                map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 4,
                     center: { lat: 39.8283, lng: -98.5795 },
                     mapTypeId: 'roadmap'
                 });
 
-                map.addListener('click', async (e) => {
+                // Add click listener
+                map.addListener('click', function(e) {
                     const pos = {
                         lat: e.latLng.lat(),
                         lng: e.latLng.lng()
                     };
-                    await addMarker(pos);
+                    addMarker(pos);
                 });
 
                 updateMarkerList();
+                setupEventListeners();
             } catch (error) {
                 console.error('Error initializing map:', error);
+                alert('Error initializing the map. Please try again later.');
             }
         }
 
-        async function addMarker(position) {
-            try {
-                const { Marker } = await google.maps.importLibrary("marker");
-                const marker = new Marker({
-                    map,
-                    position,
-                    title: `Marker ${markers.length + 1}`
-                });
-                
-                markers.push({
-                    marker,
-                    position,
-                    id: Date.now()
-                });
-                
-                updateMarkerList();
-            } catch (error) {
-                console.error('Error adding marker:', error);
-            }
+        function addMarker(position) {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: position,
+                title: `Marker ${markers.length + 1}`
+            });
+            
+            markers.push({
+                marker: marker,
+                position: position,
+                id: Date.now()
+            });
+            
+            updateMarkerList();
         }
 
         function updateMarkerList() {
@@ -206,16 +230,21 @@
         }
 
         function getCurrentLocation() {
+            if (!map) {
+                console.error('Map not initialized');
+                return;
+            }
+            
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    async position => {
+                    position => {
                         const pos = {
                             lat: position.coords.latitude,
                             lng: position.coords.longitude
                         };
                         map.setCenter(pos);
                         map.setZoom(14);
-                        await addMarker(pos);
+                        addMarker(pos);
                     },
                     error => {
                         console.error('Error getting location:', error);
@@ -252,6 +281,11 @@
         }
 
         async function loadMapFromFile(file) {
+            if (!map) {
+                console.error('Map not initialized');
+                return;
+            }
+
             try {
                 const text = await file.text();
                 const mapData = JSON.parse(text);
@@ -262,7 +296,7 @@
 
                 // Add saved markers
                 for (const markerData of mapData.markers) {
-                    await addMarker(markerData.position);
+                    addMarker(markerData.position);
                 }
 
                 // Center map on first marker if exists
@@ -276,36 +310,43 @@
             }
         }
 
-        // Event Listeners
-        document.getElementById('getCurrentLocation').addEventListener('click', getCurrentLocation);
-        document.getElementById('clearMarkers').addEventListener('click', () => {
-            markers.forEach(m => m.marker.setMap(null));
-            markers = [];
-            updateMarkerList();
-        });
-        document.getElementById('saveMap').addEventListener('click', saveMapToFile);
-        document.getElementById('loadMap').addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                loadMapFromFile(e.target.files[0]);
-            }
-        });
-        markerForm.addEventListener('submit', async () => {
-            const lat = parseFloat(latInput.value);
-            const lng = parseFloat(lngInput.value);
-            
-            if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-                alert('Please enter valid coordinates (lat: -90 to 90, lng: -180 to 180)\nकृपया मान्य निर्देशांक प्रविष्ट गर्नुहोस् (अक्षांश: -90 देखि 90, देशान्तर: -180 देखि 180)');
-                return;
-            }
+        function setupEventListeners() {
+            document.getElementById('getCurrentLocation').addEventListener('click', getCurrentLocation);
+            document.getElementById('clearMarkers').addEventListener('click', () => {
+                markers.forEach(m => m.marker.setMap(null));
+                markers = [];
+                updateMarkerList();
+            });
+            document.getElementById('saveMap').addEventListener('click', saveMapToFile);
+            document.getElementById('loadMap').addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    loadMapFromFile(e.target.files[0]);
+                }
+            });
+            markerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!map) {
+                    console.error('Map not initialized');
+                    return;
+                }
 
-            await addMarker({ lat, lng });
-            map.setCenter({ lat, lng });
-            map.setZoom(14);
-            markerForm.reset();
-        });
+                const lat = parseFloat(latInput.value);
+                const lng = parseFloat(lngInput.value);
+                
+                if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                    alert('Please enter valid coordinates (lat: -90 to 90, lng: -180 to 180)\nकृपया मान्य निर्देशांक प्रविष्ट गर्नुहोस् (अक्षांश: -90 देखि 90, देशान्तर: -180 देखि 180)');
+                    return;
+                }
 
-        // Initialize map
+                addMarker({ lat, lng });
+                map.setCenter({ lat, lng });
+                map.setZoom(14);
+                markerForm.reset();
+            });
+        }
+
+        // Initialize the map
         initMap();
     </script>
 </body>
-</html>    
+</html>
