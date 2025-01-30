@@ -3,71 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Holistic Healing Certification Program</title>
-    <style>
-        body {
-            font-family: 'Noto Sans', Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 1rem;
-        }
+    <title>कार्की स्कूल अफ हिलिंग हिलर सर्टिफिकेसन प्रोग्राम</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Inter:wght@400;500;600&display=swap');
+    
+    /* Base Styles */
+    body {
+        font-family: 'Inter', Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #1a1a1a;
+    }
+
+    /* Navigation Styles */
+    .nav-container {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .nav-sections {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .nav-button {
+        text-decoration: none;
+        color: #1c3557;
+        padding: 0.5rem 1rem;
+        border: 1px solid #deb761;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .nav-button:hover {
+        background: #f8f9fa;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .bilingual-text {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .language-separator {
+        color: #deb761;
+    }
+
+    /* Container Styles */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Header Styles */
+    .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+        color: white;
+        position: relative;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .header::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #deb761 0%, #FFD700 100%);
+    }
+
+    /* Content Styles */
+    .content-wrapper {
+        padding: 2rem;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        margin-bottom: 3rem;
+        padding: 0 2rem;
+    }
+
+    /* Container Styles */
+    .container {
+        background-color: white;
+        padding: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .english, .nepali {
+        padding: 1.5rem;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Typography */
+    h1 {
+        font-family: 'Crimson Pro', serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: inherit;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        font-family: 'Crimson Pro', serif;
+        color: #1c3557;
+        border-bottom: 3px solid #deb761;
+        padding-bottom: 0.75rem;
+        margin-top: 2.5rem;
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        font-family: 'Crimson Pro', serif;
+        color: #1c3557;
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(222, 183, 97, 0.3);
+        padding-bottom: 0.5rem;
+    }
+
+    /* Lists */
+    ul {
+        padding-left: 1.5rem;
+        list-style-type: none;
+    }
+
+    li {
+        margin-bottom: 0.75rem;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    li::before {
+        content: "•";
+        color: #deb761;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+    }
+
+    li ul {
+        margin-top: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    li ul li::before {
+        content: "◦";
+        color: #deb761;
+    }
+
+    /* Gallery Styles */
+    .image-gallery-top, .image-gallery-bottom {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        padding: 3rem 2rem;
+        margin: 2rem 0;
+        background-color: #f8f9fa;
+        position: relative;
+    }
+
+    .image-gallery-top::after, .image-gallery-bottom::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #deb761, transparent);
+    }
+
+    .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        height: 300px;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(222, 183, 97, 0.2);
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        display: block;
+        border-radius: 8px;
+    }
+
+
+/* Responsive Design */
+    @media (max-width: 768px) {
         .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: 1fr;
+            padding: 0 1rem;
         }
-        .english, .nepali {
+        .content-wrapper {
             padding: 1rem;
         }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-        h2 {
-            color: #34495e;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-        h3 {
-            color: #455a64;
-            margin-top: 1.5rem;
-        }
-        ul {
-            padding-left: 1.5rem;
-        }
-        li {
-            margin-bottom: 0.5rem;
-        }
-        @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    }
+
+</style>
 </head>
 <body>
-    <div class="container">
+
         <div class="header">
-            <h1>Complete Holistic Healing Certification Program</h1>
-            <h1>समग्र स्वास्थ्य प्रमाणीकरण कार्यक्रम</h1>
+            <h1>Karki School of Healing Healer Certification Program</h1>
+            <h1>कार्की स्कूल अफ हिलिंग हिलर सर्टिफिकेसन प्रोग्राम कार्यक्रम</h1>
         </div>
 
+   
+<div class="content-wrapper">
+    <div class="grid-container">
+        <div class="english">
+            <h2>Re-establishing Nepal's Global Leadership in Healing Wisdom</h2>
+            <p>For millennia, Nepal has been a wellspring of healing wisdom, where ancient Buddhist, Hindu, and indigenous healing traditions converged with knowledge flowing through the Silk Road. The Karki School of Healing Arts represents a renaissance of this legacy, positioning Nepal once again as a global center for integrative healing wisdom. By combining time-tested traditional practices with contemporary understanding, this program creates a new generation of healers who can address modern challenges while honoring ancient wisdom.</p>
+
+            <h3>Community-Centered Knowledge Transmission</h3>
+            <p>At its core, the Karki School program is designed around practices that require minimal equipment and can be easily shared within communities. Graduates become wisdom keepers who pass on essential knowledge in practical, accessible ways. Whether teaching meditation techniques, sharing herbal remedies, demonstrating food forest creation, or practicing hands-on healing modalities, these skills flow naturally through family and community networks.</p>
+
+            <h3>Sustainable Self-Reliance Through Traditional Wisdom</h3>
+            <p>Each Karki healer becomes a catalyst for community self-reliance. They teach families how to identify and use local medicinal plants, create healing preparations from readily available ingredients, and establish sustainable food gardens. These practical skills require no specialized equipment, ensuring that healing knowledge remains accessible to all. From simple breathing techniques for stress relief to traditional postpartum care practices, the focus is on methods that can be easily learned and shared.</p>
+
+            <h3>Healing Wisdom in Daily Life</h3>
+            <p>The program emphasizes healing practices that integrate seamlessly into daily life. Graduates teach community members how to incorporate meditation into their morning routines, use kitchen herbs for common ailments, and transform small spaces into productive healing gardens. This practical approach ensures that traditional healing wisdom becomes part of everyday community life rather than remaining confined to formal healthcare settings.</p>
+
+            <div style="background: #f8f9fa; padding: 2rem; border-left: 4px solid #deb761; margin-top: 2rem;">
+                <p style="font-style: italic;">This program represents Nepal's re-emergence as a global center of healing wisdom, where ancient knowledge meets contemporary needs. Through its emphasis on accessible, sustainable healing practices and community knowledge sharing, it creates resilient communities while preserving and evolving Nepal's rich healing traditions.</p>
+            </div>
+        </div>
+        <div class="nepali">
+            <h2>निको पार्ने ज्ञानमा नेपालको विश्वव्यापी नेतृत्व पुनर्स्थापना</h2>
+            <p>सहस्राब्दीयौंदेखि, नेपाल निको पार्ने ज्ञानको मूल स्रोत रहेको छ, जहाँ प्राचीन बौद्ध, हिन्दू र आदिवासी निको पार्ने परम्पराहरू सिल्क रोड मार्फत बग्ने ज्ञानसँग मिसिएका छन्। कार्की हिलिङ आर्ट्स स्कूलले यस विरासतको पुनर्जागरणको प्रतिनिधित्व गर्दछ, नेपाललाई फेरि एकपटक एकीकृत निको पार्ने ज्ञानको विश्वव्यापी केन्द्रको रूपमा स्थापित गर्दै। परीक्षण गरिएका परम्परागत अभ्यासहरूलाई समकालीन बुझाइसँग जोडेर, यो कार्यक्रमले प्राचीन ज्ञानको सम्मान गर्दै आधुनिक चुनौतीहरूलाई सम्बोधन गर्न सक्ने नयाँ पुस्ताका चिकित्सकहरू सिर्जना गर्दछ।</p>
+
+            <h3>समुदाय-केन्द्रित ज्ञान प्रसारण</h3>
+            <p>यसको मूलमा, कार्की स्कूल कार्यक्रम न्यूनतम उपकरण आवश्यक पर्ने र समुदायहरू भित्र सजिलै साझा गर्न सकिने अभ्यासहरूको वरिपरि डिजाइन गरिएको छ। स्नातकहरू ज्ञान-रक्षकहरू बन्छन् जसले आवश्यक ज्ञान व्यावहारिक, पहुँचयोग्य तरिकाले प्रवाह गर्छन्। ध्यान प्रविधिहरू सिकाउने, जडीबुटी उपचारहरू साझा गर्ने, खाद्य वन सिर्जना प्रदर्शन गर्ने, वा हातले गरिने निको पार्ने विधिहरू अभ्यास गर्ने जस्ता सीपहरू स्वाभाविक रूपमा परिवार र समुदाय नेटवर्कहरू मार्फत बग्छन्।</p>
+
+            <h3>परम्परागत ज्ञान मार्फत दिगो आत्मनिर्भरता</h3>
+            <p>प्रत्येक कार्की चिकित्सक समुदाय आत्मनिर्भरताको उत्प्रेरक बन्छ। उनीहरूले परिवारहरूलाई स्थानीय औषधीय बोटबिरुवाहरू पहिचान गर्न र प्रयोग गर्न, सजिलै उपलब्ध सामग्रीहरूबाट निको पार्ने तयारीहरू सिर्जना गर्न, र दिगो खाद्य बगैंचाहरू स्थापना गर्न सिकाउँछन्। यी व्यावहारिक सीपहरूले कुनै विशेष उपकरणको आवश्यकता पर्दैन, निको पार्ने ज्ञान सबैको पहुँचमा रहने सुनिश्चित गर्दै। तनाव राहतको लागि सरल श्वास प्रविधिहरूदेखि परम्परागत सुत्केरी स्याहार अभ्यासहरूसम्म, ध्यान सजिलै सिक्न र साझा गर्न सकिने विधिहरूमा केन्द्रित छ।</p>
+
+            <h3>दैनिक जीवनमा निको पार्ने ज्ञान</h3>
+            <p>कार्यक्रमले दैनिक जीवनमा निर्बाध रूपमा एकीकृत हुने निको पार्ने अभ्यासहरूमा जोड दिन्छ। स्नातकहरूले समुदायका सदस्यहरूलाई आफ्नो बिहानको दिनचर्यामा ध्यान समावेश गर्न, सामान्य रोगहरूको लागि भान्साका जडीबुटीहरू प्रयोग गर्न, र साना स्थानहरूलाई उत्पादनशील निको पार्ने बगैंचाहरूमा रूपान्तरण गर्न सिकाउँछन्। यो व्यावहारिक दृष्टिकोणले परम्परागत निको पार्ने ज्ञान औपचारिक स्वास्थ्य सेवा सेटिङहरूमा सीमित नरही दैनिक समुदाय जीवनको हिस्सा बन्ने सुनिश्चित गर्दछ।</p>
+
+            <div style="background: #f8f9fa; padding: 2rem; border-left: 4px solid #deb761; margin-top: 2rem;">
+                <p style="font-style: italic;">यो कार्यक्रमले नेपालको निको पार्ने ज्ञानको विश्वव्यापी केन्द्रको रूपमा पुनः उदय प्रतिनिधित्व गर्दछ, जहाँ प्राचीन ज्ञान समकालीन आवश्यकताहरूसँग भेट्छ। यसको पहुँचयोग्य, दिगो निको पार्ने अभ्यासहरू र समुदाय ज्ञान साझेदारीमा जोड मार्फत, यसले नेपालको समृद्ध निको पार्ने परम्पराहरूलाई संरक्षण र विकास गर्दै बलियो समुदायहरू सिर्जना गर्दछ।</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Image Gallery Top -->
+        <div class="image-gallery-top">
+            <div class="gallery-item">
+                <img src="https://nepal-web.s3.us-west-2.amazonaws.com/images/3healers.jpg" alt="Three healers performing traditional healing ceremony">
+            </div>
+            <div class="gallery-item">
+                <img src="https://nepal-web.s3.us-west-2.amazonaws.com/images/durgha.jpg" alt="Durga statue representing divine feminine energy">
+            </div>
+        </div>
+</div>        
     <div class="grid-container">
         <div class="english">
             <h2>Program Overview</h2>
@@ -655,7 +891,15 @@
                 </ul>
             </div>
         </div>
-
+        <!-- Image Gallery Top -->
+        <div class="image-gallery-top">
+            <div class="gallery-item">
+                <img src="https://nepal-web.s3.us-west-2.amazonaws.com/images/healer_computer.jpg" alt="A healers working at a computer">
+            </div>
+            <div class="gallery-item">
+                <img src="https://nepal-web.s3.us-west-2.amazonaws.com/images/healer_planting.jpg" alt="A healer planting some herbal medicine">
+            </div>
+        </div>
         <div class="grid-container">
             <div class="english">
                 <h2>Certification Requirements</h2>
