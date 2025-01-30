@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marker Manager / मार्कर म्यानेजर</title>
+    <style>
+        .bilingual {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .nepali {
+            color: #666;
+        }
+        .controls {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-blue {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-red {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-green {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        #markerList {
+            margin-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .marker-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .coordinate-input {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .coordinate-input input {
+            margin: 0 5px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+            key: "AIzaSyBMp-3KiKTU1y77NbCH-kagMj8rysG2xiU",
+            v: "weekly"
+        });
+    </script>
+</head>
+<body>
+    <div class="controls">
+        <button id="getCurrentLocation" class="btn btn-green">
+            <div class="bilingual">
+                Get Current Location
+                <span class="nepali">वर्तमान स्थान प्राप्त गर्नुहोस्</span>
+            </div>
+        </button>
+        <button id="clearMarkers" class="btn btn-red">
+            <div class="bilingual">
+                Clear All Markers
+                <span class="nepali">सबै मार्करहरू हटाउनुहोस्</span>
+            </div>
+        </button>
+        <button id="saveMap" class="btn btn-blue">
+            <div class="bilingual">
+                Save Map
+                <span class="nepali">नक्सा सेभ गर्नुहोस्</span>
+            </div>
+        </button>
+        <input type="file" id="loadMap" accept=".json" style="display:none">
+        <button onclick="document.getElementById('loadMap').click()" class="btn btn-blue">
+            <div class="bilingual">
+                Load Map
+                <span class="nepali">नक्सा लोड गर्नुहोस्</span>
+            </div>
+        </button>
+    </div>
+
+    <div class="coordinate-input">
+        <form id="markerForm" onsubmit="return false;">
+            <div class="bilingual">
+                <label for="lat">Latitude / अक्षांश:</label>
+                <input type="number" id="lat" step="any" required>
+                <label for="lng">Longitude / देशान्तर:</label>
+                <input type="number" id="lng" step="any" required>
+                <button type="submit" class="btn btn-blue">
+                    Add Marker / मार्कर थप्नुहोस्
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="map"></div>
+    <div id="markerList"></div>            
+<script>
+        let map;
+        let markers = [];
+        const markerList = document.getElementById('markerList');
+        const markerForm = document.getElementById('markerForm');
+        const latInput = document.getElementById('lat');
+        const lngInput = document.getElementById('lng');
+
+        async function initMap() {
+            try {
+                const { Map } = await google.maps.importLibrary("maps");
+                
+                map = new Map(document.getElementById('map'), {
+                    zoom: 4,
+                    center: { lat: 39.8283, lng: -98.5795 },
+                    mapTypeId: 'roadmap'
+                });
+
+                map.addListener('click', async (e) => {
+                    const pos = {
+                        lat: e.latLng.lat(),
+                        lng: e.latLng.lng()
+                    };
+                    await addMarker(pos);
+                });
+
+                updateMarkerList();
+            } catch (error) {
+                console.error('Error initializing map:', error);
+            }
+        }
+
+        async function addMarker(position) {
+            try {
+                const { Marker } = await google.maps.importLibrary("marker");
+                const marker = new Marker({
+                    map,
+                    position,
+                    title: `Marker ${markers.length + 1}`
+                });
+                
+                markers.push({
+                    marker,
+                    position,
+                    id: Date.now()
+                });
+                
+                updateMarkerList();
+            } catch (error) {
+                console.error('Error adding marker:', error);
+            }
+        }
+
+        function updateMarkerList() {
+            markerList.innerHTML = '';
+            markers.forEach((markerData, idx) => {
+                const item = document.createElement('div');
+                item.className = 'marker-item';
+                item.innerHTML = `
+                    <span class="bilingual">
+                        Marker ${idx + 1} / मार्कर ${idx + 1}: (${markerData.position.lat.toFixed(6)}, ${markerData.position.lng.toFixed(6)})
+                    </span>
+                    <button class="btn btn-red" onclick="removeMarkerById(${markerData.id})">
+                        <div class="bilingual">
+                            Remove / हटाउनुहोस्
+                        </div>
+                    </button>
+                `;
+                markerList.appendChild(item);
+            });
+        }
+
+        function removeMarkerById(id) {
+            const idx = markers.findIndex(m => m.id === id);
+            if (idx !== -1) {
+                markers[idx].marker.setMap(null);
+                markers.splice(idx, 1);
+                updateMarkerList();
+            }
+        }
+
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async position => {
+                        const pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setCenter(pos);
+                        map.setZoom(14);
+                        await addMarker(pos);
+                    },
+                    error => {
+                        console.error('Error getting location:', error);
+                        alert('Error getting your location. Please check your settings.\nतपाईंको स्थान प्राप्त गर्दा त्रुटि। कृपया आफ्नो सेटिङहरू जाँच गर्नुहोस्।');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser.\nयो ब्राउजरमा जियोलोकेसन समर्थित छैन।');
+            }
+        }
+
+        function saveMapToFile() {
+            if (markers.length === 0) {
+                alert('No markers to save! / सेभ गर्न कुनै मार्करहरू छैनन्!');
+                return;
+            }
+
+            const mapData = {
+                markers: markers.map(m => ({
+                    position: m.position
+                })),
+                savedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(mapData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `map_markers_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        async function loadMapFromFile(file) {
+            try {
+                const text = await file.text();
+                const mapData = JSON.parse(text);
+
+                // Clear existing markers
+                markers.forEach(m => m.marker.setMap(null));
+                markers = [];
+
+                // Add saved markers
+                for (const markerData of mapData.markers) {
+                    await addMarker(markerData.position);
+                }
+
+                // Center map on first marker if exists
+                if (mapData.markers.length > 0) {
+                    map.setCenter(mapData.markers[0].position);
+                    map.setZoom(12);
+                }
+            } catch (error) {
+                console.error('Error loading map file:', error);
+                alert('Error loading map file. Please make sure it\'s a valid map JSON file.\nनक्सा फाइल लोड गर्दा त्रुटि। कृपया यो मान्य JSON फाइल हो भनी सुनिश्चित गर्नुहोस्।');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('getCurrentLocation').addEventListener('click', getCurrentLocation);
+        document.getElementById('clearMarkers').addEventListener('click', () => {
+            markers.forEach(m => m.marker.setMap(null));
+            markers = [];
+            updateMarkerList();
+        });
+        document.getElementById('saveMap').addEventListener('click', saveMapToFile);
+        document.getElementById('loadMap').addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                loadMapFromFile(e.target.files[0]);
+            }
+        });
+        markerForm.addEventListener('submit', async () => {
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            
+            if (isNaN(lat) || isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                alert('Please enter valid coordinates (lat: -90 to 90, lng: -180 to 180)\nकृपया मान्य निर्देशांक प्रविष्ट गर्नुहोस् (अक्षांश: -90 देखि 90, देशान्तर: -180 देखि 180)');
+                return;
+            }
+
+            await addMarker({ lat, lng });
+            map.setCenter({ lat, lng });
+            map.setZoom(14);
+            markerForm.reset();
+        });
+
+        // Initialize map
+        initMap();
+    </script>
+</body>
+</html>    
