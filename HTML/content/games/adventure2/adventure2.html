@@ -105,6 +105,16 @@
                 });
                 window.debug('Inventory script loaded successfully');
 
+            // Load combat.js 
+            const combatScript = document.createElement('script');
+            combatScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/combat.js?v=' + Date.now();
+            await new Promise((resolve, reject) => {
+                combatScript.onload = resolve;
+                combatScript.onerror = reject;
+                document.body.appendChild(combatScript);
+            });
+            window.debug('Combat script loaded successfully');
+
                 // Load dialogue.js second
                 const dialogueScript = document.createElement('script');
                 dialogueScript.src = 'https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/dialogue.js?v=' + Date.now();

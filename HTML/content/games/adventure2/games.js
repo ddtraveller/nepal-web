@@ -26,6 +26,17 @@ const TERRAIN_TYPES = {
     'terrain-icon': { type: 'terrain-icon', char: '', passable: true }
 };
 
+// Make key variables and functions available globally
+window.gameMap = null;
+window.playerX = 0;
+window.playerY = 0;
+window.isTilePassable = function(x, y) {
+    if (!window.gameMap || !window.gameMap[y] || typeof window.gameMap[y][x] === 'undefined') {
+        return false;
+    }
+    return window.gameMap[y][x] >= 4 || TERRAIN_TYPES[window.gameMap[y][x]]?.passable || false;
+};
+
 async function loadMaps() {
     try {
         const response = await fetch(`https://nepal-web.s3.us-west-2.amazonaws.com/games/adventure2/maps.json?v=${Date.now()}`);
@@ -184,6 +195,7 @@ function selectCharacter(character) {
     startGame();
 }
 
+// Then in the generateMap function, make sure to set the global gameMap:
 function generateMap() {
     if (!maps) {
         console.error('Maps not loaded');
@@ -226,6 +238,7 @@ function generateMap() {
     });
 
     map.selectedTerrainIcons = selectedIcons;
+    window.gameMap = map; // Make sure to set the global gameMap
     return map;
 }
 
@@ -325,9 +338,13 @@ function isTilePassable(x, y) {
     return gameMap[y][x] >= 4 || TERRAIN_TYPES[gameMap[y][x]]?.passable || false;
 }
 
+// Update player position globally
 function updatePlayerPosition() {
     const player = document.getElementById('player');
     if (!player) return;
+    
+    window.playerX = playerX; // Update global playerX
+    window.playerY = playerY; // Update global playerY
     
     player.style.left = playerX * TILE_SIZE + 'px';
     player.style.top = playerY * TILE_SIZE + 'px';
