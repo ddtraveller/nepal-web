@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Learning: Simple Pendulum</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .pendulum-container { min-height: 600px; }
+    </style>
+</head>
+<body>
+    <header class="bg-blue-600 text-white p-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-2xl">Physics Interactive Learning</h1>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-4 pendulum-container">
+        <div id="root"></div>
+    </main>
+
+    <footer class="bg-gray-100 p-4 mt-8">
+        <div class="max-w-4xl mx-auto text-center text-gray-600">
+            <p>© 2025 Physics Learning Lab</p>
+        </div>
+    </footer>
+
+    <script>
+        const App = () => {
+            const [length, setLength] = React.useState(100);
+            const [angle, setAngle] = React.useState(30);
+            const [velocity, setVelocity] = React.useState(0);
+            const [language, setLanguage] = React.useState('en');
+
+            const content = {
+                en: {
+                    title: "Simple Pendulum (Click to push)",
+                    subtitle: "Learn about pendulum motion",
+                    lengthLabel: "Pendulum Length",
+                    description: "A simple pendulum is a weight suspended from a fixed point by a string or rod. The period of oscillation depends on the length of the pendulum.",
+                    formula: "Period (T) = 2π√(L/g)",
+                    notes: "Try changing the length to see how it affects the pendulum's motion!",
+                    math: "The period (T) depends on the square root of the pendulum length (L) divided by gravitational acceleration (g). This means a longer pendulum swings more slowly. The formula shows why: doubling the length increases the period by a factor of √2 ≈ 1.414. The angle doesn't affect the period for small swings - this is called simple harmonic motion.",
+                    interaction: "Click the pendulum area to give it a push. Change the slider to adjust length."
+                },
+                ne: {
+                    title: "सरल पेन्डुलम (धक्का दिन क्लिक गर्नुहोस्)",
+                    subtitle: "पेन्डुलम गतिको बारेमा जान्नुहोस्",
+                    lengthLabel: "पेन्डुलमको लम्बाई",
+                    description: "सरल पेन्डुलम एउटा भार हो जुन एउटा स्थिर बिन्दुबाट डोरी वा छडद्वारा झुण्डाइएको हुन्छ। दोलनको अवधि पेन्डुलमको लम्बाईमा निर्भर गर्दछ।",
+                    formula: "अवधि (T) = 2π√(L/g)",
+                    notes: "पेन्डुलमको गतिमा कसरी प्रभाव पार्छ भनेर हेर्न लम्बाई परिवर्तन गर्नुहोस्!",
+                    math: "आवधि (T) पेन्डुलमको लम्बाई (L) र गुरुत्वीय त्वरण (g) को वर्गमूलमा निर्भर गर्दछ। यसको मतलब लामो पेन्डुलम ढिलो दोलन गर्छ। सूत्रले यो देखाउँछ: लम्बाई दोब्बर गर्दा अवधि √2 ≈ 1.414 गुणाले बढ्छ। साना दोलनहरूको लागि कोणले अवधिमा असर गर्दैन - यसलाई सरल हार्मोनिक गति भनिन्छ।",
+                    interaction: "पेन्डुलमलाई धक्का दिन क्लिक गर्नुहोस्। लम्बाई समायोजन गर्न स्लाइडर परिवर्तन गर्नुहोस्।"
+                }
+            };
+
+            React.useEffect(() => {
+                let lastTime = Date.now();
+                const gravity = 9.81;
+                const damping = 0.995;
+                
+                const interval = setInterval(() => {
+                    const currentTime = Date.now();
+                    const deltaTime = (currentTime - lastTime) / 1000;
+                    lastTime = currentTime;
+                    
+                    const acceleration = -(gravity / length) * Math.sin(angle * Math.PI / 180);
+                    setVelocity(prev => {
+                        const newVel = (prev + acceleration * deltaTime) * damping;
+                        setAngle(a => a + newVel * 180 / Math.PI);
+                        return newVel;
+                    });
+                }, 16);
+                
+                return () => clearInterval(interval);
+            }, [length, angle]);
+
+            const x = Math.sin(angle * Math.PI / 180) * length;
+            const y = Math.cos(angle * Math.PI / 180) * length;
+
+            return React.createElement('div', { className: "min-h-screen bg-gray-100 p-8" },
+                React.createElement('div', { className: "max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6" },
+                    React.createElement('div', { className: "flex justify-end mb-4" },
+                        React.createElement('button', {
+                            onClick: () => setLanguage(l => l === 'en' ? 'ne' : 'en'),
+                            className: "px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        }, language === 'en' ? 'नेपाली' : 'English')
+                    ),
+                    React.createElement('h1', { className: "text-3xl font-bold mb-2" }, content[language].title),
+                    React.createElement('h2', { className: "text-xl text-gray-600 mb-6" }, content[language].subtitle),
+                    React.createElement('div', { className: "flex flex-col md:flex-row gap-8" },
+                        React.createElement('div', { className: "flex-1" },
+                            React.createElement('p', { className: "mb-4" }, content[language].description),
+                            React.createElement('div', { className: "mb-6" },
+                                React.createElement('p', { className: "font-mono bg-gray-100 p-2 rounded mb-2" },
+                                    content[language].formula
+                                ),
+                                React.createElement('p', { className: "text-sm" },
+                                    content[language].math
+                                )
+                            ),
+                            React.createElement('div', { className: "mb-4" },
+                                React.createElement('label', { className: "block mb-2" }, content[language].lengthLabel),
+                                React.createElement('input', {
+                                    type: "range",
+                                    min: 50,
+                                    max: 200,
+                                    value: length,
+                                    onChange: (e) => setLength(Number(e.target.value)),
+                                    className: "w-full"
+                                })
+                            ),
+                            React.createElement('p', { className: "text-sm text-gray-600" }, content[language].notes)
+                        ),
+                        React.createElement('div', {
+                            className: "flex-1 flex items-center justify-center bg-gray-50 rounded-lg p-4 cursor-pointer",
+                            onClick: () => setVelocity(v => v + 0.5)
+                        },
+                            React.createElement('svg', {
+                                width: "300",
+                                height: "300",
+                                viewBox: "-150 -150 300 300"
+                            },
+                                React.createElement('line', {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: x,
+                                    y2: y,
+                                    stroke: "black",
+                                    strokeWidth: "2"
+                                }),
+                                React.createElement('circle', {
+                                    cx: x,
+                                    cy: y,
+                                    r: "10",
+                                    fill: "blue"
+                                }),
+                                React.createElement('circle', {
+                                    cx: 0,
+                                    cy: 0,
+                                    r: "4",
+                                    fill: "black"
+                                })
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>

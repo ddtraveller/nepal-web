@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Learning: Acceleration and Gravity</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .ball { transition: all 0.016s linear; }
+    </style>
+</head>
+<body>
+    <header class="bg-blue-600 text-white p-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-2xl">Physics Interactive Learning</h1>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-4">
+        <div id="root"></div>
+    </main>
+
+    <script>
+        const App = () => {
+            const [initialHeight, setInitialHeight] = React.useState(100);
+            const [currentHeight, setCurrentHeight] = React.useState(100);
+            const [velocity, setVelocity] = React.useState(0);
+            const [isDropping, setIsDropping] = React.useState(false);
+            const [language, setLanguage] = React.useState('en');
+
+            const content = {
+                en: {
+                    title: "Free Fall and Acceleration",
+                    subtitle: "Click ball to drop and reset",
+                    heightLabel: "Initial Height (meters)",
+                    description: "Watch how objects accelerate under Earth's gravity, falling at 9.81 meters per second squared (g).",
+                    formula: "Distance = ½gt²",
+                    math: "An object in free fall accelerates downward at 9.81 m/s². The distance fallen increases with the square of time - after 1 second it falls 4.9m, after 2 seconds 19.6m, and after 3 seconds 44.1m. This quadratic relationship creates a parabolic path.",
+                    currentHeight: "Current Height:",
+                    currentVelocity: "Current Velocity:",
+                    meters: "meters",
+                    mps: "m/s"
+                },
+                ne: {
+                    title: "स्वतन्त्र पतन र त्वरण",
+                    subtitle: "खसाल्न र रिसेट गर्न बल क्लिक गर्नुहोस्",
+                    heightLabel: "प्रारम्भिक उचाई (मिटर)",
+                    description: "पृथ्वीको गुरुत्वाकर्षणमा वस्तुहरू कसरी त्वरित हुन्छन् हेर्नुहोस्, प्रति सेकेन्ड वर्ग 9.81 मिटर (g) मा खस्दै।",
+                    formula: "दूरी = ½gt²",
+                    math: "स्वतन्त्र पतनमा रहेको वस्तु 9.81 मि/से² मा तल त्वरित हुन्छ। खसेको दूरी समयको वर्गसँगै बढ्छ - 1 सेकेन्डपछि यो 4.9 मि, 2 सेकेन्डपछि 19.6 मि, र 3 सेकेन्डपछि 44.1 मि खस्छ। यो द्विघात सम्बन्धले एउटा परवलयिक पथ सिर्जना गर्छ।",
+                    currentHeight: "वर्तमान उचाई:",
+                    currentVelocity: "वर्तमान वेग:",
+                    meters: "मिटर",
+                    mps: "मि/से"
+                }
+            };
+
+            React.useEffect(() => {
+                if (!isDropping) return;
+                
+                let startTime = Date.now();
+                const gravity = 9.81;
+                
+                const interval = setInterval(() => {
+                    const time = (Date.now() - startTime) / 1000;
+                    const newHeight = Math.max(0, initialHeight - (0.5 * gravity * time * time));
+                    const newVelocity = gravity * time;
+                    
+                    if (newHeight === 0) {
+                        setIsDropping(false);
+                        setVelocity(0);
+                        clearInterval(interval);
+                    } else {
+                        setCurrentHeight(newHeight);
+                        setVelocity(newVelocity);
+                    }
+                }, 16);
+                
+                return () => clearInterval(interval);
+            }, [isDropping, initialHeight]);
+
+            const handleBallClick = () => {
+                if (isDropping) {
+                    setIsDropping(false);
+                    setCurrentHeight(initialHeight);
+                } else if (initialHeight > 0) {
+                    setIsDropping(true);
+                }
+            };
+
+            return React.createElement('div', { className: "min-h-screen bg-gray-100 p-8" },
+                React.createElement('div', { className: "max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6" },
+                    React.createElement('div', { className: "flex justify-end mb-4" },
+                        React.createElement('button', {
+                            onClick: () => setLanguage(l => l === 'en' ? 'ne' : 'en'),
+                            className: "px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        }, language === 'en' ? 'नेपाली' : 'English')
+                    ),
+                    React.createElement('h1', { className: "text-3xl font-bold mb-2" }, content[language].title),
+                    React.createElement('h2', { className: "text-xl text-gray-600 mb-6" }, content[language].subtitle),
+                    React.createElement('div', { className: "flex flex-col md:flex-row gap-8" },
+                        React.createElement('div', { className: "flex-1" },
+                            React.createElement('p', { className: "mb-4" }, content[language].description),
+                            React.createElement('div', { className: "mb-6" },
+                                React.createElement('p', { className: "font-mono bg-gray-100 p-2 rounded mb-2" },
+                                    content[language].formula
+                                ),
+                                React.createElement('p', { className: "text-sm" },
+                                    content[language].math
+                                )
+                            ),
+                            React.createElement('div', { className: "mb-4 space-y-2" },
+                                React.createElement('div', { className: "mb-4" },
+                                    React.createElement('label', { className: "block mb-2" }, content[language].heightLabel),
+                                    React.createElement('input', {
+                                        type: 'number',
+                                        min: '1',
+                                        max: '1000',
+                                        value: initialHeight,
+                                        onChange: (e) => {
+                                            const newHeight = Number(e.target.value);
+                                            setInitialHeight(newHeight);
+                                            setCurrentHeight(newHeight);
+                                            setIsDropping(false);
+                                        },
+                                        className: "w-full p-2 border rounded"
+                                    })
+                                ),
+                                React.createElement('p', null, 
+                                    content[language].currentVelocity + " " + 
+                                    velocity.toFixed(1) + " " + 
+                                    content[language].mps
+                                )
+                            )
+                        ),
+                        React.createElement('div', {
+                            className: "flex-1 relative h-96 bg-gray-50 rounded-lg"
+                        },
+                            React.createElement('div', {
+                                className: "ball absolute left-1/2 transform -translate-x-1/2 cursor-pointer",
+                                style: {
+                                    bottom: `${(currentHeight/3)}px`,
+                                    width: '20px',
+                                    height: '20px',
+                                    backgroundColor: 'blue',
+                                    borderRadius: '50%'
+                                },
+                                onClick: handleBallClick
+                            })
+                        )
+                    )
+                )
+            );
+        };
+
+        ReactDOM.render(React.createElement(App), document.getElementById('root'));
+    </script>
+</body>
+</html>

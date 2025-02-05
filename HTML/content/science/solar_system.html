@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Solar System - हाम्रो सौर्य मण्डल</title>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .content {
+            padding: 20px;
+            margin-top: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #4a90e2;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .section h3 {
+            color: #67b26f;
+            margin-top: 30px;
+        }
+        .section p {
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: justify;
+        }
+        #solar-system {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+        }
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            transform-origin: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .planet-label {
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            white-space: nowrap;
+            text-align: center;
+            top: 120%;
+        }
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(var(--translate)) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(var(--translate)) rotate(-360deg); }
+        }
+        .sun {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(#fff200, #ff8c00);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+        .saturn-rings {
+            position: absolute;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transform: rotate(20deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Our Solar System<br>हाम्रो सौर्य मण्डल</h1>
+        </div>
+        <div id="solar-system">
+            <div class="sun" style="width: 200px; height: 200px;"></div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>The Solar System: Our Cosmic Neighborhood</h2>
+                <p>Our solar system formed approximately 4.6 billion years ago from a giant cloud of gas and dust. At its heart lies the Sun, an average-sized star that provides the energy and gravitational force that governs our cosmic neighborhood. The solar system extends far beyond the eight planets we commonly discuss, encompassing thousands of smaller objects, including dwarf planets, asteroids, comets, and countless pieces of space debris.</p>
+                
+                <h3>The Sun: Our Life-Giving Star</h3>
+                <p>The Sun contains 99.86% of all mass in the solar system. This massive ball of hydrogen and helium generates energy through nuclear fusion in its core, where temperatures reach 15 million degrees Celsius. Every second, the Sun converts 600 million tons of hydrogen into helium, releasing enormous amounts of energy that travels across space as light and heat, taking about 8 minutes to reach Earth.</p>
+
+                <h3>The Inner Solar System</h3>
+                <p>The four inner planets - Mercury, Venus, Earth, and Mars - are called terrestrial planets because they are rocky worlds with solid surfaces. Mercury, the smallest and closest to the Sun, experiences extreme temperature variations and has a heavily cratered surface. Venus, often called Earth's twin due to its similar size, is actually a hostile world with a thick atmosphere that creates a runaway greenhouse effect, making it the hottest planet in our solar system.</p>
+                
+                <p>Earth, our home planet, is unique in having liquid water on its surface and an atmosphere capable of supporting life. Mars, the red planet, shows evidence of ancient rivers and lakes, suggesting it once had conditions similar to Earth's.</p>
+
+                <h3>The Outer Solar System</h3>
+                <p>Beyond the asteroid belt lie the giant planets. Jupiter, the largest planet, has a Great Red Spot that's actually a storm larger than Earth that's been raging for centuries. Saturn is famous for its spectacular ring system, composed mainly of ice particles and rock. Uranus and Neptune, the ice giants, are massive worlds composed largely of frozen methane, water, and ammonia.</p>
+
+                <h3>Recent Discoveries</h3>
+                <p>Modern space exploration continues to reveal new wonders about our solar system. We've discovered liquid water oceans beneath the icy surfaces of Jupiter's moon Europa and Saturn's moon Enceladus. The New Horizons mission showed us Pluto's heart-shaped plains and mountain ranges of water ice. The study of exoplanets - planets orbiting other stars - has helped us understand how unique and special our own solar system is.</p>
+            </div>
+
+            <div class="section">
+                <h2>सौर्य मण्डल: हाम्रो ब्रह्माण्डीय छिमेक</h2>
+                <p>हाम्रो सौर्य मण्डल लगभग ४.६ अरब वर्ष अघि एउटा विशाल ग्यास र धूलोको बादलबाट बनेको थियो। यसको केन्द्रमा सूर्य छ, जो एउटा मध्यम आकारको तारा हो जसले हाम्रो ब्रह्माण्डीय छिमेकलाई नियन्त्रण गर्ने ऊर्जा र गुरुत्वाकर्षण बल प्रदान गर्दछ। सौर्य मण्डल हामीले सामान्यतया छलफल गर्ने आठ ग्रहहरू भन्दा धेरै टाढासम्म फैलिएको छ, जसमा हजारौं साना वस्तुहरू, पुच्छ्रे ताराहरू, क्षुद्रग्रहहरू, र असंख्य अन्तरिक्ष मलबहरू समावेश छन्।</p>
+
+                <h3>सूर्य: हाम्रो जीवनदायी तारा</h3>
+                <p>सूर्यमा सौर्य मण्डलको ९९.८६% मास समावेश छ। हाइड्रोजन र हिलियमको यो विशाल पिण्डले आफ्नो कोरमा नाभिकीय संलयन मार्फत ऊर्जा उत्पादन गर्दछ, जहाँ तापमान १५ मिलियन डिग्री सेल्सियस पुग्छ। प्रत्येक सेकेन्ड, सूर्यले ६०० मिलियन टन हाइड्रोजनलाई हिलियममा परिवर्तन गर्दछ, जसले विशाल मात्रामा ऊर्जा निकाल्छ जो प्रकाश र तापको रूपमा अन्तरिक्ष भर यात्रा गर्दछ र पृथ्वीमा पुग्न लगभग ८ मिनेट लाग्छ।</p>
+
+                <h3>भित्री सौर्य मण्डल</h3>
+                <p>चार भित्री ग्रहहरू - बुध, शुक्र, पृथ्वी, र मंगल - लाई पार्थिव ग्रहहरू भनिन्छ किनभने तिनीहरू ठोस सतह भएका चट्टानी विश्वहरू हुन्। सूर्यको सबैभन्दा नजिक र सबैभन्दा सानो बुधले चरम तापमान परिवर्तनको अनुभव गर्दछ र यसको सतह क्रेटरहरूले भरिएको छ। पृथ्वीको जुम्ल्याहा भनिने शुक्र, आफ्नो समान आकारको कारण, वास्तवमा एउटा शत्रुतापूर्ण विश्व हो जसको बाक्लो वायुमण्डलले ग्रीनहाउस प्रभाव सिर्जना गर्दछ, जसले यसलाई हाम्रो सौर्य मण्डलको सबैभन्दा तातो ग्रह बनाउँछ।</p>
+
+                <p>हाम्रो घर ग्रह पृथ्वी आफ्नो सतहमा तरल पानी र जीवन समर्थन गर्न सक्ने वायुमण्डल भएको अनौठो ग्रह हो। रातो ग्रह मंगलमा प्राचीन नदीहरू र तालहरूको प्रमाण पाइन्छ, जसले यहाँ एक समय पृथ्वी जस्तै अवस्था थियो भन्ने संकेत गर्दछ।</p>
+
+                <h3>बाह्य सौर्य मण्डल</h3>
+                <p>क्षुद्रग्रह पेटी पारि विशाल ग्रहहरू छन्। सबैभन्दा ठूलो ग्रह बृहस्पतिमा एउटा विशाल रातो धब्बा छ जो वास्तवमा पृथ्वी भन्दा ठूलो आँधी हो जो शताब्दीयौंदेखि चलिरहेको छ। शनि आफ्नो भव्य वलय प्रणालीको लागि प्रसिद्ध छ, जो मुख्यतया बरफका कणहरू र चट्टानले बनेको छ। हिमयुग ग्रहहरू युरेनस र नेप्च्यून विशाल विश्वहरू हुन् जो मुख्यतया जमेको मिथेन, पानी, र अमोनियाले बनेका छन्।</p>
+
+                <h3>हालैका खोजहरू</h3>
+                <p>आधुनिक अन्तरिक्ष अन्वेषणले हाम्रो सौर्य मण्डलको बारेमा नयाँ आश्चर्यहरू प्रकट गरिरहेको छ। हामीले बृहस्पतिको चन्द्रमा यूरोपा र शनिको चन्द्रमा एन्सेलाडसको बरफीलो सतह मुनि तरल पानीका महासागरहरू पत्ता लगाएका छौं। न्यू होराइजन्स मिसनले हामीलाई प्लुटोको मुटु आकारको मैदान र पानीको बरफको पर्वतश्रृंखलाहरू देखायो। एक्सोप्लानेट्स - अन्य ताराहरूको वरिपरि घुम्ने ग्रहहरूको अध्ययनले हामीलाई हाम्रो आफ्नै सौर्य मण्डल कति अनौठो र विशेष छ भन्ने बुझ्न मद्दत गरेको छ।</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const planets = [
+            { name: 'Mercury', radius: 2, orbitRadius: 120, color: '#b5b5b5', period: 0.2 },
+            { name: 'Venus', radius: 5, orbitRadius: 160, color: '#e6b800', period: 0.52 },
+            { name: 'Earth', radius: 5, orbitRadius: 200, color: '#4169e1', period: 0.82 },
+            { name: 'Mars', radius: 3, orbitRadius: 240, color: '#c1440e', period: 1.56 },
+            { name: 'Jupiter', radius: 20, orbitRadius: 300, color: '#e0bf9e', period: 9.84 },
+            { name: 'Saturn', radius: 17, orbitRadius: 360, color: '#efd9b4', period: 24.46, hasRings: true },
+            { name: 'Uranus', radius: 7, orbitRadius: 420, color: '#b3e0ff', period: 69.74 },
+            { name: 'Neptune', radius: 7, orbitRadius: 480, color: '#3c3cdb', period: 136.8 }
+        ];
+
+        function createPlanet(planet) {
+            const orbit = document.createElement('div');
+            orbit.className = 'orbit';
+            orbit.style.width = `${planet.orbitRadius * 2}px`;
+            orbit.style.height = `${planet.orbitRadius * 2}px`;
+
+            const planetDiv = document.createElement('div');
+            planetDiv.className = 'planet';
+            planetDiv.style.width = `${planet.radius * 2}px`;
+            planetDiv.style.height = `${planet.radius * 2}px`;
+            planetDiv.style.backgroundColor = planet.color;
+            planetDiv.style.setProperty('--translate', `${planet.orbitRadius}px`);
+            planetDiv.style.animation = `orbit ${planet.period * 10}s linear infinite`;
+            planetDiv.style.left = '50%';
+            planetDiv.style.top = '50%';
+
+            if (planet.hasRings) {
+                const rings = document.createElement('div');
+                rings.className = 'saturn-rings';
+                rings.style.width = `${planet.radius * 3}px`;
+                rings.style.height = `${planet.radius * 3}px`;
+                planetDiv.appendChild(rings);
+            }
+
+            const label = document.createElement('div');
+            label.className = 'planet-label';
+            label.textContent = planet.name;
+            planetDiv.appendChild(label);
+
+            document.getElementById('solar-system').appendChild(orbit);
+            document.getElementById('solar-system').appendChild(planetDiv);
+        }
+
+        planets.forEach(createPlanet);
+    </script>
+</body>
+</html>
