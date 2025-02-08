@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskrit Alphabet - Mystical Exploration | संस्कृत वर्णमाला - रहस्यमय अन्वेषण</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        /* Add this CSS rule to fix the issue */
+        .grid-cols-11 {
+            grid-template-columns: repeat(11, minmax(0, 1fr));
+            grid-auto-rows: minmax(40px, auto);
+        }
+        button {
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+            height: 40px;
+            width: 40px;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <h1>Sanskrit Alphabet: A Mystical Journey | संस्कृत वर्णमाला: एक रहस्यमय यात्रा</h1>
+    </div>
+
+    <div class="section">
+        <h2>Introduction | परिचय</h2>
+        <p>The Sanskrit alphabet is not merely a system of writing, but a profound philosophical and spiritual framework. Each letter carries deep metaphysical significance, representing cosmic principles, divine energies, and fundamental vibrations of existence.</p>
+        <p>संस्कृत वर्णमाला केवल लेखन प्रणाली मात्र होइन, बल्कि एक गहिरो दार्शनिक र आध्यात्मिक ढाँचा हो। प्रत्येक अक्षरले ब्रह्माण्डीय सिद्धान्तहरू, दैवीय ऊर्जाहरू र अस्तित्वका मौलिक कम्पनहरूको गहिरो तात्त्विक महत्व बोक्छ।</p>
+    </div>
+
+    <div class="section">
+        <h2>The Sacred Sounds | पवित्र ध्वनिहरू</h2>
+        <p>In Sanskrit philosophy, sounds are not just phonetic representations but living energies. The alphabet, known as 'Varnamala', is considered a divine manifestation of cosmic vibration.</p>
+        <p>संस्कृत दर्शनमा ध्वनिहरू केवल ध्वन्यात्मक प्रतिनिधित्व मात्र होइनन्, बल्कि जीवित ऊर्जाहरू हुन्। वर्णमाला लाई ब्रह्माण्डीय कम्पनको एक दैवीय अभिव्यक्तिको रूपमा लिइन्छ।</p>
+    </div>
+
+    <div id="react-root"></div>
+
+    <script>
+        function LetterDetail({ label, value }) {
+            return React.createElement('div', { className: 'mb-2' }, [
+                React.createElement('p', { className: 'font-semibold' }, label),
+                React.createElement('p', null, value)
+            ]);
+        }
+
+        function SanskritLettersViz() {
+            const [selectedLetter, setSelectedLetter] = React.useState(null);
+
+const letters = [
+    // Independent Vowels (Svaras)
+    {
+        devanagari: 'अ',
+        romanized: 'A',
+        category: 'Vowel',
+        name: 'Akara',
+        meaning: 'Primordial Sound',
+        chakra: 'Muladhara (Root)',
+        element: 'Earth',
+        tattva: 'Fundamental Existence',
+        cosmicSignificance: 'Origin of Creation',
+        pronunciation: 'Soft, open "a" sound',
+        numericalValue: '1',
+        yogicInterpretation: 'Beginning of all manifestation'
+    },
+    {
+        devanagari: 'आ',
+        romanized: 'Aa',
+        category: 'Vowel',
+        name: 'Akara Dirgha',
+        meaning: 'Extended Primordial Sound',
+        chakra: 'Svadhishthana (Sacral)',
+        element: 'Water',
+        tattva: 'Expansion of Consciousness',
+        cosmicSignificance: 'Divine Breath',
+        pronunciation: 'Long "a" sound',
+        numericalValue: '2',
+        yogicInterpretation: 'Expansion of inner energy'
+    },
+    {
+        devanagari: 'इ',
+        romanized: 'I',
+        category: 'Vowel',
+        name: 'Ikara',
+        meaning: 'Inner Perception',
+        chakra: 'Ajna (Third Eye)',
+        element: 'Light',
+        tattva: 'Intuition and Insight',
+        cosmicSignificance: 'Intellectual Illumination',
+        pronunciation: 'Short "i" sound',
+        numericalValue: '3',
+        yogicInterpretation: 'Awakening of inner wisdom'
+    },
+    {
+        devanagari: 'ई',
+        romanized: 'Ii',
+        category: 'Vowel',
+        name: 'Ikara Dirgha',
+        meaning: 'Prolonged Inner Perception',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Cosmic Consciousness',
+        tattva: 'Expanded Awareness',
+        cosmicSignificance: 'Universal Intelligence',
+        pronunciation: 'Long "i" sound',
+        numericalValue: '4',
+        yogicInterpretation: 'Transcendence of individual consciousness'
+    },
+    {
+        devanagari: 'उ',
+        romanized: 'U',
+        category: 'Vowel',
+        name: 'Ukara',
+        meaning: 'Potential Energy',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Fire',
+        tattva: 'Transformation',
+        cosmicSignificance: 'Creative Power',
+        pronunciation: 'Short "u" sound',
+        numericalValue: '5',
+        yogicInterpretation: 'Inner strength and motivation'
+    },
+    {
+        devanagari: 'ऊ',
+        romanized: 'Uu',
+        category: 'Vowel',
+        name: 'Ukara Dirgha',
+        meaning: 'Extended Potential Energy',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Expression and Communication',
+        cosmicSignificance: 'Cosmic Vibration',
+        pronunciation: 'Long "u" sound',
+        numericalValue: '6',
+        yogicInterpretation: 'Expansion of creative expression'
+    },
+    {
+        devanagari: 'ऋ',
+        romanized: 'Ri',
+        category: 'Vowel',
+        name: 'Rikara',
+        meaning: 'Cosmic Rhythm',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Harmony and Balance',
+        cosmicSignificance: 'Universal Resonance',
+        pronunciation: 'Rolled "ri" sound',
+        numericalValue: '7',
+        yogicInterpretation: 'Alignment with cosmic rhythms'
+    },
+    {
+        devanagari: 'ए',
+        romanized: 'E',
+        category: 'Vowel',
+        name: 'Ekara',
+        meaning: 'Unified Consciousness',
+        chakra: 'Ajna (Third Eye)',
+        element: 'Pure Consciousness',
+        tattva: 'Non-Duality',
+        cosmicSignificance: 'Cosmic Unity',
+        pronunciation: '"e" as in "may"',
+        numericalValue: '8',
+        yogicInterpretation: 'Transcendence of individual ego'
+    },
+    {
+        devanagari: 'ऐ',
+        romanized: 'Ai',
+        category: 'Vowel',
+        name: 'Aikara',
+        meaning: 'Expansive Awareness',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Cosmic Intellect',
+        tattva: 'Infinite Potential',
+        cosmicSignificance: 'Boundless Wisdom',
+        pronunciation: '"ai" as in "aisle"',
+        numericalValue: '9',
+        yogicInterpretation: 'Dissolution of mental boundaries'
+    },
+    {
+        devanagari: 'ओ',
+        romanized: 'O',
+        category: 'Vowel',
+        name: 'Okara',
+        meaning: 'Divine Wholeness',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Integrated Energy',
+        tattva: 'Complete Manifestation',
+        cosmicSignificance: 'Holistic Creation',
+        pronunciation: '"o" as in "go"',
+        numericalValue: '10',
+        yogicInterpretation: 'Synthesis of cosmic energies'
+    },
+    {
+        devanagari: 'औ',
+        romanized: 'Au',
+        category: 'Vowel',
+        name: 'Aukara',
+        meaning: 'Ultimate Realization',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Absolute Existence',
+        cosmicSignificance: 'Transcendent Awareness',
+        pronunciation: '"au" as in "house"',
+        numericalValue: '11',
+        yogicInterpretation: 'Liberation and cosmic union'
+    },
+    {
+        devanagari: 'अं',
+        romanized: 'Am',
+        category: 'Vowel',
+        name: 'Anusvara',
+        meaning: 'Resonant Vibration',
+        chakra: 'All Chakras',
+        element: 'Cosmic Sound',
+        tattva: 'Vibrational Essence',
+        cosmicSignificance: 'Primordial Vibration',
+        pronunciation: 'Nasal "m" sound',
+        numericalValue: '12',
+        yogicInterpretation: 'Universal connectedness'
+    },
+    {
+        devanagari: 'अः',
+        romanized: 'Ah',
+        category: 'Vowel',
+        name: 'Visarga',
+        meaning: 'Cosmic Breath',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Ultimate Release',
+        cosmicSignificance: 'Breath of Creation',
+        pronunciation: 'Soft exhaled "h"',
+        numericalValue: '13',
+        yogicInterpretation: 'Final liberation'
+    },
+    // Semivowels
+    {
+        devanagari: 'य',
+        romanized: 'Ya',
+        category: 'Semivowel',
+        name: 'Yakara',
+        meaning: 'Connecting Bridge',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Dynamic Connection',
+        cosmicSignificance: 'Bridging Consciousness',
+        pronunciation: 'Soft "y" sound',
+        numericalValue: '14',
+        yogicInterpretation: 'Union of inner and outer'
+    },
+    {
+        devanagari: 'र',
+        romanized: 'Ra',
+        category: 'Semivowel',
+        name: 'Rakara',
+        meaning: 'Vibrational Energy',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Fire',
+        tattva: 'Dynamic Transformation',
+        cosmicSignificance: 'Energetic Movement',
+        pronunciation: 'Rolled "r" sound',
+        numericalValue: '15',
+        yogicInterpretation: 'Cosmic dynamic energy'
+    },
+    {
+        devanagari: 'ल',
+        romanized: 'La',
+        category: 'Semivowel',
+        name: 'Lakara',
+        meaning: 'Fluid Perception',
+        chakra: 'Svadhishthana (Sacral)',
+        element: 'Water',
+        tattva: 'Adaptability',
+        cosmicSignificance: 'Flowing Consciousness',
+        pronunciation: 'Soft "l" sound',
+        numericalValue: '16',
+        yogicInterpretation: 'Emotional fluidity'
+    },
+    {
+        devanagari: 'व',
+        romanized: 'Va',
+        category: 'Semivowel',
+        name: 'Vakara',
+        meaning: 'Connecting Breath',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Communication',
+        cosmicSignificance: 'Expressive Energy',
+        pronunciation: 'Soft "v" sound',
+        numericalValue: '17',
+        yogicInterpretation: 'Expressive consciousness'
+    },
+    {
+        devanagari: 'श',
+        romanized: 'Sha',
+        category: 'Sibilant',
+        name: 'Shakara',
+        meaning: 'Subtle Perception',
+        chakra: 'Ajna (Third Eye)',
+        element: 'Light',
+        tattva: 'Intuitive Wisdom',
+        cosmicSignificance: 'Inner Vision',
+        pronunciation: 'Soft "sh" sound',
+        numericalValue: '18',
+        yogicInterpretation: 'Intuitive insight'
+    },
+    {
+        devanagari: 'ष',
+        romanized: 'Sha (Retroflex)',
+        category: 'Sibilant',
+        name: 'Shaa Kakara',
+        meaning: 'Penetrating Insight',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Transcendent Awareness',
+        cosmicSignificance: 'Spiritual Penetration',
+        pronunciation: 'Retroflex "sh" sound',
+        numericalValue: '19',
+        yogicInterpretation: 'Breakthrough of consciousness'
+    },
+    {
+        devanagari: 'स',
+        romanized: 'Sa',
+        category: 'Sibilant',
+        name: 'Sakara',
+        meaning: 'Cosmic Harmony',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Balanced Resonance',
+        cosmicSignificance: 'Universal Equilibrium',
+        pronunciation: 'Soft "s" sound',
+        numericalValue: '20',
+        yogicInterpretation: 'Harmonious being'
+    },
+    {
+        devanagari: 'ह',
+        romanized: 'Ha',
+        category: 'Aspirate',
+        name: 'Hakara',
+        meaning: 'Divine Breath',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Ultimate Release',
+        cosmicSignificance: 'Cosmic Exhalation',
+        pronunciation: 'Soft "h" sound',
+        numericalValue: '21',
+        yogicInterpretation: 'Spiritual liberation'
+    },
+    // Velars
+    {
+        devanagari: 'क',
+        romanized: 'Ka',
+        category: 'Consonant (Velar)',
+        name: 'Kakara',
+        meaning: 'Cosmic Form',
+        chakra: 'Muladhara (Root)',
+        element: 'Earth',
+        tattva: 'Materialization',
+        cosmicSignificance: 'Creation of Form',
+        pronunciation: 'Hard "k" sound',
+        numericalValue: '22',
+        yogicInterpretation: 'Manifestation of physical reality'
+    },
+    {
+        devanagari: 'ख',
+        romanized: 'Kha',
+        category: 'Consonant (Velar)',
+        name: 'Kakara Aspirate',
+        meaning: 'Energetic Form',
+        chakra: 'Svadhishthana (Sacral)',
+        element: 'Water',
+        tattva: 'Dynamic Materialization',
+        cosmicSignificance: 'Energetic Creation',
+        pronunciation: 'Aspirated "kh" sound',
+        numericalValue: '23',
+        yogicInterpretation: 'Activation of physical energy'
+    },
+    {
+        devanagari: 'ग',
+        romanized: 'Ga',
+        category: 'Consonant (Velar)',
+        name: 'Gakara',
+        meaning: 'Cosmic Energy',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Fire',
+        tattva: 'Transformation',
+        cosmicSignificance: 'Creative Power',
+        pronunciation: 'Hard "g" sound',
+        numericalValue: '24',
+        yogicInterpretation: 'Inner strength and motivation'
+    },
+    {
+        devanagari: 'घ',
+        romanized: 'Gha',
+        category: 'Consonant (Velar)',
+        name: 'Gakara Aspirate',
+        meaning: 'Energetic Energy',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Dynamic Transformation',
+        cosmicSignificance: 'Energetic Movement',
+        pronunciation: 'Aspirated "gh" sound',
+        numericalValue: '25',
+        yogicInterpretation: 'Activation of inner energy'
+    },
+    {
+        devanagari: 'ङ',
+        romanized: 'Nga',
+        category: 'Consonant (Velar)',
+        name: 'Nakara',
+        meaning: 'Cosmic Resonance',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Vibrational Essence',
+        cosmicSignificance: 'Universal Resonance',
+        pronunciation: 'Nasal "ng" sound',
+        numericalValue: '26',
+        yogicInterpretation: 'Alignment with cosmic vibrations'
+    },
+    // Palatals
+    {
+        devanagari: 'च',
+        romanized: 'Ca',
+        category: 'Consonant (Palatal)',
+        name: 'Cakara',
+        meaning: 'Cosmic Awareness',
+        chakra: 'Ajna (Third Eye)',
+        element: 'Light',
+        tattva: 'Intuitive Wisdom',
+        cosmicSignificance: 'Inner Vision',
+        pronunciation: 'Hard "ch" sound',
+        numericalValue: '27',
+        yogicInterpretation: 'Awakening of inner wisdom'
+    },
+    {
+        devanagari: 'छ',
+        romanized: 'Cha',
+        category: 'Consonant (Palatal)',
+        name: 'Cakara Aspirate',
+        meaning: 'Energetic Awareness',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Dynamic Intuition',
+        cosmicSignificance: 'Spiritual Insight',
+        pronunciation: 'Aspirated "chh" sound',
+        numericalValue: '28',
+        yogicInterpretation: 'Activation of higher awareness'
+    },
+    {
+        devanagari: 'ज',
+        romanized: 'Ja',
+        category: 'Consonant (Palatal)',
+        name: 'Jakara',
+        meaning: 'Cosmic Knowledge',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Intellectual Illumination',
+        cosmicSignificance: 'Universal Intelligence',
+        pronunciation: 'Hard "j" sound',
+        numericalValue: '29',
+        yogicInterpretation: 'Expansion of knowledge'
+    },
+    {
+        devanagari: 'झ',
+        romanized: 'Jha',
+        category: 'Consonant (Palatal)',
+        name: 'Jakara Aspirate',
+        meaning: 'Energetic Knowledge',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Dynamic Illumination',
+        cosmicSignificance: 'Energetic Expression',
+        pronunciation: 'Aspirated "jh" sound',
+        numericalValue: '30',
+        yogicInterpretation: 'Activation of expressive energy'
+    },
+    {
+        devanagari: 'ञ',
+        romanized: 'Na',
+        category: 'Consonant (Palatal)',
+        name: 'Nakara',
+        meaning: 'Cosmic Union',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Ultimate Release',
+        cosmicSignificance: 'Transcendent Awareness',
+        pronunciation: 'Nasal "n" sound',
+        numericalValue: '31',
+        yogicInterpretation: 'Union with the divine'
+    },
+    // Retroflex
+    {
+        devanagari: 'ट',
+        romanized: 'Ta',
+        category: 'Consonant (Retroflex)',
+        name: 'Takara',
+        meaning: 'Cosmic Action',
+        chakra: 'Muladhara (Root)',
+        element: 'Earth',
+        tattva: 'Materialization',
+        cosmicSignificance: 'Creation of Form',
+        pronunciation: 'Hard "t" sound with retroflex tongue position',
+        numericalValue: '32',
+        yogicInterpretation: 'Manifestation of physical reality'
+    },
+    {
+        devanagari: 'ठ',
+        romanized: 'Tha',
+        category: 'Consonant (Retroflex)',
+        name: 'Takara Aspirate',
+        meaning: 'Energetic Action',
+        chakra: 'Svadhishthana (Sacral)',
+        element: 'Water',
+        tattva: 'Dynamic Materialization',
+        cosmicSignificance: 'Energetic Creation',
+        pronunciation: 'Aspirated "th" sound with retroflex tongue position',
+        numericalValue: '33',
+        yogicInterpretation: 'Activation of physical energy'
+    },
+    {
+        devanagari: 'ड',
+        romanized: 'Da',
+        category: 'Consonant (Retroflex)',
+        name: 'Dakara',
+        meaning: 'Cosmic Energy',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Fire',
+        tattva: 'Transformation',
+        cosmicSignificance: 'Creative Power',
+        pronunciation: 'Hard "d" sound with retroflex tongue position',
+        numericalValue: '34',
+        yogicInterpretation: 'Inner strength and motivation'
+    },
+    {
+        devanagari: 'ढ',
+        romanized: 'Dha',
+        category: 'Consonant (Retroflex)',
+        name: 'Dakara Aspirate',
+        meaning: 'Energetic Energy',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Dynamic Transformation',
+        cosmicSignificance: 'Energetic Movement',
+        pronunciation: 'Aspirated "dh" sound with retroflex tongue position',
+        numericalValue: '35',
+        yogicInterpretation: 'Activation of inner energy'
+    },
+    {
+        devanagari: 'ण',
+        romanized: 'Na',
+        category: 'Consonant (Retroflex)',
+        name: 'Nakara',
+        meaning: 'Cosmic Resonance',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Vibrational Essence',
+        cosmicSignificance: 'Universal Resonance',
+        pronunciation: 'Nasal "n" sound with retroflex tongue position',
+        numericalValue: '36',
+        yogicInterpretation: 'Alignment with cosmic vibrations'
+    },
+    // Dentals
+    {
+        devanagari: 'त',
+        romanized: 'Ta',
+        category: 'Consonant (Dental)',
+        name: 'Takara',
+        meaning: 'Cosmic Form',
+        chakra: 'Ajna (Third Eye)',
+        element: 'Light',
+        tattva: 'Intuitive Wisdom',
+        cosmicSignificance: 'Inner Vision',
+        pronunciation: 'Hard "t" sound',
+        numericalValue: '37',
+        yogicInterpretation: 'Awakening of inner wisdom'
+    },
+    {
+        devanagari: 'थ',
+        romanized: 'Tha',
+        category: 'Consonant (Dental)',
+        name: 'Takara Aspirate',
+        meaning: 'Energetic Form',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Dynamic Intuition',
+        cosmicSignificance: 'Spiritual Insight',
+        pronunciation: 'Aspirated "th" sound',
+        numericalValue: '38',
+        yogicInterpretation: 'Activation of higher awareness'
+    },
+    {
+        devanagari: 'द',
+        romanized: 'Da',
+        category: 'Consonant (Dental)',
+        name: 'Dakara',
+        meaning: 'Cosmic Knowledge',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Intellectual Illumination',
+        cosmicSignificance: 'Universal Intelligence',
+        pronunciation: 'Hard "d" sound',
+        numericalValue: '39',
+        yogicInterpretation: 'Expansion of knowledge'
+    },
+    {
+        devanagari: 'ध',
+        romanized: 'Dha',
+        category: 'Consonant (Dental)',
+        name: 'Dakara Aspirate',
+        meaning: 'Energetic Knowledge',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Dynamic Illumination',
+        cosmicSignificance: 'Energetic Expression',
+        pronunciation: 'Aspirated "dh" sound',
+        numericalValue: '40',
+        yogicInterpretation: 'Activation of expressive energy'
+    },
+    {
+        devanagari: 'न',
+        romanized: 'Na',
+        category: 'Consonant (Dental)',
+        name: 'Nakara',
+        meaning: 'Cosmic Union',
+        chakra: 'Sahasrara (Crown)',
+        element: 'Pure Consciousness',
+        tattva: 'Ultimate Release',
+        cosmicSignificance: 'Transcendent Awareness',
+        pronunciation: 'Nasal "n" sound',
+        numericalValue: '41',
+        yogicInterpretation: 'Union with the divine'
+    },
+    // Labials
+    {
+        devanagari: 'प',
+        romanized: 'Pa',
+        category: 'Consonant (Labial)',
+        name: 'Pakara',
+        meaning: 'Cosmic Protection',
+        chakra: 'Muladhara (Root)',
+        element: 'Earth',
+        tattva: 'Materialization',
+        cosmicSignificance: 'Creation of Form',
+        pronunciation: 'Hard "p" sound',
+        numericalValue: '42',
+        yogicInterpretation: 'Manifestation of physical reality'
+    },
+    {
+        devanagari: 'फ',
+        romanized: 'Pha',
+        category: 'Consonant (Labial)',
+        name: 'Pakara Aspirate',
+        meaning: 'Energetic Protection',
+        chakra: 'Svadhishthana (Sacral)',
+        element: 'Water',
+        tattva: 'Dynamic Materialization',
+        cosmicSignificance: 'Energetic Creation',
+        pronunciation: 'Aspirated "ph" sound',
+        numericalValue: '43',
+        yogicInterpretation: 'Activation of physical energy'
+    },
+    {
+        devanagari: 'ब',
+        romanized: 'Ba',
+        category: 'Consonant (Labial)',
+        name: 'Bakara',
+        meaning: 'Cosmic Energy',
+        chakra: 'Manipura (Solar Plexus)',
+        element: 'Fire',
+        tattva: 'Transformation',
+        cosmicSignificance: 'Creative Power',
+        pronunciation: 'Hard "b" sound',
+        numericalValue: '44',
+        yogicInterpretation: 'Inner strength and motivation'
+    },
+    {
+        devanagari: 'भ',
+        romanized: 'Bha',
+        category: 'Consonant (Labial)',
+        name: 'Bakara Aspirate',
+        meaning: 'Energetic Energy',
+        chakra: 'Anahata (Heart)',
+        element: 'Air',
+        tattva: 'Dynamic Transformation',
+        cosmicSignificance: 'Energetic Movement',
+        pronunciation: 'Aspirated "bh" sound',
+        numericalValue: '45',
+        yogicInterpretation: 'Activation of inner energy'
+    },
+    {
+        devanagari: 'म',
+        romanized: 'Ma',
+        category: 'Consonant (Labial)',
+        name: 'Makara',
+        meaning: 'Cosmic Resonance',
+        chakra: 'Vishuddha (Throat)',
+        element: 'Ether',
+        tattva: 'Vibrational Essence',
+        cosmicSignificance: 'Universal Resonance',
+        pronunciation: 'Nasal "m" sound',
+        numericalValue: '46',
+        yogicInterpretation: 'Alignment with cosmic vibrations'
+    }
+];
+
+            return React.createElement('div', { className: 'w-full max-w-4xl mx-auto p-4' },
+                React.createElement('div', { className: 'bg-white rounded-lg shadow-lg p-6' }, [
+                    React.createElement('h3', { 
+                        key: 'title',
+                        className: 'text-2xl mb-6 font-bold text-center' 
+                    }, 'Sanskrit Alphabet: Cosmic Vibrations | संस्कृत वर्णमाला: ब्रह्माण्डीय कम्पनहरू'),
+                    
+                    React.createElement('div', { 
+                        key: 'letter-grid',
+                        className: 'grid grid-cols-11 gap-1 mb-6 overflow-y-auto max-h-96' 
+                    }, letters.map((letter, index) =>
+                        React.createElement('button', {
+                            key: `letter-${index}`,
+                            className: `p-2 text-xl font-bold rounded-lg transition-colors ${
+                                selectedLetter === index
+                                    ? 'bg-blue-500 text-white'
+                                    : letter.category.includes('Vowel')
+                                        ? 'bg-green-100 hover:bg-green-200'
+                                        : letter.category.includes('Consonant (Velar)')
+                                            ? 'bg-red-100 hover:bg-red-200'
+                                            : letter.category.includes('Consonant (Palatal)')
+                                                ? 'bg-blue-100 hover:bg-blue-200'
+                                                : letter.category.includes('Consonant (Retroflex)')
+                                                    ? 'bg-purple-100 hover:bg-purple-200'
+                                                    : 'bg-orange-100 hover:bg-orange-200'
+                            }`,
+                            onClick: () => setSelectedLetter(index)
+                        }, letter.devanagari)
+                    )),
+                    
+                    selectedLetter !== null && React.createElement('div', {
+                        key: 'details',
+                        className: 'bg-gray-50 p-6 rounded-lg'
+                    }, [
+                        React.createElement(LetterDetail, {
+                            key: 'devanagari',
+                            label: 'Devanagari Letter',
+                            value: letters[selectedLetter].devanagari
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'romanized',
+                            label: 'Romanized',
+                            value: letters[selectedLetter].romanized
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'category',
+                            label: 'Category',
+                            value: letters[selectedLetter].category
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'meaning',
+                            label: 'Mystical Meaning',
+                            value: letters[selectedLetter].meaning
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'chakra',
+                            label: 'Associated Chakra',
+                            value: letters[selectedLetter].chakra
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'element',
+                            label: 'Elemental Association',
+                            value: letters[selectedLetter].element
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'cosmicSignificance',
+                            label: 'Cosmic Significance',
+                            value: letters[selectedLetter].cosmicSignificance
+                        }),
+                        React.createElement(LetterDetail, {
+                            key: 'yogicInterpretation',
+                            label: 'Yogic Interpretation',
+                            value: letters[selectedLetter].yogicInterpretation
+                        })
+                    ]),
+                    
+                    // Color coding explanation
+                    React.createElement('div', { 
+                        key: 'color-legend',
+                        className: 'mt-4 text-center' 
+                    }, [
+                        React.createElement('h4', {
+                            key: 'legend-title',
+                            className: 'font-bold mb-2'
+                        }, 'Letter Categories'),
+                        React.createElement('div', {
+                            key: 'legend-colors',
+                            className: 'flex justify-center gap-4 flex-wrap'
+                        }, [
+                            React.createElement('div', {
+                                key: 'vowel-legend',
+                                className: 'flex items-center gap-2'
+                            }, [
+                                React.createElement('div', {
+                                    key: 'vowel-color',
+                                    className: 'w-4 h-4 bg-green-100 border'
+                                }),
+                                React.createElement('span', null, 'Vowels')
+                            ])
+                        ])
+                    ])
+                ])
+            );
+        }
+
+        // Mount the React component
+        const root = ReactDOM.createRoot(document.getElementById('react-root'));
+        root.render(React.createElement(SanskritLettersViz));
+    </script>
+</body>
+</html>

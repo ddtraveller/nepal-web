@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cymatics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        
+        #root {
+            width: 80%;
+            margin: 40px auto;
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #cymatics-visualization {
+            width: 400px;
+            height: 400px;
+            border: 1px solid black;
+            margin: 20px auto;
+        }
+        
+        #cymatics-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        h1 {
+            color: #333333;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        p {
+            color: #666666;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nepali-text {
+            font-family: 'Lohit Devanagari', sans-serif;
+            font-size: 16px;
+            color: #666666;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        #controls {
+            margin-top: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 20px;
+            margin-bottom: 20px;
+        }
+        
+        #frequency-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        #amplitude-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        const Cymatics = () => {
+            return (
+                <div>
+                    <h1>Cymatics</h1>
+                    <p>Cymatics is the study of the visual patterns that emerge when a surface is vibrated with sound waves.</p>
+                    <p className="nepali-text">साइम्याटिक्स ध्वनि तरङ्गहरूले सतहलाई कंपित गर्दा देखिने दृश्य प्याटर्नहरूको अध्ययन हो।</p>
+                    <p>The Spandakarika, an ancient Sanskrit text, describes the universe as a vast, vibrating web of energy. This concept is echoed in the work of Nikola Tesla, who believed that everything in the universe is made up of vibrations.</p>
+                    <p className="nepali-text">स्पन्दाकरिका, एक प्राचीन संस्कृत ग्रन्थ, ब्रह्माण्डलाई एक विशाल, कंपित ऊर्जाको जालो भनेर वर्णन गर्दछ। यो अवधारणा निकोला टेस्लाको कार्यमा प्रतिबिम्बित हुन्छ, जसले विश्वास गर्थे कि ब्रह्माण्डमा सबै कुरा कंपनहरूबाट बनेको छ।</p>
+                    <p>The Vijnana Bhairava Tantra, a Hindu text, describes the use of sound and vibration to achieve spiritual enlightenment. This text describes the use of specific sounds and vibrations to awaken the kundalini energy, which is believed to reside at the base of the spine.</p>
+                    <p className="nepali-text">विज्ञान भैरव तंत्र, एक हिन्दू ग्रन्थ, आध्यात्मिक ज्ञान प्राप्त गर्न ध्वनि र कंपनको प्रयोगको वर्णन गर्दछ। यो ग्रन्थले कुन्डलिनी ऊर्जालाई जागृत गर्न विशिष्ट ध्वनि र कंपनको प्रयोगको वर्णन गर्दछ, जो कि मेरुदण्डको आधारमा बसेको विश्वास गरिन्छ।</p>
+                    <p>These concepts are all related to cymatics, as they describe the use of vibration and sound to create patterns and shapes. In cymatics, these patterns are visualized on a surface, such as a plate or a membrane, using sand, salt, or other materials.</p>
+                    <p className="nepali-text">यी अवधारणाहरू सबै साइम्याटिक्ससँग सम्बन्धित छन्, किनभने तिनीहरूले कंपन र ध्वनिको प्रयोगले प्याटर्न र आकारहरू बनाउने वर्णन गर्दछन्। साइम्याटिक्समा, यी प्याटर्नहरू एक सतहमा, जस्तै कि एक प्लेट वा झिल्ली, रेत, नुन, वा अन्य सामग्रीहरूको प्रयोग गरेर दृश्यीकृत गरिन्छन्।</p>
+                    <div id="cymatics-visualization">
+                        <canvas id="cymatics-canvas" width="400" height="400"></canvas>
+                    </div>
+                    <div id="controls">
+                        <label htmlFor="frequency-range" min="1" max="100" defaultValue="10">Frequency Range:</label>
+                        <input type="range" id="frequency-range" min="1" max="100" defaultValue="10" onChange={(e) => setFrequencyValue(e.target.value)} />
+                        <span id="frequency-value">10</span>
+                        <br />
+                        <label htmlFor="amplitude-range">Amplitude Range:</label>
+                        <input type="range" id="amplitude-range" min="1" max="100" defaultValue="10" onChange={(e) => setFrequencyValue(e.target.value)} />
+                        <span id="amplitude-value">10</span>
+                    </div>
+
+                </div>
+            );
+        };
+
+        const root = document.getElementById('root');
+        ReactDOM.render(<Cymatics />, root);
+
+        const canvas = document.getElementById('cymatics-canvas');
+        const ctx = canvas.getContext('2d');
+        const particles = [];
+        let frequency = 10; // Initial frequency
+        let amplitude = 10; // Initial amplitude
+
+        // Increase the amount of sand
+        for (let i = 0; i < 5000; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: 0,
+                vy: 0,
+                radius: 1
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                const particle = particles[i];
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.radius, 0, 2 * Math.PI);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+
+                // Update particle position
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+
+                // Apply friction (high friction coefficient)
+                particle.vx *= 0.95;
+                particle.vy *= 0.95;
+
+                // Boundary check
+                if (particle.x + particle.radius > canvas.width || particle.x - particle.radius < 0) {
+                    particle.vx *= -1;
+                }
+                if (particle.y + particle.radius > canvas.height || particle.y - particle.radius < 0) {
+                    particle.vy *= -1;
+                }
+
+                // Stop particle if velocity is very low
+                if (Math.abs(particle.vx) < 0.01 && Math.abs(particle.vy) < 0.01) {
+                    particle.vx = 0;
+                    particle.vy = 0;
+                }
+            }
+            requestAnimationFrame(draw);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            // Simulate a range of frequencies
+            const wavelength = canvas.width / frequency;
+            const amplitudeValue = amplitude;
+
+            for (let i = 0; i < particles.length; i++) {
+                const particle = particles[i];
+                const distanceX = particle.x - clickX;
+                const distanceY = particle.y - clickY;
+                const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+                const angle = Math.atan2(distanceY, distanceX);
+
+                // Displace particles based on frequency and amplitude
+                if (distance < 200) {
+                    particle.vx += Math.cos(angle + (distanceX / wavelength) * Math.PI * 2) * amplitudeValue / distance;
+                    particle.vy += Math.sin(angle + (distanceY / wavelength) * Math.PI * 2) * amplitudeValue / distance;
+                }
+            }
+        });
+
+        const frequencyRangeInput = document.getElementById('frequency-range');
+        const amplitudeRangeInput = document.getElementById('amplitude-range');
+        const frequencyValueDisplay = document.getElementById('frequency-value');
+        const amplitudeValueDisplay = document.getElementById('amplitude-value');
+
+        frequencyRangeInput.addEventListener('input', (e) => {
+            frequency = parseInt(e.target.value);
+            frequencyValueDisplay.innerText = frequency;
+        });
+
+        amplitudeRangeInput.addEventListener('input', (e) => {
+            amplitude = parseInt(e.target.value);
+            amplitudeValueDisplay.innerText = amplitude;
+        });
+
+        draw();
+    </script>
+</body>
+</html>

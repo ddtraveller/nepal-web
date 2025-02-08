@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traditional Musical Instruments - परम्परागत वाद्ययन्त्रहरू</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .content {
+            padding: 20px;
+            margin-top: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #ffd700;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+        .section h3 {
+            color: #ff9933;
+            margin-top: 30px;
+        }
+        .section p {
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: justify;
+        }
+        #instruments-container {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Traditional Musical Instruments<br>परम्परागत वाद्ययन्त्रहरू</h1>
+        </div>
+        
+        <!-- React app will be mounted here -->
+        <div id="instruments-container"></div>
+        
+        <div class="content">
+            <!-- Content sections remain the same -->
+            <div class="section">
+                <h2>Traditional Musical Instruments: A Global Heritage</h2>
+                <p>Musical instruments are the voice of cultural expression, carrying centuries of tradition and innovation in their design and sound. Each region of the world has developed unique instruments that reflect their cultural heritage, available materials, and musical traditions, creating a rich tapestry of global musical diversity.</p>
+                
+                <h3>Understanding Sound Waves and Our Visualization</h3>
+                <p>To understand the visualization above, let's first explore what sound actually is. Sound is a type of energy that travels through air (or other materials) as a wave. When a musical instrument plays, it creates vibrations that push and pull the air molecules around it, creating areas where air molecules are compressed together and areas where they're spread apart. These compressions and rarefactions travel through the air as sound waves, eventually reaching our ears.</p>
+
+                <h3>What is a Waveform?</h3>
+                <p>A waveform is a visual representation of sound - imagine taking a sound wave and drawing it on paper. The waves you see in our visualization show how the sound moves up and down over time. The height of the wave (amplitude) shows how loud the sound is, while the number of times the wave repeats per second (frequency) determines the pitch we hear. A taller wave means a louder sound, and more waves squeezed into the same space means a higher pitch.</p>
+
+                <h3>Understanding Hertz (Hz)</h3>
+                <p>Hertz (Hz) is how we measure frequency - it simply means "times per second." When we say a note has a frequency of 440 Hz, it means the sound wave repeats itself 440 times every second. Lower notes have lower frequencies (fewer repetitions per second), while higher notes have higher frequencies (more repetitions per second). For example, the lowest note on a piano is about 27.5 Hz (very slow repetitions, deep sound), while the highest is about 4,186 Hz (very fast repetitions, bright sound).</p>
+
+                <h3>Our Interactive Visualization</h3>
+                <p>The interactive display above shows four traditional instruments and their characteristic sound waves. Each waveform represents the fundamental frequency of the instrument:</p>
+                <ul style="list-style-type: none; padding-left: 20px; margin: 10px 0;">
+                    <li>• Sitar: 130.81 Hz (note C3) - about 131 vibrations per second, creating deep, rich overtones</li>
+                    <li>• Tabla: 146.83 Hz (note D3) - roughly 147 vibrations per second</li>
+                    <li>• Flute: 261.63 Hz (note C4) - about 262 vibrations per second</li>
+                    <li>• Sarangi: 196.00 Hz (note G3) - 196 vibrations per second</li>
+                </ul>
+                <p>The animated waves demonstrate how these instruments create sound through different types of vibration:</p>
+                <ul style="list-style-type: none; padding-left: 20px; margin: 10px 0;">
+                    <li>• String instruments (Sitar, Sarangi): The strings vibrate back and forth</li>
+                    <li>• Percussion (Tabla): The membrane (drum skin) vibrates up and down</li>
+                    <li>• Wind instruments (Flute): A column of air vibrates inside the instrument</li>
+                </ul>
+                <p>When you click on different instruments in the visualization, you can see how their waveforms differ. Notice how the waves repeat faster (higher frequency) for higher-pitched instruments and slower (lower frequency) for lower-pitched ones.</p>
+
+                <h3>String Instruments: The Universal Language</h3>
+                <p>From the Indian sitar to the Spanish guitar, string instruments form the backbone of many musical traditions. These instruments produce sound through vibrating strings, whether plucked, bowed, or struck. The variety in their construction and playing techniques demonstrates human ingenuity in creating beautiful sounds from simple physical principles.</p>
+
+                <h3>Percussion: The Heart of Rhythm</h3>
+                <p>Percussion instruments, found in every culture, range from simple hand drums to complex pitched instruments like the xylophone. The African djembe, the Indian tabla, and the Caribbean steel drum each bring unique voices to the world's rhythmic heritage, driving dance and ceremonial music across continents.</p>
+                
+                <h3>Wind Instruments: Nature's Voice</h3>
+                <p>Wind instruments harness the power of human breath to create music. From the haunting sound of the Native American flute to the complex harmonies of the Chinese sheng, these instruments often mimic natural sounds and have deep spiritual significance in many cultures.</p>
+            </div>
+
+            <div class="section">
+                <h2>परम्परागत वाद्ययन्त्रहरू: विश्वव्यापी सम्पदा</h2>
+                <p>वाद्ययन्त्रहरू सांस्कृतिक अभिव्यक्तिको आवाज हुन्, जसले आफ्नो डिजाइन र ध्वनिमा शताब्दियौंको परम्परा र नवीनता बोकेका छन्। विश्वको प्रत्येक क्षेत्रले आफ्नो सांस्कृतिक सम्पदा, उपलब्ध सामग्री, र संगीत परम्पराहरूलाई प्रतिबिम्बित गर्ने अनौठा वाद्ययन्त्रहरू विकास गरेका छन्, जसले विश्व संगीतको विविधताको समृद्ध बुनोट सिर्जना गरेको छ।</p>
+
+                <h3>ध्वनि तरंग र हाम्रो दृश्य प्रस्तुतिको बुझाइ</h3>
+                <p>माथिको दृश्य प्रस्तुति बुझ्नको लागि, पहिले ध्वनि वास्तवमा के हो भन्ने कुरा बुझौं। ध्वनि एक प्रकारको ऊर्जा हो जुन हावा (वा अन्य पदार्थहरू) मार्फत तरंगको रूपमा यात्रा गर्दछ। जब कुनै वाद्ययन्त्र बज्छ, यसले वरिपरिको हावाका अणुहरूलाई धक्का दिने र तान्ने कम्पनहरू सिर्जना गर्दछ, जसले हावाका अणुहरू एकै ठाउँमा खाँदिएका र फैलिएका क्षेत्रहरू बनाउँछ। यी संकुचन र विरलीकरणहरू ध्वनि तरंगको रूपमा हावा मार्फत यात्रा गर्छन् र अन्ततः हाम्रो कानसम्म पुग्छन्।</p>
+
+                <h3>तरंगरूप के हो?</h3>
+                <p>तरंगरूप ध्वनिको दृश्य प्रतिनिधित्व हो - ध्वनि तरंगलाई कागजमा कोरेको कल्पना गर्नुहोस्। हाम्रो दृश्य प्रस्तुतिमा देखिने तरंगहरूले ध्वनि समयसँगै कसरी माथि र तल जान्छ भन्ने देखाउँछन्। तरंगको उचाइ (आयाम) ले ध्वनि कति ठूलो छ भन्ने देखाउँछ, जबकि प्रति सेकेन्ड तरंग दोहोरिने पटक (आवृत्ति) ले हामीले सुन्ने स्वर निर्धारण गर्दछ। अग्लो तरंगको अर्थ ठूलो आवाज हो, र एउटै स्थानमा धेरै तरंगहरू खाँदिएको अर्थ उच्च स्वर हो।</p>
+
+                <h3>हर्ट्ज (Hz) बुझ्ने</h3>
+                <p>हर्ट्ज (Hz) ले आवृत्ति नाप्ने एकाई हो - यसको सीधा अर्थ "प्रति सेकेन्ड पटक" हो। जब हामी कुनै स्वरको आवृत्ति ४४० Hz छ भन्छौं, यसको अर्थ ध्वनि तरंग हरेक सेकेन्डमा ४४० पटक दोहोरिन्छ। कम स्वरहरूमा कम आवृत्ति (प्रति सेकेन्ड कम दोहोरिने) हुन्छ, जबकि उच्च स्वरहरूमा उच्च आवृत्ति (प्रति सेकेन्ड धेरै दोहोरिने) हुन्छ। उदाहरणका लागि, पियानोको सबैभन्दा कम स्वर लगभग २७.५ Hz (धेरै ढिलो दोहोरिने, गहिरो आवाज) हो, जबकि सबैभन्दा उच्च स्वर लगभग ४,१८६ Hz (धेरै छिटो दोहोरिने, तीक्ष्ण आवाज) हो।</p>
+
+                <h3>हाम्रो अन्तरक्रियात्मक दृश्य प्रस्तुति</h3>
+                <p>माथिको अन्तरक्रियात्मक प्रदर्शनले चार परम्परागत वाद्ययन्त्रहरू र तिनीहरूको विशिष्ट ध्वनि तरंगहरू देखाउँछ। प्रत्येक तरंगरूपले वाद्ययन्त्रको आधारभूत आवृत्तिलाई प्रतिनिधित्व गर्दछ:</p>
+                <ul style="list-style-type: none; padding-left: 20px; margin: 10px 0;">
+                    <li>• सितार: १३०.८१ Hz (C३ स्वर) - प्रति सेकेन्ड लगभग १३१ कम्पन, गहिरो र समृद्ध स्वरहरू सिर्जना गर्दै</li>
+                    <li>• तबला: १४६.८३ Hz (D३ स्वर) - प्रति सेकेन्ड लगभग १४७ कम्पन</li>
+                    <li>• बाँसुरी: २६१.६३ Hz (C४ स्वर) - प्रति सेकेन्ड लगभग २६२ कम्पन</li>
+                    <li>• सारंगी: १९६.०० Hz (G३ स्वर) - प्रति सेकेन्ड १९६ कम्पन</li>
+                </ul>
+                <p>एनिमेटेड तरंगहरूले यी वाद्ययन्त्रहरूले विभिन्न प्रकारका कम्पनहरू मार्फत कसरी ध्वनि सिर्जना गर्छन् भन्ने कुरा प्रदर्शन गर्दछन्:</p>
+                <ul style="list-style-type: none; padding-left: 20px; margin: 10px 0;">
+                    <li>• तार वाद्ययन्त्रहरू (सितार, सारंगी): तारहरू अगाडि र पछाडि कम्पन गर्छन्</li>
+                    <li>• ताल वाद्ययन्त्र (तबला): झिल्ली (ड्रमको छाला) माथि र तल कम्पन गर्छ</li>
+                    <li>• हावा वाद्ययन्त्र (बाँसुरी): वाद्ययन्त्र भित्र हावाको स्तम्भ कम्पन गर्छ</li>
+                </ul>
+                <p>जब तपाईं दृश्य प्रस्तुतिमा विभिन्न वाद्ययन्त्रहरूमा क्लिक गर्नुहुन्छ, तपाईं तिनीहरूका तरंगरूपहरू कसरी फरक छन् भन्ने देख्न सक्नुहुन्छ। उच्च स्वरका वाद्ययन्त्रहरूका लागि तरंगहरू छिटो (उच्च आवृत्ति) र कम स्वरका वाद्ययन्त्रहरूका लागि ढिलो (कम आवृत्ति) दोहोरिएको ध्यान दिनुहोस्।</p>
+
+                <h3>तार वाद्ययन्त्रहरू: विश्वव्यापी भाषा</h3>
+                <p>भारतीय सितारदेखि स्पेनिश गिटारसम्म, तार वाद्ययन्त्रहरूले धेरै संगीत परम्पराहरूको आधार निर्माण गर्छन्। यी वाद्ययन्त्रहरूले कम्पन गर्ने तारहरू मार्फत ध्वनि उत्पादन गर्छन्, चाहे ती चिमोटिएका होउन्, धनुले बजाइएका होउन्, वा हिर्काइएका होउन्। तिनीहरूको निर्माण र बजाउने तरिकाहरूमा भएको विविधताले सरल भौतिक सिद्धान्तहरूबाट सुन्दर ध्वनिहरू सिर्जना गर्ने मानवीय प्रतिभालाई प्रदर्शित गर्दछ।</p>
+
+                <h3>ताल वाद्ययन्त्रहरू: लयको मुटु</h3>
+                <p>प्रत्येक संस्कृतिमा पाइने ताल वाद्ययन्त्रहरू सामान्य हात ढोलदेखि जटिल स्वरयुक्त वाद्ययन्त्रहरू जस्तै जाइलोफोनसम्म विस्तारित छन्। अफ्रिकी जेम्बे, भारतीय तबला, र क्यारिबियन स्टील ड्रम प्रत्येकले विश्वको लयात्मक सम्पदामा अनौठा आवाजहरू ल्याउँछन्, जसले महादेशहरू भर नृत्य र धार्मिक संगीतलाई प्रेरित गर्दछन्।</p>
+
+                <h3>हावा वाद्ययन्त्रहरू: प्रकृतिको आवाज</h3>
+                <p>हावा वाद्ययन्त्रहरूले संगीत सिर्जना गर्न मानव श्वासको शक्तिको उपयोग गर्छन्। रेड इन्डियन बाँसुरीको मनमोहक आवाजदेखि चिनियाँ शेङको जटिल स्वर मिलनसम्म, यी वाद्ययन्त्रहरूले प्राय: प्राकृतिक ध्वनिहरूको अनुकरण गर्छन् र धेरै संस्कृतिहरूमा गहिरो आध्यात्मिक महत्व राख्छन्।</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel">
+        // Define the React component
+        const instruments = [
+            { 
+                name: 'Sitar',
+                nepaliName: 'सितार',
+                origin: 'India',
+                type: 'String',
+                baseFreq: 130.81,
+                color: '#FFD700'
+            },
+            { 
+                name: 'Tabla',
+                nepaliName: 'तबला',
+                origin: 'India',
+                type: 'Percussion',
+                baseFreq: 146.83,
+                color: '#FF6B6B'
+            },
+            { 
+                name: 'Flute',
+                nepaliName: 'बाँसुरी',
+                origin: 'Universal',
+                type: 'Wind',
+                baseFreq: 261.63,
+                color: '#4ECDC4'
+            },
+            { 
+                name: 'Sarangi',
+                nepaliName: 'सारंगी',
+                origin: 'Nepal',
+                type: 'String',
+                baseFreq: 196.00,
+                color: '#96CEB4'
+            }
+        ];
+
+        function InstrumentVisualizer() {
+            const [selectedInstrument, setSelectedInstrument] = React.useState(null);
+            const [isPlaying, setIsPlaying] = React.useState(false);
+            const [animation, setAnimation] = React.useState(0);
+
+            React.useEffect(() => {
+                let animationFrame;
+                if (isPlaying) {
+                    const animate = () => {
+                        setAnimation(prev => (prev + 1) % 360);
+                        animationFrame = requestAnimationFrame(animate);
+                    };
+                    animationFrame = requestAnimationFrame(animate);
+                }
+                return () => cancelAnimationFrame(animationFrame);
+            }, [isPlaying]);
+
+            const handleInstrumentClick = (instrument) => {
+                setSelectedInstrument(instrument);
+                setIsPlaying(true);
+            };
+
+            function WaveformVisualization({ frequency, color }) {
+                const points = Array.from({ length: 100 }, (_, i) => {
+                    const x = (i / 100) * 360;
+                    const y = Math.sin(x * frequency / 50 + animation * 0.1) * 30;
+                    return `${x},${50 + y}`;
+                }).join(' ');
+
+                return (
+                    <svg className="w-full h-32">
+                        <polyline
+                            points={points}
+                            fill="none"
+                            stroke={color}
+                            strokeWidth="2"
+                            className="transition-all duration-300"
+                        />
+                    </svg>
+                );
+            }
+
+            return (
+                <div className="p-6 bg-gray-900 rounded-lg">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        {instruments.map((instrument) => (
+                            <div
+                                key={instrument.name}
+                                onClick={() => handleInstrumentClick(instrument)}
+                                className={`p-4 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 ${
+                                    selectedInstrument?.name === instrument.name
+                                        ? 'bg-gray-700 scale-105'
+                                        : 'bg-gray-800'
+                                }`}
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-2xl" style={{color: instrument.color}}>♪</span>
+                                    {isPlaying && selectedInstrument?.name === instrument.name && (
+                                        <span className="text-2xl animate-pulse" style={{color: instrument.color}}>♫</span>
+                                    )}
+                                </div>
+                                <h3 className="text-lg font-semibold text-white mb-1">{instrument.name}</h3>
+                                <p className="text-sm text-gray-300 mb-1">{instrument.nepaliName}</p>
+                                <p className="text-xs text-gray-400">{instrument.type} • {instrument.origin}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {selectedInstrument && (
+                        <div className="bg-gray-800 p-4 rounded-lg">
+                            <h2 className="text-xl font-bold text-white mb-4">
+                                {selectedInstrument.name} Waveform
+                            </h2>
+                            <WaveformVisualization
+                                frequency={selectedInstrument.baseFreq}
+                                color={selectedInstrument.color}
+                            />
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        // Mount the React component
+        const container = document.getElementById('instruments-container');
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(InstrumentVisualizer));
+    </script>
+
+    <!-- Add Babel for JSX support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Livestock Planning | नेपाल पशुधन योजना</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            background-color: #f9fafb;
+        }
+        .nepali { 
+            font-family: 'Noto Sans Devanagari', system-ui, sans-serif; 
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .calculator { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .input-group { 
+            margin-bottom: 1rem; 
+        }
+        .option-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .option-card h3 {
+            color: #1f2937;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .usage-bar {
+            position: relative;
+            height: 24px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        .usage-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+            border-radius: 12px;
+        }
+        .usage-label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            line-height: 24px;
+            color: white;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            grid-column: 1 / -1;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .slider {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: #f3f4f6;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        .slider-value {
+            font-weight: 500;
+            color: #1f2937;
+            min-width: 100px;
+            text-align: right;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background-color: #3b82f6;
+            color: white;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <div className="benefits">
+        <h2>Benefits of Animal Pairings</h2>
+        <div className="benefit-card">
+            <h3>Cow-Goat Pairing</h3>
+            <p>English: The cow-goat pairing is a beneficial combination for several reasons. Firstly, cows provide high-quality milk, which can be used for consumption or sold as a source of income. Additionally, cow manure is a valuable fertilizer that can be used to improve soil fertility and structure. Goats, on the other hand, provide meat and help with land management by controlling weeds and brush. This pairing also allows for efficient use of land and resources, as cows and goats can graze on different types of vegetation. Furthermore, the cow-goat pairing can help to reduce the risk of disease and parasites, as the two species have different immune systems and are less likely to transmit diseases to each other.</p>
+            <p>Nepali: गाई-बाख्रा जोडी लाभदायक छ किनभने यसले जमिन र संसाधनको कार्यक्षम उपयोग गर्न अनुमति दिन्छ। गाईहरू उच्च गुणस्तरको दूध प्रदान गर्छन्, जुन उपभोग वा आयको स्रोतको रूपमा बिक्री गर्न सकिन्छ। गाईको मल एक मूल्यवान उर्वरक हो जुन माटोको उर्वरता र संरचना सुधार गर्न प्रयोग गर्न सकिन्छ। बाख्राहरू मासु प्रदान गर्छन् र जमिन प्रबंधनमा सहयोग गर्छन्, जसमा घाँस र झाडी नियन्त्रण गर्ने। यो जोडीले जमिन र संसाधनको कार्यक्षम उपयोग गर्न अनुमति दिन्छ, किनभने गाई र बाख्रा विभिन्न प्रकारका वनस्पतिमा चरन सक्छन्। यसका साथै, गाई-बाख्रा जोडीले रोग र परजीवीको जोखिम कम गर्न मद्दत गर्छ, किनभने दुई प्रजातिहरूको विभिन्न प्रतिरक्षा प्रणाली छ र एक अर्कामा रोग सञ्चारित गर्ने सम्भावना कम छ।</p>
+        </div>
+        <div className="benefit-card">
+            <h3>Buffalo-Goat-Chicken System</h3>
+            <p>English: The buffalo-goat-chicken system is a diverse and resilient farming system that offers several benefits. Buffaloes provide high-quality milk, which can be used for consumption or sold as a source of income. Goats provide meat and help with land management by controlling weeds and brush. Chickens provide eggs and help with pest control by eating insects and other small animals. This system also allows for efficient use of land and resources, as buffaloes, goats, and chickens can graze on different types of vegetation. Furthermore, the buffalo-goat-chicken system can help to reduce the risk of disease and parasites, as the three species have different immune systems and are less likely to transmit diseases to each other. Additionally, this system can help to improve soil fertility and structure, as the manure from the buffaloes, goats, and chickens can be used as a natural fertilizer.</p>
+            <p>Nepali: भैंसी-बाख्रा-कुखुरा प्रणाली एक विविध र लचीलो कृषि प्रणाली हो जुन विभिन्न लाभ प्रदान गर्छ। भैंसीहरू उच्च गुणस्तरको दूध प्रदान गर्छन्, जुन उपभोग वा आयको स्रोतको रूपमा बिक्री गर्न सकिन्छ। बाख्राहरू मासु प्रदान गर्छन् र जमिन प्रबंधनमा सहयोग गर्छन्, जसमा घाँस र झाडी नियन्त्रण गर्ने। कुखुराहरू अण्डा प्रदान गर्छन् र कीट नियन्त्रणमा सहयोग गर्छन्, जसमा कीरा र अन्य साना जनावर खाने। यो प्रणालीले जमिन र संसाधनको कार्यक्षम उपयोग गर्न अनुमति दिन्छ, किनभने भैंसी, बाख्रा र कुखुरा विभिन्न प्रकारका वनस्पतिमा चरन सक्छन्। यसका साथै, भैंसी-बाख्रा-कुखुरा प्रणालीले रोग र परजीवीको जोखिम कम गर्न मद्दत गर्छ, किनभने तीन प्रजातिहरूको विभिन्न प्रतिरक्षा प्रणाली छ र एक अर्कामा रोग सञ्चारित गर्ने सम्भावना कम छ। यसका साथै, यो प्रणालीले माटोको उर्वरता र संरचना सुधार गर्न मद्दत गर्छ, किनभने भैंसी, बाख्रा र कुखुराको मल एक प्राकृतिक उर्वरकको रूपमा प्रयोग गर्न सकिन्छ।</p>
+        </div>
+        <div className="benefit-card">
+            <h3>Sheep-Yak Combination</h3>
+            <p>English: The sheep-yak combination is a beneficial pairing for high-altitude areas. Sheep provide wool and meat, while yaks provide milk and help with transportation. This pairing allows for efficient use of land and resources, as sheep and yaks can graze on different types of vegetation. Additionally, the sheep-yak combination can help to improve soil fertility and structure, as the manure from the sheep and yaks can be used as a natural fertilizer. Furthermore, this pairing can help to reduce the risk of disease and parasites, as sheep and yaks have different immune systems and are less likely to transmit diseases to each other. The sheep-yak combination is also well-suited for high-altitude areas, as both species are adapted to the harsh climate and can thrive in areas with limited vegetation.</p>
+            <p>Nepali: भेडा-चौंरी संयोजन उच्च पहाडी क्षेत्रहरूका लागि लाभदायक छ। भेडाहरू ऊन र मासु प्रदान गर्छन्, जबकि चौंरीहरू दूध प्रदान गर्छन् र परिवहनमा सहयोग गर्छन्। यो संयोजनले जमिन र संसाधनको कार्यक्षम उपयोग गर्न अनुमति दिन्छ, किनभने भेडा र चौंरी विभिन्न प्रकारका वनस्पतिमा चरन सक्छन्। यसका साथै, भेडा-चौंरी संयोजनले माटोको उर्वरता र संरचना सुधार गर्न मद्दत गर्छ, किनभने भेडा र चौंरीको मल एक प्राकृतिक उर्वरकको रूपमा प्रयोग गर्न सकिन्छ। यसका साथै, यो संयोजनले रोग र परजीवीको जोखिम कम गर्न मद्दत गर्छ, किनभने भेडा र चौंरीको विभिन्न प्रतिरक्षा प्रणाली छ र एक अर्कामा रोग सञ्चारित गर्ने सम्भावना कम छ। भेडा-चौंरी संयोजन उच्च पहाडी क्षेत्रहरूका लागि उपयुक्त छ, किनभने दुई प्रजातिहरू कठोर जलवायुमा अनुकूलन भएका छन् र सीमित वनस्पति भएका क्षेत्रहरूमा समृद्धि प्राप्त गर्न सक्छन्।</p>
+        </div>
+        <div className="benefit-card">
+            <h3>Integrated Pig-Fish-Duck System</h3>
+            <p>English: The integrated pig-fish-duck system is a closed-loop farming system that offers several benefits. Pigs provide meat, fish provide a source of protein, and ducks help with pest control by eating insects and other small animals. This system also allows for efficient use of land and resources, as pigs, fish, and ducks can be raised together in a single system. Additionally, the integrated pig-fish-duck system can help to improve soil fertility and structure, as the manure from the pigs, fish, and ducks can be used as a natural fertilizer. Furthermore, this system can help to reduce the risk of disease and parasites, as the three species have different immune systems and are less likely to transmit diseases to each other. The integrated pig-fish-duck system is also a sustainable and environmentally friendly way of farming, as it reduces the need for external inputs and promotes the use of local resources.</p>
+            <p>Nepali: एकीकृत सुँगुर-माछा-हाँस प्रणाली एक बन्द लूप कृषि प्रणाली हो जुन विभिन्न लाभ प्रदान गर्छ। सुँगुरहरू मासु प्रदान गर्छन्, माछाहरू प्रोटिनको स्रोत प्रदान गर्छन्, र हाँसहरू कीट नियन्त्रणमा सहयोग गर्छन्, जसमा कीरा र अन्य साना जनावर खाने। यो प्रणालीले जमिन र संसाधनको कार्यक्षम उपयोग गर्न अनुमति दिन्छ, किनभने सुँगुर, माछा र हाँस एकै प्रणालीमा एकसाथ पाल्न सकिन्छ। यसका साथै, एकीकृत सुँगुर-माछा-हाँस प्रणालीले माटोको उर्वरता र संरचना सुधार गर्न मद्दत गर्छ, किनभने सुँगुर, माछा र हाँसको मल एक प्राकृतिक उर्वरकको रूपमा प्रयोग गर्न सकिन्छ। यसका साथै, यो प्रणालीले रोग र परजीवीको जोखिम कम गर्न मद्दत गर्छ, किनभने तीन प्रजातिहरूको विभिन्न प्रतिरक्षा प्रणाली छ र एक अर्कामा रोग सञ्चारित गर्ने सम्भावना कम छ। एकीकृत सुँगुर-माछा-हाँस प्रणाली एक टिकाऊ र पर्यावरण अनुकूल कृषि प्रणाली पनि हो, किनभने यसले बाह्य इनपुटको आवश्यकता कम गर्छ र स्थानीय संसाधनको उपयोगलाई प्रोत्साहित गर्छ।</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+    const { useState } = React;
+    const { createRoot } = ReactDOM;
+    
+    const animalRequirements = {
+        cow: {
+            landPerAnimal: 0.5,
+            initialCost: 60000,
+            monthlyCost: 3500,
+            name: "Local Cow",
+            nameNp: "स्थानीय गाई"
+        },
+        buffalo: {
+            landPerAnimal: 0.6,
+            initialCost: 100000,
+            monthlyCost: 4500,
+            name: "Murrah Buffalo",
+            nameNp: "मुर्रा भैंसी"
+        },
+        goat: {
+            landPerAnimal: 0.15,
+            initialCost: 10000,
+            monthlyCost: 1000,
+            name: "Khari Goat",
+            nameNp: "खरी बाख्रा"
+        },
+        chicken: {
+            landPerAnimal: 0.002,
+            initialCost: 300,
+            monthlyCost: 150,
+            name: "Local Chicken",
+            nameNp: "स्थानीय कुखुरा"
+        },
+        sheep: {
+            landPerAnimal: 0.2,
+            initialCost: 15000,
+            monthlyCost: 1200,
+            name: "Highland Sheep",
+            nameNp: "हिमाली भेडा"
+        },
+        yak: {
+            landPerAnimal: 1.0,
+            initialCost: 150000,
+            monthlyCost: 5000,
+            name: "Yak",
+            nameNp: "चौंरी"
+        },
+        pig: {
+            landPerAnimal: 0.05,
+            initialCost: 20000,
+            monthlyCost: 2000,
+            name: "Local Pig",
+            nameNp: "स्थानीय सुँगुर"
+        },
+        duck: {
+            landPerAnimal: 0.001,
+            initialCost: 250,
+            monthlyCost: 100,
+            name: "Duck",
+            nameNp: "हाँस"
+        },
+        fish: {
+            landPerAnimal: 0.0001,
+            initialCost: 50,
+            monthlyCost: 20,
+            name: "Carp",
+            nameNp: "कार्प माछा"
+        }
+    };
+    
+    const Calculator = ({ language }) => {
+        const [landSize, setLandSize] = useState(1);
+        const [budget, setBudget] = useState(100000);
+    
+        const calculateAllOptions = () => {
+            const options = [];
+            
+            // Calculate maximum animals for the given land
+            const maxCows = Math.floor(landSize / animalRequirements.cow.landPerAnimal);
+            const maxBuffalo = Math.floor(landSize / animalRequirements.buffalo.landPerAnimal);
+            const maxGoats = Math.floor(landSize / animalRequirements.goat.landPerAnimal);
+        
+            // Single cow/buffalo options
+            if (landSize >= animalRequirements.cow.landPerAnimal && 
+                budget >= animalRequirements.cow.initialCost) {
+                options.push({
+                    type: language === 'en' ? "Single Cow" : "एक गाई",
+                    animals: { cows: 1 },
+                    initialCost: animalRequirements.cow.initialCost,
+                    monthlyCost: animalRequirements.cow.monthlyCost,
+                    landUse: animalRequirements.cow.landPerAnimal
+                });
+            }
+        
+            if (landSize >= animalRequirements.buffalo.landPerAnimal && 
+                budget >= animalRequirements.buffalo.initialCost) {
+                options.push({
+                    type: language === 'en' ? "Single Buffalo" : "एक भैंसी",
+                    animals: { buffalo: 1 },
+                    initialCost: animalRequirements.buffalo.initialCost,
+                    monthlyCost: animalRequirements.buffalo.monthlyCost,
+                    landUse: animalRequirements.buffalo.landPerAnimal
+                });
+            }
+        
+            // Goats only
+            const possibleGoats = Math.min(
+                maxGoats,
+                Math.floor(budget / animalRequirements.goat.initialCost)
+            );
+            if (possibleGoats >= 4) { // Minimum viable herd
+                options.push({
+                    type: language === 'en' ? "Goat Herd" : "बाख्रा बथान",
+                    animals: { goats: possibleGoats },
+                    initialCost: possibleGoats * animalRequirements.goat.initialCost,
+                    monthlyCost: possibleGoats * animalRequirements.goat.monthlyCost,
+                    landUse: possibleGoats * animalRequirements.goat.landPerAnimal
+                });
+            }
+        
+            // Cow + Goats
+            if (maxCows >= 1 && maxGoats >= 2) {
+                const cowCount = 1;
+                const remainingLand = landSize - (cowCount * animalRequirements.cow.landPerAnimal);
+                const remainingBudget = budget - (cowCount * animalRequirements.cow.initialCost);
+                const goatCount = Math.min(
+                    Math.floor(remainingLand / animalRequirements.goat.landPerAnimal),
+                    Math.floor(remainingBudget / animalRequirements.goat.initialCost)
+                );
+        
+                if (goatCount >= 2) {
+                    options.push({
+                        type: language === 'en' ? "Mixed Cow-Goat" : "मिश्रित गाई-बाख्रा",
+                        animals: { cows: cowCount, goats: goatCount },
+                        initialCost: (cowCount * animalRequirements.cow.initialCost) + 
+                                   (goatCount * animalRequirements.goat.initialCost),
+                        monthlyCost: (cowCount * animalRequirements.cow.monthlyCost) +
+                                   (goatCount * animalRequirements.goat.monthlyCost),
+                        landUse: (cowCount * animalRequirements.cow.landPerAnimal) +
+                               (goatCount * animalRequirements.goat.landPerAnimal)
+                    });
+                }
+            }
+        
+            // Buffalo + Goat + Chicken System
+            if (maxBuffalo >= 1 && maxGoats >= 3) {
+                const buffaloCount = 1;
+                const remainingLand = landSize - (buffaloCount * animalRequirements.buffalo.landPerAnimal);
+                const remainingBudget = budget - (buffaloCount * animalRequirements.buffalo.initialCost);
+                
+                const maxChickens = Math.floor(remainingLand / animalRequirements.chicken.landPerAnimal);
+                const chickenCount = Math.min(50, maxChickens); // Reasonable number of chickens
+        
+                const goatCount = Math.min(
+                    Math.floor((remainingLand - (chickenCount * animalRequirements.chicken.landPerAnimal)) / animalRequirements.goat.landPerAnimal),
+                    Math.floor((remainingBudget - (chickenCount * animalRequirements.chicken.initialCost)) / animalRequirements.goat.initialCost)
+                );
+        
+                if (goatCount >= 3 && chickenCount > 0) {
+                    options.push({
+                        type: language === 'en' ? "Buffalo-Goat-Chicken System" : "भैंसी-बाख्रा-कुखुरा प्रणाली",
+                        animals: { 
+                            buffalo: buffaloCount, 
+                            goats: goatCount,
+                            chickens: chickenCount 
+                        },
+                        initialCost: (buffaloCount * animalRequirements.buffalo.initialCost) + 
+                                   (goatCount * animalRequirements.goat.initialCost) +
+                                   (chickenCount * animalRequirements.chicken.initialCost),
+                        monthlyCost: (buffaloCount * animalRequirements.buffalo.monthlyCost) +
+                                   (goatCount * animalRequirements.goat.monthlyCost) +
+                                   (chickenCount * animalRequirements.chicken.monthlyCost),
+                        landUse: (buffaloCount * animalRequirements.buffalo.landPerAnimal) +
+                               (goatCount * animalRequirements.goat.landPerAnimal) +
+                               (chickenCount * animalRequirements.chicken.landPerAnimal)
+                    });
+                }
+            }
+        
+        // Sheep-Yak Combination for High Altitudes
+        if (maxGoats >= 4) {
+            const sheepCount = 2;
+            const yakCount = 1;
+    
+            const totalLandRequired = (sheepCount * animalRequirements.sheep.landPerAnimal) +
+                                     (yakCount * animalRequirements.yak.landPerAnimal);
+            
+            const totalInitialCost = (sheepCount * animalRequirements.sheep.initialCost) +
+                                     (yakCount * animalRequirements.yak.initialCost);
+            
+            const totalMonthlyCost = (sheepCount * animalRequirements.sheep.monthlyCost) +
+                                     (yakCount * animalRequirements.yak.monthlyCost);
+    
+            if (totalLandRequired <= landSize && totalInitialCost <= budget) {
+                options.push({
+                    type: language === 'en' ? "High Altitude Sheep-Yak Combination" : "उच्च पहाडी भेडा-चौंरी संयोजन",
+                    animals: { 
+                        sheep: sheepCount, 
+                        yak: yakCount 
+                    },
+                    initialCost: totalInitialCost,
+                    monthlyCost: totalMonthlyCost,
+                    landUse: totalLandRequired
+                });
+            }
+        }
+    
+        // Integrated Pig-Fish-Duck System
+        if (landSize >= 0.3) { // Minimum land requirement
+            const pigCount = 3;
+            const fishCount = 100; // Reasonable number of fish
+            const duckCount = 10;
+    
+            const totalLandRequired = (pigCount * animalRequirements.pig.landPerAnimal) +
+                                     (fishCount * animalRequirements.fish.landPerAnimal) +
+                                     (duckCount * animalRequirements.duck.landPerAnimal);
+            
+            const totalInitialCost = (pigCount * animalRequirements.pig.initialCost) +
+                                     (fishCount * animalRequirements.fish.initialCost) +
+                                     (duckCount * animalRequirements.duck.initialCost);
+            
+            const totalMonthlyCost = (pigCount * animalRequirements.pig.monthlyCost) +
+                                     (fishCount * animalRequirements.fish.monthlyCost) +
+                                     (duckCount * animalRequirements.duck.monthlyCost);
+    
+            if (totalLandRequired <= landSize && totalInitialCost <= budget) {
+                options.push({
+                    type: language === 'en' ? "Integrated Pig-Fish-Duck System" : "एकीकृत सुँगुर-माछा-हाँस प्रणाली",
+                    animals: { 
+                        pigs: pigCount, 
+                        fish: fishCount,
+                        ducks: duckCount 
+                    },
+                    initialCost: totalInitialCost,
+                    monthlyCost: totalMonthlyCost,
+                    landUse: totalLandRequired
+                });
+            }
+        }
+    
+        return options;
+    };
+
+    const allOptions = calculateAllOptions();
+
+    return (
+        <div className="calculator">
+            <div className="card">
+                <div className="input-group">
+                    <label>
+                        {language === 'en' ? 'Land Size (hectares)' : 'जग्गाको क्षेत्रफल (हेक्टर)'}
+                    </label>
+                    <div className="slider-container">
+                        <input
+                            type="range"
+                            min="0.1"
+                            max="10"
+                            step="0.1"
+                            value={landSize}
+                            onChange={(e) => setLandSize(Number(e.target.value))}
+                            className="slider"
+                        />
+                        <span className="slider-value">{landSize.toFixed(1)}</span>
+                    </div>
+                </div>
+                
+                <div className="input-group">
+                    <label>
+                        {language === 'en' ? 'Budget (NPR)' : 'बजेट (रु)'}
+                    </label>
+                    <div className="slider-container">
+                        <input
+                            type="range"
+                            min="1000"
+                            max="500000"
+                            step="1000"
+                            value={budget}
+                            onChange={(e) => setBudget(Number(e.target.value))}
+                            className="slider"
+                        />
+                        <span className="slider-value">{budget.toLocaleString()}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="results-grid">
+                {allOptions.length > 0 ? (
+                    allOptions.map((option, index) => (
+                        <div key={index} className="option-card">
+                            <h3>{option.type}</h3>
+                            <div className="option-details">
+                                {Object.entries(option.animals).map(([animal, count]) => (
+                                    <p key={animal}>
+                                        {language === 'en' 
+                                            ? animal.charAt(0).toUpperCase() + animal.slice(1) 
+                                            : (animalRequirements[animal] ? animalRequirements[animal].nameNp : animal)
+                                        }: {count}
+                                    </p>
+                                ))}
+                                <div className="usage-bar">
+                                    <div 
+                                        className="usage-fill"
+                                        style={{ width: `${(option.landUse / landSize) * 100}%` }}
+                                    />
+                                    <span className="usage-label">
+                                        {Math.round((option.landUse / landSize) * 100)}% {language === 'en' ? 'land used' : 'जमिन प्रयोग'}
+                                    </span>
+                                </div>
+                                <p>{language === 'en' ? 'Initial Cost' : 'प्रारम्भिक लागत'}: NPR {option.initialCost.toLocaleString()}</p>
+                                <p>{language === 'en' ? 'Monthly Cost' : 'मासिक खर्च'}: NPR {option.monthlyCost.toLocaleString()}</p>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="no-results">
+                        <h3>{language === 'en' ? 'No Viable Options' : 'कुनै उपयुक्त विकल्प छैन'}</h3>
+                        <p>
+                                        ? 'Try increasing your land size or budget.' 
+                                        : 'जग्गाको आकार वा बजेट बढाउने प्रयास गर्नुहोस्।'}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+        
+        const App = () => {
+            const [language, setLanguage] = useState('en');
+        
+            return (
+                <div className="container">
+                    <header className="header">
+                        <h1 className="title">
+                            {language === 'en' ? 
+                                'Nepal Livestock Planning' : 
+                                'नेपाल पशुधन योजना'}
+                        </h1>
+                        <button 
+                            className="btn"
+                            onClick={() => setLanguage(language === 'en' ? 'np' : 'en')}
+                        >
+                            {language === 'en' ? 'नेपाली' : 'English'}
+                        </button>
+                    </header>
+        
+                    <Calculator language={language} />
+                </div>
+            );
+        };
+        
+        // Use createRoot for React 18
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
