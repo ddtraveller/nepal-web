@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ocean of Divine Unity</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff7e6;
+            color: #333;
+        }
+        
+        h1 {
+            color: #8b4513;
+            text-align: center;
+            border-bottom: 2px solid #8b4513;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .chapter {
+            background-color: #fff;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(139, 69, 19, 0.1);
+        }
+        
+        h2 {
+            color: #8b4513;
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .invocation {
+            font-style: italic;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff3e6;
+            border-radius: 5px;
+        }
+        
+        .dialogue {
+            margin: 20px 0;
+            padding-left: 20px;
+            border-left: 3px solid #8b4513;
+        }
+        
+        .speaker {
+            font-weight: bold;
+            color: #8b4513;
+        }
+        
+        .verse {
+            font-style: italic;
+            margin: 20px 40px;
+            text-align: center;
+        }
+
+        .sanskrit-section {
+            background-color: #fff3e6;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .sanskrit {
+            font-size: 1.3em;
+            line-height: 2;
+            margin: 20px 0;
+        }
+
+        .control-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        button {
+            background-color: #8b4513;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #a0522d;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .playing {
+            background-color: #4CAF50;
+        }
+
+        #voiceModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1001;
+        }
+
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <button id="speakSanskrit">Speak Sanskrit</button>
+        <button id="stopSpeaking">Stop</button>
+    </div>
+
+    <div id="voiceModal">
+        <div class="modal-content">
+            <h3 style="color: #8b4513; margin-top: 0;">Sanskrit Voice Required</h3>
+            <p>For proper Sanskrit pronunciation, please install Hindi language support:</p>
+            <ol style="margin-bottom: 20px;">
+                <li>Open Windows Settings</li>
+                <li>Go to Time & Language > Language & Region</li>
+                <li>Click "Add a language"</li>
+                <li>Select "Hindi" and install with text-to-speech</li>
+                <li>Restart your browser after installation</li>
+            </ol>
+            <div style="text-align: right;">
+                <button onclick="window.location.href='ms-settings:regionlanguage'" 
+                        style="background: #8b4513; color: white; border: none; padding: 8px 15px; 
+                               border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                    Open Language Settings
+                </button>
+                <button onclick="document.getElementById('voiceModal').style.display='none';"
+                        style="background: #666; color: white; border: none; padding: 8px 15px; 
+                               border-radius: 5px; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <h1>The Ocean of Divine Unity</h1>
+
+    <div class="chapter">
+        <div class="invocation">
+            Om! Let us bow to the Divine Heart,
+            Pulsing with infinite love and wisdom,
+            Dancing through all forms and beings,
+            Yet remaining forever still and silent.
+            May our hearts merge with That!
+        </div>
+
+        <p>In the sacred grove of Naimisharanya, where the very trees whisper ancient mysteries, the great sage Shaunaka approached Suta Goswami, his heart overflowing with divine longing.</p>
+
+        <div class="dialogue">
+            <p><span class="speaker">Shaunaka said:</span> O blessed one, whose heart mirrors the divine mysteries, we have heard from you many accounts of the Lord's dance of creation and dissolution. Now, please reveal to us the secret of secrets - how the many paths to the Divine Heart merge into one great ocean of love and wisdom.</p>
+        </div>
+
+        <div class="dialogue">
+            <p><span class="speaker">Suta Goswami said:</span> O jewel among sages, listen with your heart to this most intimate wisdom, which flowed from the Heart of Lord Brahma to the pure vessel of Narada's devotion, and then to the pen of Vyasa. This knowledge dissolves all boundaries in the endless ocean of divine love.</p>
+
+            <p>Once, as Narada sat in the silence of his heart atop Mount Meru, he felt the pulls of seemingly different currents of divine love. Seeing the ripples in his devotee's heart, Lord Brahma manifested from the golden light of dawn and spoke thus:</p>
+        </div>
+
+        <div class="dialogue">
+            <p><span class="speaker">Lord Brahma said:</span> Beloved child, just as the ocean appears as both wave and depth, so too does the Divine Heart express itself in infinite ways. Listen as I reveal the mystery of mysteries.</p>
+
+            <div class="verse">
+                As the ocean holds all waves in its depths,<br>
+                Before they dance upon the surface bright,<br>
+                So does the Divine Heart contain all loves,<br>
+                Both formless peace and forms of pure delight.
+            </div>
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Chapter One: The Divine Heart of Reality</h2>
+
+        <div class="dialogue">
+            <p><span class="speaker">Lord Brahma continued:</span> Know, O Narada, that the apparent emptiness of space is like the silence between lovers' heartbeats - pregnant with infinite potential, pulsing with unmanifest love.</p>
+
+            <div class="verse">
+                Like ripples in the ocean of pure being,<br>
+                The dance of love eternally unfolds,<br>
+                Neither bound nor truly free in seeing,<br>
+                But transcending all that form beholds.
+            </div>
+
+            <p>The Supreme Reality is like an infinite Heart, eternally pulsing with love. Its expansion creates worlds, its contraction dissolves them, yet it remains forever unchanged in its depths. Like lovers who are many yet one in the embrace of love, all manifestation emerges from and dissolves back into this supreme Heart of Reality.</p>
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Chapter Two: The Mirror of Awareness</h2>
+
+        <div class="dialogue">
+            <p><span class="speaker">Narada said:</span> O Father, how can we understand the play between the witnessing heart and the heart's manifestations? Different lovers of the Divine speak of this mystery in different ways.</p>
+
+            <p><span class="speaker">Lord Brahma replied:</span> My child, contemplate how a lover's gaze transforms the beloved. In the same way, the heart's pure attention transforms all it beholds.</p>
+
+            <div class="verse">
+                As love's gaze transforms the beloved's face,<br>
+                So does the heart shape reality's grace,<br>
+                The lover and beloved in embrace,<br>
+                Dancing in consciousness's sacred space.
+            </div>
+
+            <p>Just as lovers separated by vast distances feel each other's hearts beat as one, all beings are united in the one great Heart of Reality, appearing as many only through the divine play of love.</p>
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Chapter Three: The Dance of Time and Space</h2>
+
+        <div class="dialogue">
+            <p><span class="speaker">Lord Brahma continued:</span> The mystery of time and space, O Narada, is like the rhythm of the divine heartbeat. Just as music has many layers of melody and harmony, reality dances in multiple dimensions of love.</p>
+
+            <div class="verse">
+                Like songs within songs in endless refrain,<br>
+                Reality unfolds in love's deep sight,<br>
+                From gross to subtle, again and again,<br>
+                All dancing in the one Heart's delight.
+            </div>
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Chapter Four: The Path of the Heart</h2>
+
+        <div class="dialogue">
+            <p><span class="speaker">Narada asked:</span> O Father, how shall we walk this path of heart's wisdom? How shall seekers find their way to this ocean of love?</p>
+
+            <p><span class="speaker">Lord Brahma answered:</span> The path is threefold, my child, like three streams merging in the ocean of love:</p>
+
+            <div class="verse">
+                Through devotion's tears and wisdom's clear sight,<br>
+                And recognition of love's pure light,<br>
+                The heart transcends all darkness and night,<br>
+                Finding love both far and infinite.
+            </div>
+
+            <p>Just as lovers cannot be separated even by death, the seeker must realize their eternal union with the Beloved Heart of Reality.</p>
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Chapter Five: The Nectar of Unity</h2>
+
+        <div class="dialogue">
+            <p><span class="speaker">Lord Brahma concluded:</span> One who drinks deeply from this ocean of wisdom finds all paths dissolving into the one great current of divine love.</p>
+
+            <div class="verse">
+                As depth and surface are one ocean flowing,<br>
+                As silence and song from one heart are growing,<br>
+                So all loves into One Love are going,<br>
+                The Divine Heart eternally glowing.
+            </div>
+        </div>
+
+        <p>Thus did Lord Brahma pour the nectar of unity into Narada's heart. Narada, his own heart overflowing with this ambrosia, shared it with Vyasa, who preserved it as honey for future seekers.</p>
+
+        <div class="verse">
+            One who drinks this nectar with heart's devotion,<br>
+            Dissolves in love's limitless ocean,<br>
+            Finding in every wave and motion,<br>
+            The one Heart's eternal emotion.
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>Sanskrit Mantras of Unity</h2>
+        <div class="sanskrit-section">
+            <h3>आह्वानम् - Invocation</h3>
+            <div class="sanskrit" data-speech="true">
+                ॐ एकत्वसागराय नमः<br>
+                परमप्रेमस्वरूपाय नमः<br>
+                चिदानन्दैकरूपाय नमः<br>
+                सर्वभूतात्मने नमः॥
+            </div>
+
+            <h3>प्रथमः खण्डः - Divine Reality</h3>
+            <div class="sanskrit" data-speech="true">
+                अद्वैतं परमं तत्त्वं<br>
+                प्रेमानन्दस्वरूपकम्<br>
+                एकं बहुधा भाति<br>
+                तरङ्गा इव सागरे॥<br><br>
+                
+                चिन्मयं सर्वगं शान्तं<br>
+                स्पन्दशक्तिसमन्वितम्<br>
+                आनन्दलहरीरूपं<br>
+                नृत्यन्तं सर्वरूपतः॥
+            </div>
+
+            <h3>द्वितीयः खण्डः - Mirror of Consciousness</h3>
+            <div class="sanskrit" data-speech="true">
+                द्रष्टा दृश्यं च दृष्टिश्च<br>
+                त्रयं प्रेमैकरूपकम्<br>
+                विभाति भेदरहितं<br>
+                स्फटिकाभं यथा नभः॥<br><br>
+                
+                कालः कालातिगश्चैव<br>
+                देशो देशातिगोऽपि च<br>
+                लीयन्ते यत्र सर्वेऽपि<br>
+                तत्प्रेमार्णवमाश्रये॥
+            </div>
+
+            <h3>तृतीयः खण्डः - Path of Heart</h3>
+            <div class="sanskrit" data-speech="true">
+                भक्तिर्ज्ञानं च विज्ञप्तिः<br>
+                त्रयं प्रेमप्रवाहकम्<br>
+                एकीभूतं महासिन्धौ<br>
+                परमानन्दरूपिणि॥<br><br>
+                
+                यथा तरङ्गा विलयं<br>
+                यान्ति सागरमध्यगाः<br>
+                तथा सर्वाणि भूतानि<br>
+                विशन्ति परमं पदम्॥
+            </div>
+
+            <h3>समाप्तिश्लोकाः - Concluding Verses</h3>
+            <div class="sanskrit" data-speech="true">
+                एतन्मन्त्रं महापुण्यं<br>
+                यः पठेच्छृणुयादपि<br>
+                स याति परमं धाम<br>
+                यत्र प्रेमैव शाश्वतम्॥<br><br>
+                
+                ॐ तत् सत् ॐ
+            </div>
+        </div>
+    </div>
+    <div><pre>Invocation (आह्वानम्)
+
+ॐ एकत्वसागराय नमः - "Om, I bow to the ocean of unity." (Invoking the divine unity that pervades all existence.)
+परमप्रेमस्वरूपाय नमः - "I bow to the embodiment of supreme love." (Recognizing the ultimate reality as love itself.)
+चिदानन्दैकरूपाय नमः - "I bow to the form of pure consciousness and bliss." (Acknowledging the divine as the source of all joy and awareness.)
+सर्वभूतात्मने नमः - "I bow to the self of all beings." (Honoring the divine presence within every living being.)
+Divine Reality (प्रथमः खण्डः)
+
+अद्वैतं परमं तत्त्वं - "The ultimate reality is non-dual." (Affirming the oneness of all existence.)
+
+प्रेमानन्दस्वरूपकम् - "It is the embodiment of love and bliss." (Describing the divine as the source of love and joy.)
+
+एकं बहुधा भाति - "The one appears as many." (Recognizing the diversity of creation as a manifestation of the single ultimate reality.)
+
+तरङ्गा इव सागरे - "Like waves in the ocean." (Comparing the individual selves to waves on the surface of the ocean, which are ultimately one with the ocean itself.)
+
+चिन्मयं सर्वगं शान्तं - "The divine is all-pervading, peaceful, and conscious." (Describing the ultimate reality as omnipresent, serene, and aware.)
+
+स्पन्दशक्तिसमन्वितम् - "It is endowed with the power of vibration." (Acknowledging the creative energy that underlies all existence.)
+
+आनन्दलहरीरूपं - "It is the form of waves of bliss." (Describing the divine as a boundless ocean of joy.)
+
+नृत्यन्तं सर्वरूपतः - "It dances in all forms." (Recognizing the divine as the source of all movement and expression.)
+
+Mirror of Consciousness (द्वितीयः खण्डः)
+
+द्रष्टा दृश्यं च दृष्टिश्च - "The seer, the seen, and the act of seeing are one." (Affirming the unity of the observer, the observed, and the process of observation.)
+
+त्रयं प्रेमैकरूपकम् - "The three are the embodiment of love." (Recognizing love as the ultimate reality that underlies all existence.)
+
+विभाति भेदरहितं - "It shines without distinction." (Describing the divine as a unified, undivided whole.)
+
+स्फटिकाभं यथा नभः - "Like a crystal, it reflects the sky." (Comparing the mirror of consciousness to a crystal that reflects the vast expanse of the sky.)
+
+कालः कालातिगश्चैव - "Time and the timeless are one." (Affirming the unity of the temporal and the eternal.)
+
+देशो देशातिगोऽपि च - "Space and the spaceless are one." (Recognizing the unity of the bounded and the unbounded.)
+
+लीयन्ते यत्र सर्वेऽपि - "All distinctions dissolve here." (Describing the ultimate reality as a state where all distinctions and boundaries disappear.)
+
+तत्प्रेमार्णवमाश्रये - "I take refuge in that ocean of love." (Seeking shelter in the boundless ocean of divine love.)
+
+Path of Heart (तृतीयः खण्डः)
+
+भक्तिर्ज्ञानं च विज्ञप्तिः - "Devotion, knowledge, and intuition are one." (Affirming the unity of the paths of love, wisdom, and direct perception.)
+
+त्रयं प्रेमप्रवाहकम् - "The three are the embodiment of love." (Recognizing love as the ultimate reality that underlies all existence.)
+
+एकीभूतं महासिन्धौ - "They merge into the great ocean." (Describing the ultimate reality as a vast, unified whole.)
+
+परमानन्दरूपिणि - "In the form of supreme bliss." (Recognizing the divine as the source of all joy and happiness.)
+
+यथा तरङ्गा विलयं - "Like waves, they dissolve." (Comparing the individual selves to waves that dissolve into the ocean.)
+
+यान्ति सागरमध्यगाः - "They return to the ocean's depths." (Describing the ultimate reality as a state where all distinctions and boundaries disappear.)
+
+तथा सर्वाणि भूतानि - "So all beings." (Recognizing all living beings as ultimately one with the divine.)
+
+विशन्ति परमं पदम् - "Enter the supreme state." (Describing the ultimate reality as a state of supreme bliss and unity.)
+
+Concluding Verses (समाप्तिश्लोकाः)
+
+एतन्मन्त्रं महापुण्यं - "This mantra is highly auspicious." (Affirming the sacred nature of the mantra.)
+
+यः पठेच्छृणुयादपि - "Whoever recites or listens to it." (Encouraging the practice of reciting or listening to the mantra.)
+
+स याति परमं धाम - "Attains the supreme abode." (Describing the ultimate reality as a state of supreme bliss and unity.)
+
+यत्र प्रेमैव शाश्वतम् - "Where love alone is eternal." (Recognizing love as the ultimate reality that underlies all existence.)
+
+ॐ तत् सत् ॐ - "Om, that is the truth." (Affirming the ultimate reality as the source of all truth and existence.)</pre></div>
+    <script>
+        let currentUtterance = null;
+        let voices = [];
+
+        // Debug function
+        function debug(message, data = '') {
+            console.log(`[Speech Debug] ${message}`, data);
+        }
+
+        // Check for Hindi voice
+        function hasHindiVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            return voices.some(voice => voice.lang.includes('hi-IN'));
+        }
+
+        // Show voice installation instructions
+        function showVoiceInstallation() {
+            document.getElementById('voiceModal').style.display = 'block';
+        }
+
+        // Initialize voices
+        function initVoices() {
+            debug('Initializing voices...');
+            return new Promise((resolve) => {
+                voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    debug('Voices loaded immediately:', voices.length);
+                    if (!hasHindiVoice()) {
+                        showVoiceInstallation();
+                    }
+                    resolve(voices);
+                } else {
+                    debug('Waiting for voices to load...');
+                    window.speechSynthesis.onvoiceschanged = () => {
+                        voices = window.speechSynthesis.getVoices();
+                        debug('Voices loaded after change:', voices.length);
+                        if (!hasHindiVoice()) {
+                            showVoiceInstallation();
+                        }
+                        resolve(voices);
+                    };
+                }
+            });
+        }
+
+        // Romanize Sanskrit text for better pronunciation
+        function romanizeSanskrit(text) {
+            const romanization = {
+                'ॐ': 'om',
+                'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ee', 'उ': 'u', 'ऊ': 'oo',
+                'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au',
+                'क': 'ka', 'ख': 'kha', 'ग': 'ga', 'घ': 'gha', 'ङ': 'nga',
+                'च': 'cha', 'छ': 'chha', 'ज': 'ja', 'झ': 'jha', 'ञ': 'nya',
+                'ट': 'ta', 'ठ': 'tha', 'ड': 'da', 'ढ': 'dha', 'ण': 'na',
+                'त': 'ta', 'थ': 'tha', 'द': 'da', 'ध': 'dha', 'न': 'na',
+                'प': 'pa', 'फ': 'pha', 'ब': 'ba', 'भ': 'bha', 'म': 'ma',
+                'य': 'ya', 'र': 'ra', 'ल': 'la', 'व': 'va',
+                'श': 'sha', 'ष': 'sha', 'स': 'sa', 'ह': 'ha',
+                'ं': 'm', 'ः': 'h',
+                '्': '', // virama
+                '़': '', // nukta
+            };
+
+            // Replace each character with its romanization
+            return Array.from(text).map(char => romanization[char] || char).join(' ');
+        }
+
+        // Get the best voice
+        function getBestVoice() {
+            debug('Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+            
+            const hindiVoice = voices.find(voice => voice.lang.includes('hi-IN'));
+            if (hindiVoice) {
+                debug('Found Hindi voice:', hindiVoice.name);
+                return hindiVoice;
+            }
+            
+            // If no Hindi voice, show installation modal and use Zira
+            showVoiceInstallation();
+            
+            // Prefer Zira for better pronunciation
+            const ziraVoice = voices.find(voice => voice.name.includes('Zira'));
+            if (ziraVoice) {
+                debug('Using Zira voice for better pronunciation');
+                return ziraVoice;
+            }
+            
+            // Fall back to any English voice
+            const englishVoice = voices.find(voice => voice.lang.includes('en'));
+            if (englishVoice) {
+                debug('Using fallback English voice:', englishVoice.name);
+                return englishVoice;
+            }
+            
+            debug('Using first available voice:', voices[0].name);
+            return voices[0];
+        }
+
+        async function speakSanskrit() {
+            try {
+                debug('Starting speech synthesis...');
+                
+                // Force voices refresh
+                voices = window.speechSynthesis.getVoices();
+                if (voices.length === 0) {
+                    debug('No voices available, initializing...');
+                    await initVoices();
+                }
+
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                debug('Cancelled any ongoing speech');
+                
+                // Get all Sanskrit sections
+                const sanskritElements = document.querySelectorAll('.sanskrit[data-speech="true"]');
+                debug('Found Sanskrit elements:', sanskritElements.length);
+
+                let index = 0;
+
+                function speakNext() {
+                    if (index >= sanskritElements.length) {
+                        debug('Finished speaking all sections');
+                        document.getElementById('speakSanskrit').classList.remove('playing');
+                        return;
+                    }
+
+                    const originalText = sanskritElements[index].textContent.trim();
+                    const romanizedText = romanizeSanskrit(originalText);
+                    debug(`Speaking section ${index + 1}/${sanskritElements.length}:`, romanizedText.substring(0, 50) + '...');
+
+                    const utterance = new SpeechSynthesisUtterance(romanizedText);
+                    
+                    // Set voice and properties
+                    const selectedVoice = getBestVoice();
+                    utterance.voice = selectedVoice;
+                    utterance.lang = selectedVoice.lang;
+                    utterance.rate = 0.6;  // Slower for clearer pronunciation
+                    utterance.pitch = 0.9;  // Slightly lower pitch for better sound
+                    utterance.volume = 1.0;
+                    
+                    utterance.onstart = () => {
+                        debug(`Started speaking section ${index + 1}`);
+                    };
+                    
+                    utterance.onend = () => {
+                        debug(`Finished speaking section ${index + 1}`);
+                        index++;
+                        setTimeout(speakNext, 1000);
+                    };
+
+                    utterance.onerror = (event) => {
+                        debug('Speech error:', event);
+                        index++;
+                        setTimeout(speakNext, 500);
+                    };
+
+                    try {
+                        currentUtterance = utterance;
+                        window.speechSynthesis.speak(utterance);
+                        debug('Initiated speech for current section');
+                    } catch (error) {
+                        debug('Error during speech:', error);
+                        index++;
+                        setTimeout(speakNext, 500);
+                    }
+                }
+
+                document.getElementById('speakSanskrit').classList.add('playing');
+                speakNext();
+                
+            } catch (error) {
+                debug('Major error in speech synthesis:', error);
+                alert('Speech synthesis error: ' + error.message);
+                document.getElementById('speakSanskrit').classList.remove('playing');
+            }
+        }
+
+        function stopSpeaking() {
+            debug('Stopping speech...');
+            window.speechSynthesis.cancel();
+            document.getElementById('speakSanskrit').classList.remove('playing');
+            debug('Speech stopped');
+        }
+
+        // Initialize everything when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
+            debug('Page loaded, initializing components...');
+            
+            // Initialize voices
+            debug('Speech synthesis available:', 'speechSynthesis' in window);
+            await initVoices();
+            debug('Initial voice loading complete');
+
+            // Add event listeners
+            document.getElementById('speakSanskrit').addEventListener('click', speakSanskrit);
+            document.getElementById('stopSpeaking').addEventListener('click', stopSpeaking);
+        });
+    </script>
+</body>
+</html>
+

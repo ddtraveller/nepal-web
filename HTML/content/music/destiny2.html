@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacred Verses of Liberation</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+        .play-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        .play-button:hover {
+            background-color: #2563eb;
+        }
+        .play-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .visualization {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .note-box {
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .note-box.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .note-name {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        .frequency {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .note-box.active .frequency {
+            color: #e5e7eb;
+        }
+        .lyrics {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-top: 2rem;
+            font-family: serif;
+        }
+        .current-note {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sacred Verses of Liberation</h1>
+        
+        <button id="playButton" class="play-button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Play Song
+        </button>
+
+        <div id="currentNote" class="current-note">No note playing</div>
+
+        <div id="visualization" class="visualization">
+            <!-- Note boxes will be added here dynamically -->
+        </div>
+
+        <div id="lyrics" class="lyrics">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacred Liberation Song</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            text-align: center;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2563eb;
+        }
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .visualization {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .note-box {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .note-box.active {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.05);
+        }
+        .note-name {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .frequency {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        .lyrics {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            margin-top: 2rem;
+            font-family: serif;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .current-section {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            color: #2563eb;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sacred Liberation Song</h1>
+        
+        <div class="controls">
+            <button id="playButton" class="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Play Song
+            </button>
+            <button id="stopButton" class="button" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="4" width="16" height="16"></rect>
+                </svg>
+                Stop
+            </button>
+        </div>
+
+        <div id="currentSection" class="current-section">Ready to play</div>
+        <div id="visualization" class="visualization">
+            <!-- Note boxes will be added here dynamically -->
+        </div>
+
+        <div class="lyrics" id="lyrics"></div>
+    </div>
+
+    <script>
+        const frequencies = {
+            'C4': 261.63,
+            'D4': 293.66,
+            'E4': 329.63,
+            'F4': 349.23,
+            'F#4': 369.99,
+            'G4': 392.00,
+            'A4': 440.00,
+            'B4': 493.88,
+            'C5': 523.25,
+            'D5': 587.33,
+            'E5': 659.25
+        };
+
+        // Extended melody pattern for the chorus
+        const mainMelody = [
+            // "Every woman has got a right"
+            { note: 'E4', duration: 0.4 },
+            { note: 'G4', duration: 0.4 },
+            { note: 'A4', duration: 0.4 },
+            { note: 'B4', duration: 0.8 },
+            
+            // "to decide her own destiny"
+            { note: 'A4', duration: 0.4 },
+            { note: 'G4', duration: 0.4 },
+            { note: 'E4', duration: 0.8 },
+
+            // "And in this judgement"
+            { note: 'G4', duration: 0.4 },
+            { note: 'A4', duration: 0.4 },
+            { note: 'B4', duration: 0.8 },
+
+            // "there can be no partiality"
+            { note: 'A4', duration: 0.4 },
+            { note: 'G4', duration: 0.4 },
+            { note: 'E4', duration: 0.8 }
+        ];
+
+        const chorusMelody = [
+            // "Sister, you're right, you're right"
+            { note: 'B4', duration: 0.4 },
+            { note: 'C5', duration: 0.4 },
+            { note: 'D5', duration: 0.8 },
+            { note: 'B4', duration: 0.8 },
+            
+            // "You're right, you're right, you're so right!"
+            { note: 'A4', duration: 0.4 },
+            { note: 'B4', duration: 0.4 },
+            { note: 'G4', duration: 0.4 },
+            { note: 'E4', duration: 0.8 }
+        ];
+
+        let audioCtx = null;
+        let isPlaying = false;
+
+        // Create visualization
+        const visualization = document.getElementById('visualization');
+        Object.entries(frequencies).forEach(([note, freq]) => {
+            const noteBox = document.createElement('div');
+            noteBox.className = 'note-box';
+            noteBox.id = `note-${note}`;
+            noteBox.innerHTML = `
+                <div class="note-name">${note}</div>
+                <div class="frequency">${freq.toFixed(0)} Hz</div>
+            `;
+            visualization.appendChild(noteBox);
+        });
+
+        function updateCurrentSection(text) {
+            document.getElementById('currentSection').textContent = text;
+        }
+
+        async function playNote(frequency, duration, noteName) {
+            return new Promise(resolve => {
+                document.querySelectorAll('.note-box').forEach(box => {
+                    box.classList.remove('active');
+                });
+                const noteBox = document.getElementById(`note-${noteName}`);
+                if (noteBox) noteBox.classList.add('active');
+
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(
+                    0.01, 
+                    audioCtx.currentTime + duration - 0.05
+                );
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                
+                setTimeout(() => {
+                    oscillator.stop();
+                    resolve();
+                }, duration * 1000);
+            });
+        }
+
+        async function playSong() {
+            if (isPlaying) return;
+            
+            try {
+                isPlaying = true;
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                document.getElementById('playButton').disabled = true;
+                document.getElementById('stopButton').disabled = false;
+
+                // Play main verses
+                updateCurrentSection('Playing: Verse 1');
+                for (const note of mainMelody) {
+                    if (!isPlaying) break;
+                    await playNote(frequencies[note.note], note.duration, note.note);
+                }
+
+                // Play chorus
+                if (isPlaying) {
+                    updateCurrentSection('Playing: Chorus');
+                    for (const note of chorusMelody) {
+                        if (!isPlaying) break;
+                        await playNote(frequencies[note.note], note.duration, note.note);
+                    }
+                }
+
+                stopPlaying();
+                
+            } catch (error) {
+                console.error('Error playing song:', error);
+                stopPlaying();
+            }
+        }
+
+        function stopPlaying() {
+            isPlaying = false;
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+            document.getElementById('playButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
+            document.querySelectorAll('.note-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            updateCurrentSection('Ready to play');
+        }
+
+        document.getElementById('playButton').addEventListener('click', playSong);
+        document.getElementById('stopButton').addEventListener('click', stopPlaying);
+
+        // Initialize lyrics
+        document.getElementById('lyrics').textContent = `Sacred Liberation Song
+
+Every woman has got a right to decide her own destiny
+And in this judgement there can be no partiality
+So arm in arms, we'll work to overcome this little struggle
+'Cause that's the only way we can overcome our little trouble
+
+Sister, you're right, you're right
+You're right, you're right, you're so right!
+We gon' fight (we gon' heal), we'll have to fight (we gon' wake up)
+We gonna fight (we gon' heal), fight for our rights!`;
+    </script>
+</body>
+</html>
+
+;</div>
+    </div>
+
+    <script>
+        const frequencies = {
+            'D4': 293.66,
+            'E4': 329.63,
+            'F#4': 369.99,
+            'G4': 392.00,
+            'A4': 440.00,
+            'B4': 493.88,
+            'C5': 523.25,
+            'D5': 587.33,
+            'E5': 659.25
+        };
+
+        const melody = [
+            { note: 'E4', duration: 0.5 },  // Ev
+            { note: 'G4', duration: 0.5 },  // ery
+            { note: 'A4', duration: 0.5 },  // wo
+            { note: 'B4', duration: 1.0 },  // man
+            { note: 'A4', duration: 0.5 },  // has
+            { note: 'G4', duration: 0.5 },  // got
+            { note: 'E4', duration: 1.0 },  // right
+        ];
+
+        // Create note boxes
+        const visualization = document.getElementById('visualization');
+        Object.entries(frequencies).forEach(([note, freq]) => {
+            const noteBox = document.createElement('div');
+            noteBox.className = 'note-box';
+            noteBox.id = `note-${note}`;
+            noteBox.innerHTML = `
+                <div class="note-name">${note}</div>
+                <div class="frequency">${freq.toFixed(2)} Hz</div>
+            `;
+            visualization.appendChild(noteBox);
+        });
+
+        const playButton = document.getElementById('playButton');
+        const currentNoteDisplay = document.getElementById('currentNote');
+
+        async function playSong() {
+            try {
+                playButton.disabled = true;
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+                const playNote = (frequency, duration, noteName) => {
+                    return new Promise(resolve => {
+                        // Update visualization
+                        document.querySelectorAll('.note-box').forEach(box => {
+                            box.classList.remove('active');
+                        });
+                        document.getElementById(`note-${noteName}`).classList.add('active');
+                        currentNoteDisplay.textContent = `Now playing: ${noteName}`;
+
+                        const oscillator = audioCtx.createOscillator();
+                        const gainNode = audioCtx.createGain();
+                        
+                        oscillator.type = 'sine';
+                        oscillator.frequency.value = frequency;
+                        
+                        gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(
+                            0.01, 
+                            audioCtx.currentTime + duration - 0.05
+                        );
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                        
+                        oscillator.start();
+                        
+                        setTimeout(() => {
+                            oscillator.stop();
+                            resolve();
+                        }, duration * 1000);
+                    });
+                };
+
+                for (const { note, duration } of melody) {
+                    await playNote(frequencies[note], duration, note);
+                }
+
+                await audioCtx.close();
+                playButton.disabled = false;
+                currentNoteDisplay.textContent = 'No note playing';
+                document.querySelectorAll('.note-box').forEach(box => {
+                    box.classList.remove('active');
+                });
+                
+            } catch (error) {
+                console.error('Error playing song:', error);
+                playButton.disabled = false;
+                currentNoteDisplay.textContent = 'Error playing song';
+            }
+        }
+
+        playButton.addEventListener('click', playSong);
+    </script>
+</body>
+</html>

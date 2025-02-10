@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacred Liberation Song</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            text-align: center;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        .button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2563eb;
+        }
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .visualization {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .note-box {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .note-box.active {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.05);
+        }
+        .note-name {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .frequency {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        .current-section {
+            text-align: center;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        .lyrics-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .lyrics-section {
+            margin: 1.5rem 0;
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+        .lyrics-line {
+            margin: 0.8rem 0;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        .lyrics-word {
+            display: inline-block;
+            padding: 0.1rem 0.2rem;
+            margin: 0 0.1rem;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+        .lyrics-word.active {
+            background-color: #3b82f6;
+            color: white;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sacred Liberation Song</h1>
+        
+        <div class="controls">
+            <button id="playButton" class="button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                Play Song
+            </button>
+            <button id="stopButton" class="button" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="4" width="16" height="16"></rect>
+                </svg>
+                Stop
+            </button>
+        </div>
+
+        <div id="currentSection" class="current-section">Ready to play</div>
+        <div id="visualization" class="visualization"></div>
+        <div id="lyrics" class="lyrics-container"></div>
+    </div>
+
+    <script>
+        // Initialize UI elements
+        const playButton = document.getElementById('playButton');
+        const stopButton = document.getElementById('stopButton');
+        const currentSection = document.getElementById('currentSection');
+        const visualization = document.getElementById('visualization');
+        const lyricsContainer = document.getElementById('lyrics');
+
+        // Musical data
+        const NOTES = {
+            'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+            'F#4': 369.99, 'G4': 392.00, 'A4': 440.00, 'B4': 493.88,
+            'C5': 523.25, 'D5': 587.33, 'E5': 659.25
+        };
+
+        // State management
+        let audioCtx = null;
+        let isPlaying = false;
+
+        // Complete MELODY patterns for all sections
+        const MELODY = {
+            verse1: [
+                { note: 'E4', duration: 0.4, word: 'Every' },
+                { note: 'G4', duration: 0.4, word: 'woman' },
+                { note: 'A4', duration: 0.4, word: 'has' },
+                { note: 'B4', duration: 0.8, word: 'got' },
+                { note: 'A4', duration: 0.4, word: 'a' },
+                { note: 'G4', duration: 0.4, word: 'right' },
+                { note: 'E4', duration: 0.8, word: 'to' },
+                { note: 'E4', duration: 0.4, word: 'decide' },
+                { note: 'G4', duration: 0.4, word: 'her' },
+                { note: 'A4', duration: 0.4, word: 'own' },
+                { note: 'B4', duration: 0.8, word: 'destiny' },
+                { note: 'A4', duration: 0.4, word: 'And' },
+                { note: 'G4', duration: 0.4, word: 'in' },
+                { note: 'E4', duration: 0.4, word: 'this' },
+                { note: 'E4', duration: 0.8, word: 'judgement' },
+                { note: 'E4', duration: 0.4, word: 'there' },
+                { note: 'G4', duration: 0.4, word: 'can' },
+                { note: 'A4', duration: 0.4, word: 'be' },
+                { note: 'B4', duration: 0.8, word: 'no' },
+                { note: 'A4', duration: 0.4, word: 'partiality' },
+                { note: 'G4', duration: 0.4, word: 'So' },
+                { note: 'E4', duration: 0.4, word: 'arm' },
+                { note: 'E4', duration: 0.8, word: 'in' },
+                { note: 'E4', duration: 0.4, word: 'arms,' },
+                { note: 'G4', duration: 0.4, word: 'we\'ll' },
+                { note: 'A4', duration: 0.4, word: 'work' },
+                { note: 'B4', duration: 0.8, word: 'to' },
+                { note: 'A4', duration: 0.4, word: 'overcome' },
+                { note: 'G4', duration: 0.4, word: 'this' },
+                { note: 'E4', duration: 0.4, word: 'little' },
+                { note: 'E4', duration: 0.8, word: 'struggle' },
+                { note: 'E4', duration: 0.4, word: "\'Cause" },
+                { note: 'G4', duration: 0.4, word: 'that\'s' },
+                { note: 'A4', duration: 0.4, word: 'the' },
+                { note: 'B4', duration: 0.8, word: 'only' },
+                { note: 'A4', duration: 0.4, word: 'way' },
+                { note: 'G4', duration: 0.4, word: 'we' },
+                { note: 'E4', duration: 0.4, word: 'can' },
+                { note: 'E4', duration: 0.8, word: 'overcome' },
+                { note: 'E4', duration: 0.4, word: 'our' },
+                { note: 'G4', duration: 0.4, word: 'little' },
+                { note: 'A4', duration: 0.4, word: 'trouble' }
+            ],
+            chorus1: [
+                { note: 'B4', duration: 0.4, word: 'Sister,' },
+                { note: 'C5', duration: 0.4, word: "you\'re" },
+                { note: 'D5', duration: 0.8, word: 'right,' },
+                { note: 'D5', duration: 0.4, word: 'you\'re' },
+                { note: 'C5', duration: 0.4, word: 'right,' },
+                { note: 'B4', duration: 0.8, word: 'you\'re' },
+                { note: 'B4', duration: 0.4, word: 'so' },
+                { note: 'C5', duration: 0.4, word: 'right!' },
+                { note: 'D5', duration: 0.8, word: 'We' },
+                { note: 'D5', duration: 0.4, word: 'gon\'' },
+                { note: 'C5', duration: 0.4, word: 'fight' },
+                { note: 'B4', duration: 0.8, word: '(we' },
+                { note: 'B4', duration: 0.4, word: 'gon\'' },
+                { note: 'C5', duration: 0.4, word: 'heal),' },
+                { note: 'D5', duration: 0.8, word: 'we\'ll' },
+                { note: 'D5', duration: 0.4, word: 'have' },
+                { note: 'C5', duration: 0.4, word: 'to' },
+                { note: 'B4', duration: 0.8, word: 'fight' },
+                { note: 'B4', duration: 0.4, word: '(we' },
+                { note: 'C5', duration: 0.4, word: 'gon\'' },
+                { note: 'D5', duration: 0.4, word: 'wake' },
+                { note: 'D5', duration: 0.8, word: 'up)' },
+                { note: 'D5', duration: 0.4, word: 'We' },
+                { note: 'D5', duration: 0.4, word: 'gonna' },
+                { note: 'C5', duration: 0.4, word: 'fight' },
+                { note: 'B4', duration: 0.8, word: '(we' },
+                { note: 'B4', duration: 0.4, word: 'gon\'' },
+                { note: 'C5', duration: 0.4, word: 'heal),' },
+                { note: 'D5', duration: 0.8, word: 'fight' },
+                { note: 'D5', duration: 0.4, word: 'for' },
+                { note: 'C5', duration: 0.4, word: 'our' },
+                { note: 'B4', duration: 0.8, word: 'rights!' }
+            ],
+            bridge1: [
+                { note: 'G4', duration: 0.4, word: 'Sacred' },
+                { note: 'A4', duration: 0.4, word: 'ones' },
+                { note: 'B4', duration: 0.4, word: 'in-a' },
+                { note: 'A4', duration: 0.8, word: 'Kathmandu' },
+                { note: 'G4', duration: 0.4, word: 'Set' },
+                { note: 'A4', duration: 0.4, word: 'it' },
+                { note: 'B4', duration: 0.4, word: 'up' },
+                { note: 'A4', duration: 0.8, word: 'in' },
+                { note: 'G4', duration: 0.4, word: 'Pokhara' },
+                { note: 'A4', duration: 0.4, word: 'Rise' },
+                { note: 'B4', duration: 0.4, word: 'it' },
+                { note: 'A4', duration: 0.8, word: 'up-a' },
+                { note: 'G4', duration: 0.4, word: 'in-a' },
+                { note: 'A4', duration: 0.4, word: 'Gorkarna' },
+                { note: 'B4', duration: 0.8, word: 'Women' },
+                { note: 'A4', duration: 0.4, word: 'a-liberate' },
+                { note: 'G4', duration: 0.4, word: 'Dhulikhel,' },
+                { note: 'A4', duration: 0.8, word: 'yeah' }
+            ],
+            verse2: [
+                { note: 'E4', duration: 0.4, word: 'No' },
+                { note: 'G4', duration: 0.4, word: 'more' },
+                { note: 'A4', duration: 0.4, word: 'internal' },
+                { note: 'B4', duration: 0.8, word: 'power' },
+                { note: 'A4', duration: 0.4, word: 'struggle' },
+                { note: 'G4', duration: 0.4, word: 'We\'ll' },
+                { note: 'E4', duration: 0.4, word: 'come' },
+                { note: 'E4', duration: 0.8, word: 'together' },
+                { note: 'E4', duration: 0.4, word: 'to' },
+                { note: 'G4', duration: 0.4, word: 'overcome' },
+                { note: 'A4', duration: 0.4, word: 'the' },
+                { note: 'B4', duration: 0.8, word: 'trouble' },
+                { note: 'A4', duration: 0.4, word: 'Soon' },
+                { note: 'G4', duration: 0.4, word: 'we\'ll' },
+                { note: 'E4', duration: 0.4, word: 'find' },
+                { note: 'E4', duration: 0.8, word: 'out' },
+                { note: 'E4', duration: 0.4, word: 'who' },
+                { note: 'G4', duration: 0.4, word: 'are' },
+                { note: 'A4', duration: 0.4, word: 'the' },
+                { note: 'B4', duration: 0.8, word: 'real' },
+                { note: 'A4', duration: 0.4, word: 'visionaries' },
+                { note: 'G4', duration: 0.4, word: "\'Cause" },
+                { note: 'E4', duration: 0.4, word: 'I' },
+                { note: 'E4', duration: 0.8, word: 'don\'t' },
+                { note: 'E4', duration: 0.4, word: 'want' },
+                { note: 'G4', duration: 0.4, word: 'my' },
+                { note: 'A4', duration: 0.4, word: 'sisters' },
+                { note: 'B4', duration: 0.8, word: 'to' },
+                { note: 'A4', duration: 0.4, word: 'be' },
+                { note: 'G4', duration: 0.4, word: 'contrary' }
+            ],
+            bridge2: [
+                { note: 'C5', duration: 0.4, word: 'You' },
+                { note: 'B4', duration: 0.4, word: 'are' },
+                { note: 'A4', duration: 0.4, word: 'not' },
+                { note: 'G4', duration: 0.8, word: 'earth' },
+                { note: 'A4', duration: 0.4, word: 'water,' },
+                { note: 'B4', duration: 0.4, word: 'fire' },
+                { note: 'C5', duration: 0.4, word: 'or' },
+                { note: 'B4', duration: 0.8, word: 'air' },
+                { note: 'A4', duration: 0.4, word: 'You' },
+                { note: 'G4', duration: 0.4, word: 'are' },
+                { note: 'A4', duration: 0.4, word: 'the' },
+                { note: 'B4', duration: 0.8, word: 'witness' },
+                { note: 'A4', duration: 0.4, word: 'of' },
+                { note: 'G4', duration: 0.4, word: 'these,' },
+                { note: 'A4', duration: 0.8, word: 'be' },
+                { note: 'B4', duration: 0.4, word: 'free' },
+                { note: 'C5', duration: 0.4, word: 'Abide' },
+                { note: 'B4', duration: 0.4, word: 'in' },
+                { note: 'A4', duration: 0.4, word: 'awareness,' },
+                { note: 'G4', duration: 0.8, word: 'find' },
+                { note: 'A4', duration: 0.4, word: 'your' },
+                { note: 'B4', duration: 0.4, word: 'peace' },
+                { note: 'C5', duration: 0.8, word: 'Let' },
+                { note: 'B4', duration: 0.4, word: 'go' },
+                { note: 'A4', duration: 0.4, word: 'of' },
+                { note: 'G4', duration: 0.8, word: 'illusion,' },
+                { note: 'A4', duration: 0.4, word: 'let' },
+                { note: 'B4', duration: 0.4, word: 'your' },
+                { note: 'C5', duration: 0.8, word: 'spirit' },
+                { note: 'B4', duration: 0.4, word: 'release' }
+            ],
+            verse3: [
+                { note: 'D5', duration: 0.4, word: 'To' },
+                { note: 'C5', duration: 0.4, word: 'divide' },
+                { note: 'B4', duration: 0.4, word: 'and' },
+                { note: 'A4', duration: 0.8, word: 'rule' },
+                { note: 'A4', duration: 0.4, word: 'could' },
+                { note: 'G4', duration: 0.4, word: 'only' },
+                { note: 'A4', duration: 0.4, word: 'tear' },
+                { note: 'B4', duration: 0.8, word: 'us' },
+                { note: 'A4', duration: 0.4, word: 'apart' },
+                { note: 'G4', duration: 0.4, word: 'In' },
+                { note: 'A4', duration: 0.4, word: 'every' },
+                { note: 'B4', duration: 0.4, word: 'woman\'s' },
+                { note: 'C5', duration: 0.8, word: 'chest,' },
+                { note: 'B4', duration: 0.4, word: 'there' },
+                { note: 'A4', duration: 0.4, word: 'beats' },
+                { note: 'G4', duration: 0.8, word: 'a' },
+                { note: 'A4', duration: 0.4, word: 'heart' },
+                { note: 'B4', duration: 0.4, word: 'So' },
+                { note: 'C5', duration: 0.4, word: 'soon' },
+                { note: 'B4', duration: 0.4, word: 'we\'ll' },
+                { note: 'A4', duration: 0.4, word: 'find' },
+                { note: 'G4', duration: 0.8, word: 'out' },
+                { note: 'A4', duration: 0.4, word: 'who' },
+                { note: 'B4', duration: 0.4, word: 'are' },
+                { note: 'C5', duration: 0.4, word: 'the' },
+                { note: 'B4', duration: 0.8, word: 'real' },
+                { note: 'A4', duration: 0.4, word: 'revolutionaries' },
+                { note: 'G4', duration: 0.4, word: 'And' },
+                { note: 'A4', duration: 0.4, word: 'I' },
+                { note: 'B4', duration: 0.4, word: 'don\'t' },
+                { note: 'C5', duration: 0.8, word: 'want' },
+                { note: 'B4', duration: 0.4, word: 'my' },
+                { note: 'A4', duration: 0.4, word: 'sisters' },
+                { note: 'G4', duration: 0.8, word: 'to' },
+                { note: 'A4', duration: 0.4, word: 'be' },
+                { note: 'B4', duration: 0.4, word: 'tricked' },
+                { note: 'C5', duration: 0.8, word: 'by' },
+                { note: 'B4', duration: 0.4, word: 'mercenaries' }
+            ],
+            chorus2: [
+                { note: 'B4', duration: 0.4, word: 'Sister,' },
+                { note: 'C5', duration: 0.4, word: "you're" },
+                { note: 'D5', duration: 0.8, word: 'right,' },
+                { note: 'D5', duration: 0.4, word: 'you\'re' },
+                { note: 'C5', duration: 0.4, word: 'right,' },
+                { note: 'B4', duration: 0.8, word: 'you\'re' },
+                { note: 'B4', duration: 0.4, word: 'so' },
+                { note: 'C5', duration: 0.4, word: 'right' },
+                { note: 'D5', duration: 0.8, word: 'We' },
+                { note: 'D5', duration: 0.4, word: 'gon\'' },
+                { note: 'C5', duration: 0.4, word: 'fight' },
+                { note: 'B4', duration: 0.8, word: '(we' },
+                { note: 'B4', duration: 0.4, word: 'gon\'' },
+                { note: 'C5', duration: 0.4, word: 'grow),' },
+                { note: 'D5', duration: 0.8, word: 'we\'ll' },
+                { note: 'D5', duration: 0.4, word: 'have' },
+                { note: 'C5', duration: 0.4, word: 'to' },
+                { note: 'B4', duration: 0.8, word: 'fight' },
+                { note: 'B4', duration: 0.4, word: '(we' },
+                { note: 'C5', duration: 0.4, word: 'gon\'' },
+                { note: 'D5', duration: 0.4, word: 'wake' },
+                { note: 'D5', duration: 0.8, word: 'up)' },
+                { note: 'D5', duration: 0.4, word: 'We\'ll' },
+                { note: 'D5', duration: 0.4, word: 'have' },
+                { note: 'C5', duration: 0.4, word: 'to' },
+                { note: 'B4', duration: 0.8, word: 'heal' },
+                { note: 'B4', duration: 0.4, word: '(we' },
+                { note: 'C5', duration: 0.4, word: 'gon\'' },
+                { note: 'D5', duration: 0.4, word: 'heal),' },
+                { note: 'D5', duration: 0.8, word: 'healing' },
+                { note: 'D5', duration: 0.4, word: 'for' },
+                { note: 'C5', duration: 0.4, word: 'our' },
+                { note: 'B4', duration: 0.8, word: 'rights!' }
+            ],
+            bridge3: [
+                { note: 'E5', duration: 0.4, word: 'Sacred' },
+                { note: 'D5', duration: 0.4, word: 'flow' },
+                { note: 'C5', duration: 0.4, word: 'in-a' },
+                { note: 'B4', duration: 0.8, word: 'Lalitpur' },
+                { note: 'A4', duration: 0.4, word: 'Rise' },
+                { note: 'G4', duration: 0.4, word: 'it' },
+                { note: 'A4', duration: 0.4, word: 'up' },
+                { note: 'B4', duration: 0.8, word: 'in-a' },
+                { note: 'A4', duration: 0.4, word: 'Dhankuta' },
+                { note: 'G4', duration: 0.4, word: 'Set' },
+                { note: 'A4', duration: 0.4, word: 'it' },
+                { note: 'B4', duration: 0.4, word: 'up' },
+                { note: 'A4', duration: 0.8, word: 'in' },
+                { note: 'G4', duration: 0.4, word: 'Bhaktapur' },
+                { note: 'A4', duration: 0.4, word: 'Women' },
+                { note: 'B4', duration: 0.4, word: 'a-liberate' },
+                { note: 'C5', duration: 0.8, word: 'Chitwan' }
+            ],
+            finalVerse: [
+                { note: 'G4', duration: 0.4, word: 'Joys' },
+                { note: 'A4', duration: 0.4, word: 'and' },
+                { note: 'B4', duration: 0.4, word: 'sorrows' },
+                { note: 'C5', duration: 0.8, word: 'are' },
+                { note: 'B4', duration: 0.4, word: 'time-born,' },
+                { note: 'A4', duration: 0.4, word: 'they' },
+                { note: 'G4', duration: 0.8, word: 'cannot' },
+                { note: 'A4', duration: 0.4, word: 'last' },
+                { note: 'B4', duration: 0.4, word: 'Through' },
+                { note: 'C5', duration: 0.4, word: 'difficulties' },
+                { note: 'B4', duration: 0.8, word: 'and' },
+                { note: 'A4', duration: 0.4, word: 'obstructions,' },
+                { note: 'G4', duration: 0.4, word: 'we\'ll' },
+                { note: 'A4', duration: 0.8, word: 'surpass' },
+                { note: 'B4', duration: 0.4, word: 'Turn' },
+                { note: 'C5', duration: 0.4, word: 'attention' },
+                { note: 'B4', duration: 0.8, word: 'to' },
+                { note: 'A4', duration: 0.4, word: 'forgiveness,' },
+                { note: 'G4', duration: 0.4, word: 'truth' },
+                { note: 'A4', duration: 0.8, word: 'and' },
+                { note: 'B4', duration: 0.4, word: 'peace' },
+                { note: 'C5', duration: 0.8, word: 'In' },
+                { note: 'B4', duration: 0.4, word: 'awareness' },
+                { note: 'A4', duration: 0.4, word: 'alone,' },
+                { note: 'G4', duration: 0.8, word: 'find' },
+                { note: 'A4', duration: 0.4, word: 'your' },
+                { note: 'B4', duration: 0.8, word: 'sweet' },
+                { note: 'C5', duration: 0.4, word: 'release' }
+            ],
+            outro: [
+                { note: 'C5', duration: 0.4, word: 'You' },
+                { note: 'B4', duration: 0.4, word: 'are' },
+                { note: 'A4', duration: 0.4, word: 'consciousness,' },
+                { note: 'G4', duration: 0.8, word: 'pure' },
+                { note: 'A4', duration: 0.4, word: 'and' },
+                { note: 'B4', duration: 0.4, word: 'free' },
+                { note: 'C5', duration: 0.8, word: 'Beyond' },
+                { note: 'B4', duration: 0.4, word: 'all' },
+                { note: 'A4', duration: 0.4, word: 'bondage,' },
+                { note: 'G4', duration: 0.8, word: 'that\'s' },
+                { note: 'A4', duration: 0.4, word: 'what' },
+                { note: 'B4', duration: 0.4, word: 'you\'ll' },
+                { note: 'C5', duration: 0.8, word: 'be' },
+                { note: 'B4', duration: 0.4, word: 'Sister' },
+                { note: 'A4', duration: 0.4, word: 'arise,' },
+                { note: 'G4', duration: 0.8, word: 'let' },
+                { note: 'A4', duration: 0.4, word: 'your' },
+                { note: 'B4', duration: 0.4, word: 'spirit' },
+                { note: 'C5', duration: 0.8, word: 'soar' },
+                { note: 'B4', duration: 0.4, word: 'In' },
+                { note: 'A4', duration: 0.4, word: 'liberation,' },
+                { note: 'G4', duration: 0.8, word: 'find' },
+                { note: 'A4', duration: 0.4, word: 'something' },
+                { note: 'B4', duration: 0.8, word: 'more' }
+            ]
+        };
+
+        // Initialize visualization
+        Object.entries(NOTES).forEach(([note, freq]) => {
+            const noteBox = document.createElement('div');
+            noteBox.className = 'note-box';
+            noteBox.id = `note-${note}`;
+            noteBox.innerHTML = `
+                <div class="note-name">${note}</div>
+                <div class="frequency">${freq.toFixed(0)} Hz</div>
+            `;
+            visualization.appendChild(noteBox);
+        });
+
+        // Create lyrics display
+        function createLyricsDisplay() {
+        const lyrics = [
+            {
+                section: "VERSE 1",
+                lines: [
+                    "Every woman has got a right to decide her own destiny",
+                    "And in this judgement there can be no partiality",
+                    "So arm in arms, we'll work to overcome this little struggle",
+                    "'Cause that's the only way we can overcome our little trouble"
+                ]
+            },
+            {
+                section: "CHORUS 1",
+                lines: [
+                    "Sister, you're right, you're right",
+                    "You're right, you're right, you're so right!",
+                    "We gon' fight (we gon' heal), we'll have to fight (we gon' wake up)",
+                    "We gonna fight (we gon' heal), fight for our rights!"
+                ]
+            },
+            {
+                section: "BRIDGE 1",
+                lines: [
+                    "Sacred ones in-a Kathmandu",
+                    "Set it up in Pokhara",
+                    "Rise it up-a in-a Gorkarna",
+                    "Women a-liberate Dhulikhel, yeah"
+                ]
+            },
+            {
+                section: "VERSE 2",
+                lines: [
+                    "No more internal power struggle",
+                    "We'll come together to overcome the trouble",
+                    "Soon we'll find out who are the real visionaries",
+                    "'Cause I don't want my sisters to be contrary"
+                ]
+            },
+            {
+                section: "BRIDGE 2",
+                lines: [
+                    "You are not earth, water, fire or air",
+                    "You are the witness of these, be free",
+                    "Abide in awareness, find your peace",
+                    "Let go of illusion, let your spirit release"
+                ]
+            },
+            {
+                section: "VERSE 3",
+                lines: [
+                    "To divide and rule could only tear us apart",
+                    "In every woman's chest, there beats a heart",
+                    "So soon we'll find out who are the real revolutionaries",
+                    "And I don't want my sisters to be tricked by mercenaries"
+                ]
+            },
+            {
+                section: "CHORUS 2",
+                lines: [
+                    "Sister, you're right, you're right",
+                    "You're right, you're right, you're so right",
+                    "We gon' fight (we gon' grow), we'll have to fight (we gon' wake up)",
+                    "We'll have to heal (we gon' heal), healing for our rights!"
+                ]
+            },
+            {
+                section: "BRIDGE 3",
+                lines: [
+                    "Sacred flow in-a Lalitpur",
+                    "Rise it up in-a Dhankuta",
+                    "Set it up in-a Bhaktapur",
+                    "Women a-liberate Chitwan"
+                ]
+            },
+            {
+                section: "FINAL VERSE",
+                lines: [
+                    "Joys and sorrows are time-born, they cannot last",
+                    "Through difficulties and obstructions, we'll surpass",
+                    "Turn attention to forgiveness, truth and peace",
+                    "In awareness alone, find your sweet release"
+                ]
+            },
+            {
+                section: "OUTRO",
+                lines: [
+                    "You are consciousness, pure and free",
+                    "Beyond all bondage, that's what you'll be",
+                    "Sister arise, let your spirit soar",
+                    "In liberation, find something more"
+                ]
+            }
+        ];
+
+            lyricsContainer.innerHTML = lyrics.map(section => `
+                <div class="lyrics-section">
+                    <h2 class="section-title">${section.section}</h2>
+                    ${section.lines.map(line => `
+                        <div class="lyrics-line">
+                            ${line.split(' ').map(word => `
+                                <span class="lyrics-word" data-word="${word.toLowerCase()}">${word}</span>
+                            `).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+
+        function highlightWord(word) {
+            document.querySelectorAll('.lyrics-word').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.word === word.toLowerCase()) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
+        function updateCurrentSection(text) {
+            if (currentSection) {
+                currentSection.textContent = text;
+            }
+        }
+
+        async function playNote(frequency, duration, noteName, word) {
+            if (!audioCtx) return;
+            
+            return new Promise(resolve => {
+                document.querySelectorAll('.note-box').forEach(box => {
+                    box.classList.remove('active');
+                });
+                
+                const noteBox = document.getElementById(`note-${noteName}`);
+                if (noteBox) {
+                    noteBox.classList.add('active');
+                }
+
+                if (word) {
+                    highlightWord(word);
+                }
+
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequency;
+                
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(
+                    0.01, 
+                    audioCtx.currentTime + duration - 0.05
+                );
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                
+                setTimeout(() => {
+                    oscillator.stop();
+                    resolve();
+                }, duration * 1000);
+            });
+        }
+
+        async function playSong() {
+            if (isPlaying || !playButton || !stopButton) return;
+            
+            try {
+                isPlaying = true;
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                playButton.disabled = true;
+                stopButton.disabled = false;
+
+                const sections = [
+                    'verse1', 'chorus1', 'bridge1',
+                    'verse2', 'bridge2', 'verse3',
+                    'chorus2', 'bridge3', 'finalVerse',
+                    'outro'
+                ];
+
+                for (const section of sections) {
+                    if (!isPlaying) break;
+                    updateCurrentSection(`Playing: ${section.replace(/([A-Z])/g, ' $1').trim()}`);
+                    for (const note of MELODY[section]) {
+                        if (!isPlaying) break;
+                        await playNote(NOTES[note.note], note.duration, note.note, note.word);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+
+                stopPlaying();
+                
+            } catch (error) {
+                console.error('Error playing song:', error);
+                stopPlaying();
+            }
+        }
+
+        function stopPlaying() {
+            isPlaying = false;
+            if (audioCtx) {
+                audioCtx.close();
+                audioCtx = null;
+            }
+            if (playButton) playButton.disabled = false;
+            if (stopButton) stopButton.disabled = true;
+            
+            document.querySelectorAll('.note-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.lyrics-word').forEach(word => {
+                word.classList.remove('active');
+            });
+            
+            updateCurrentSection('Ready to play');
+        }
+
+        // Create initial lyrics display
+        createLyricsDisplay();
+
+        // Event listeners for play/stop controls
+        if (playButton) {
+            playButton.addEventListener('click', playSong);
+        }
+
+        if (stopButton) {
+            stopButton.addEventListener('click', stopPlaying);
+        }
+
+        // Optional: Add keyboard shortcuts
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (!isPlaying) {
+                    playSong();
+                } else {
+                    stopPlaying();
+                }
+            }
+        });
+
+        // Initialize audio context on first user interaction
+        document.addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }, { once: true });
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && isPlaying) {
+                stopPlaying();
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (audioCtx) {
+                audioCtx.close();
+            }
+        });
+    </script>
+</body>
+</html>
