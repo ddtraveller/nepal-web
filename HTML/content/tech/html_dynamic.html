@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn HTML: Interactive Guide</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles for HTML elements */
+        .preview-container [class*="text-"] {
+            font-family: inherit;
+            line-height: inherit;
+        }
+        .preview-container p[align="center"] { text-align: center; }
+        .preview-container p[align="right"] { text-align: right; }
+        .preview-container p[align="left"] { text-align: left; }
+        
+        /* List styles */
+        .preview-container ul {
+            padding-left: 2em;
+            margin: 1em 0;
+        }
+        .preview-container ul li {
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">Learn HTML: Interactive Guide</h1>
+        <div id="root"></div>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8">Understanding HTML Structure<br>
+            <span class="text-2xl text-gray-600">HTML संरचना बुझ्ने</span>
+        </h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow-lg space-y-6">
+            <div class="space-y-4">
+                <h2 class="text-2xl font-bold">Basic HTML Structure<br>
+                    <span class="text-xl text-gray-600">आधारभूत HTML संरचना</span>
+                </h2>
+                <p class="text-gray-600">Every HTML document follows a standard structure that includes several essential elements. Here's the basic structure:<br>
+                    <span class="text-gray-500">प्रत्येक HTML कागजातले केही आवश्यक तत्वहरू समावेश गरेको मानक संरचना पालना गर्छ। यहाँ आधारभूत संरचना छ:</span>
+                </p>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded">
+                <h4 class="font-mono mb-2">Source Code | स्रोत कोड:</h4>
+                <pre class="bg-gray-800 text-white p-4 rounded overflow-x-auto">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+        &lt;title&gt;Your Page Title&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;!-- Your content goes here --&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="text-xl font-bold">Element Breakdown<br>
+                    <span class="text-lg text-gray-600">तत्व विश्लेषण</span>
+                </h3>
+                <div class="space-y-2">
+                    <div class="bg-blue-50 p-4 rounded">
+                        <h4 class="font-semibold text-blue-800">!DOCTYPE html</h4>
+                        <p class="text-gray-700">Declares that this is an HTML5 document<br>
+                            <span class="text-gray-600">यो HTML5 कागजात हो भनी घोषणा गर्छ</span>
+                        </p>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded">
+                        <h4 class="font-semibold text-green-800">html</h4>
+                        <p class="text-gray-700">The root element that contains all other elements<br>
+                            <span class="text-gray-600">सबै अन्य तत्वहरू समावेश गर्ने मूल तत्व</span>
+                        </p>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded">
+                        <h4 class="font-semibold text-yellow-800">head</h4>
+                        <p class="text-gray-700">Contains metadata, title, and links to external resources<br>
+                            <span class="text-gray-600">मेटाडेटा, शीर्षक र बाह्य स्रोतहरूको लिंकहरू समावेश गर्छ</span>
+                        </p>
+                    </div>
+                    
+                    <div class="bg-purple-50 p-4 rounded">
+                        <h4 class="font-semibold text-purple-800">body</h4>
+                        <p class="text-gray-700">Contains all the visible content of the webpage<br>
+                            <span class="text-gray-600">वेबपेजको सबै दृश्यमान सामग्री समावेश गर्छ</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-4 rounded">
+                <h3 class="text-lg font-bold text-blue-800 mb-2">Pro Tips | व्यावसायिक सुझावहरू:</h3>
+                <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                    <li>Always include the DOCTYPE declaration at the start<br>
+                        <span class="text-gray-600">सधैं सुरुमा DOCTYPE घोषणा समावेश गर्नुहोस्</span>
+                    </li>
+                    <li>Specify the language attribute in the html tag for accessibility<br>
+                        <span class="text-gray-600">पहुँचयोग्यताको लागि html ट्यागमा भाषा विशेषता निर्दिष्ट गर्नुहोस्</span>
+                    </li>
+                    <li>Include meta viewport tag for responsive design<br>
+                        <span class="text-gray-600">प्रतिक्रियात्मक डिजाइनको लागि मेटा भ्युपोर्ट ट्याग समावेश गर्नुहोस्</span>
+                    </li>
+                    <li>Properly indent your code for better readability<br>
+                        <span class="text-gray-600">राम्रो पठनीयताको लागि तपाईंको कोडलाई उचित रूपमा इन्डेन्ट गर्नुहोस्</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>        
+    </div>
+
+    <script type="text/javascript">
+        const { useState, useEffect, useCallback } = React;
+
+        const HTMLLearningApp = () => {
+            const [currentStep, setCurrentStep] = useState(0);
+            const [previewHtml, setPreviewHtml] = useState('');
+            const [selectedAttributes, setSelectedAttributes] = useState({});
+            const [exerciseComplete, setExerciseComplete] = useState(false);
+
+            const htmlTags = [
+                {
+                    tag: 'h1',
+                    description: 'The main heading tag मुख्य शीर्षक ट्याग',
+                    example: '<h1>Welcome to my website</h1>',
+                    attributes: {
+                        align: ['left', 'center', 'right'],
+                        class: ['text-red-500', 'text-blue-500', 'text-green-500']
+                    },
+                    exercise: {
+                        question: "Try centering this heading and making it blue यो शीर्षकलाई केन्द्रित गरेर नीलो बनाउने प्रयास गर्नुहोस्।",
+                        solution: { align: 'center', class: 'text-blue-500' }
+                    }
+                },
+                {
+                    tag: 'p',
+                    description: 'Paragraph tag for text content पाठ सामग्रीको लागि अनुच्छेद ट्याग',
+                    example: '<p>This is a paragraph of text.</p>',
+                    attributes: {
+                        align: ['left', 'center', 'right'],
+                        class: ['text-sm', 'text-base', 'text-lg']
+                    },
+                    exercise: {
+                        question: "Make this paragraph right-aligned and larger यो अनुच्छेद दायाँ-पङ्क्तिबद्ध र ठूलो बनाउनुहोस्",
+                        solution: { align: 'right', class: 'text-lg' }
+                    }
+                },
+                {
+                    tag: 'a',
+                    description: 'Link tag for navigation नेभिगेसनको लागि लिङ्क ट्याग',
+                    example: '<a href="#">Click me</a>',
+                    attributes: {
+                        href: ['#', 'https://nepal-web.net', 'mailto:email@nepal-web.net'],
+                        target: ['_blank', '_self']
+                    },
+                    exercise: {
+                        question: "Create a link that opens in a new tab नयाँ ट्याबमा खुल्ने लिङ्क सिर्जना गर्नुहोस्",
+                        solution: { href: 'https://nepal-web.net', target: '_blank' }
+                    }
+                },
+                {
+                    tag: 'img',
+                    description: 'Image tag for displaying pictures तस्बिरहरू प्रदर्शन गर्नको लागि छवि ट्याग',
+                    example: '<img src="https://nepal-web.s3.us-west-2.amazonaws.com/images/rocket_stove.jpg" alt="Example image" />',
+                    attributes: {
+                        width: ['200', '300', '400'],
+                        height: ['150', '200', '250'],
+                        alt: ['Sample image', 'Profile picture', 'Logo']
+                    },
+                    exercise: {
+                        question: "Resize this image to 300x200 and add a descriptive alt text यो छविको आकार ३००x२०० बनाउनुहोस् र वर्णनात्मक वैकल्पिक पाठ थप्नुहोस्।",
+                        solution: { width: '300', height: '200', alt: 'Profile picture' }
+                    }
+                },
+                {
+                    tag: 'ul',
+                    description: 'Unordered list tag क्रमबद्ध नगरिएको सूची ट्याग',
+                    example: '<ul><li>Item 1</li><li>Item 2</li></ul>',
+                    attributes: {
+                        style: ['list-style-type: disc', 'list-style-type: circle', 'list-style-type: square'],
+                        class: ['list-none', 'list-disc', 'list-decimal']
+                    },
+                    exercise: {
+                        question: "Change the bullet style to squares बुलेट शैलीलाई वर्गमा परिवर्तन गर्नुहोस्",
+                        solution: { style: 'list-style-type: square' }
+                    }
+                },
+                {
+                    tag: 'input',
+                    description: 'Input tag for form fields फारम क्षेत्रहरूको लागि इनपुट ट्याग',
+                    example: '<input type="text" placeholder="Enter text" />',
+                    attributes: {
+                        type: ['text', 'password', 'email', 'number'],
+                        placeholder: ['Enter text', 'Your email', 'Password'],
+                        required: ['true', 'false']
+                    },
+                    exercise: {
+                        question: "Create a required email input field आवश्यक इमेल इनपुट फिल्ड सिर्जना गर्नुहोस्",
+                        solution: { type: 'email', placeholder: 'Your email', required: 'true' }
+                    }
+                },
+                {
+                    tag: 'button',
+                    description: 'Button tag for interactive elements अन्तरक्रियात्मक तत्वहरूको लागि बटन ट्याग',
+                    example: '<button>Click me</button>',
+                    attributes: {
+                        type: ['button', 'submit', 'reset'],
+                        class: ['bg-blue-500 text-white', 'bg-red-500 text-white', 'bg-green-500 text-white']
+                    },
+                    exercise: {
+                        question: "Style this button with a green background यो बटनलाई हरियो पृष्ठभूमिमा शैलीबद्ध गर्नुहोस्",
+                        solution: { type: 'button', class: 'bg-green-500 text-white' }
+                    }
+                },
+                {
+                    tag: 'form',
+                    description: 'Form tag for user input प्रयोगकर्ता इनपुटको लागि फारम ट्याग',
+                    example: '<form><input type="text"/><button>Submit</button></form>',
+                    attributes: {
+                        method: ['get', 'post'],
+                        class: ['space-y-4', 'space-y-2', 'space-y-8']
+                    },
+                    exercise: {
+                        question: "Create a POST form with more spacing between elements तत्वहरू बीच बढी स्पेसिङ भएको POST फारम सिर्जना गर्नुहोस्",
+                        solution: { method: 'post', class: 'space-y-8' }
+                    }
+                }
+            ];
+
+            const updatePreview = useCallback((attributes) => {
+                const currentTag = htmlTags[currentStep];
+                let example = currentTag.example;
+                
+                // Get the opening tag without closing bracket
+                const tagName = currentTag.tag;
+                
+                if (tagName === 'img') {
+                    // For img tags, parse the original attributes first
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(example, 'text/html');
+                    const imgElement = doc.querySelector('img');
+                    
+                    // Get all existing attributes
+                    const existingAttributes = {};
+                    Array.from(imgElement.attributes).forEach(attr => {
+                        existingAttributes[attr.name] = attr.value;
+                    });
+                    
+                    // Merge with new attributes
+                    const mergedAttributes = { ...existingAttributes, ...attributes };
+                    
+                    // Build new tag
+                    let newTag = '<img';
+                    Object.entries(mergedAttributes).forEach(([attr, value]) => {
+                        if (value) {
+                            newTag += ` ${attr}="${value}"`;
+                        }
+                    });
+                    newTag += ' />';
+                    
+                    example = newTag;
+                } else {
+                    // For other tags, handle normally
+                    const openingTagPattern = new RegExp(`<${tagName}[^>]*`);
+                    const match = example.match(openingTagPattern);
+                    
+                    if (match) {
+                        let newOpeningTag = `<${tagName}`;
+                        Object.entries(attributes).forEach(([attr, value]) => {
+                            if (value) {
+                                newOpeningTag += ` ${attr}="${value}"`;
+                            }
+                        });
+                        newOpeningTag += '>';
+                        example = example.replace(new RegExp(`<${tagName}[^>]*>`), newOpeningTag);
+                    }
+                }
+                
+                setPreviewHtml(example);
+            }, [currentStep]);
+
+            const handleAttributeChange = (attribute, value) => {
+                const newAttributes = {
+                    ...selectedAttributes,
+                    [attribute]: value
+                };
+                setSelectedAttributes(newAttributes);
+                updatePreview(newAttributes);
+                
+                // Add to dialogue history
+
+
+                // Check if exercise is complete
+                checkExerciseCompletion(newAttributes);
+            };
+
+            const checkExerciseCompletion = (attributes) => {
+                const currentExercise = htmlTags[currentStep].exercise;
+                const solution = currentExercise.solution;
+                
+                const isComplete = Object.entries(solution).every(([key, value]) => 
+                    attributes[key] === value
+                );
+                
+                if (isComplete) {
+                    setExerciseComplete(true);
+                }
+            };
+
+            const handleNext = () => {
+                if (currentStep < htmlTags.length - 1) {
+                    setCurrentStep(currentStep + 1);
+                    setSelectedAttributes({});
+                    setPreviewHtml(htmlTags[currentStep + 1].example);
+                    setDialogueHistory([]);
+                }
+            };
+
+            const handlePrevious = () => {
+                if (currentStep > 0) {
+                    setCurrentStep(currentStep - 1);
+                    setSelectedAttributes({});
+                    setPreviewHtml(htmlTags[currentStep - 1].example);
+                    setDialogueHistory([]);
+                }
+            };
+
+
+
+            useEffect(() => {
+                setPreviewHtml(htmlTags[currentStep].example);
+                setExerciseComplete(false);
+            }, [currentStep]);
+
+            return React.createElement('div', { className: 'space-y-8' },
+                // Exercise Status Section
+                React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow-lg' },
+                    React.createElement('h3', { className: 'text-xl font-bold mb-4' }, 'Current Exercise'),
+                    React.createElement('div', { className: 'bg-yellow-100 p-4 rounded' },
+                        htmlTags[currentStep].exercise.question
+                    ),
+                    // Navigation Buttons - now inside exercise section
+                    React.createElement('div', { className: 'flex justify-between mt-4' },
+                        React.createElement('button', {
+                            className: `px-4 py-2 rounded ${currentStep === 0 ? 'bg-gray-300' : 'bg-blue-500 text-white'}`,
+                            onClick: handlePrevious,
+                            disabled: currentStep === 0
+                        }, 'Previous'),
+                        React.createElement('button', {
+                            className: `px-4 py-2 rounded ${currentStep === htmlTags.length - 1 ? 'bg-gray-300' : 'bg-blue-500 text-white'}`,
+                            onClick: handleNext,
+                            disabled: currentStep === htmlTags.length - 1
+                        }, 'Next')
+                    )
+                ),
+
+                // Learning Interface
+                React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow-lg' },
+                    React.createElement('h2', { className: 'text-2xl font-bold mb-4' },
+                        `Learning the ${htmlTags[currentStep].tag} tag`
+                    ),
+                    React.createElement('p', { className: 'text-gray-600 mb-4' },
+                        htmlTags[currentStep].description
+                    ),
+                    React.createElement('div', { className: 'space-y-4' },
+                        Object.entries(htmlTags[currentStep].attributes).map(([attribute, values]) =>
+                            React.createElement('div', { key: attribute, className: 'flex flex-col space-y-2' },
+                                React.createElement('label', { className: 'font-medium' },
+                                    `${attribute}:`
+                                ),
+                                React.createElement('select', {
+                                    className: 'border rounded p-2',
+                                    value: selectedAttributes[attribute] || '',
+                                    onChange: (e) => handleAttributeChange(attribute, e.target.value)
+                                },
+                                    React.createElement('option', { value: '' }, 'None'),
+                                    values.map(value =>
+                                        React.createElement('option', { key: value, value: value }, value)
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // Preview Section
+                React.createElement('div', { className: 'bg-white p-6 rounded-lg shadow-lg space-y-4' },
+                    React.createElement('h3', { className: 'text-xl font-bold' }, 'Preview'),
+                    React.createElement('div', { className: 'bg-gray-100 p-4 rounded' },
+                        React.createElement('h4', { className: 'font-mono mb-2' }, 'Source:'),
+                        React.createElement('pre', { className: 'bg-gray-800 text-white p-4 rounded' },
+                            previewHtml || htmlTags[currentStep].example
+                        )
+                    ),
+                    React.createElement('div', { className: 'bg-gray-100 p-4 rounded' },
+                        React.createElement('h4', { className: 'font-mono mb-2' }, 'Output:'),
+                        React.createElement('div', {
+                            className: 'bg-white p-4 rounded border preview-container',
+                            dangerouslySetInnerHTML: {
+                                __html: previewHtml || htmlTags[currentStep].example
+                            },
+                            style: { minHeight: '100px' }
+                        })
+                    )
+                )
+            );
+        };
+
+        ReactDOM.render(
+            React.createElement(HTMLLearningApp),
+            document.getElementById('root')
+        );
+    </script>
+</body>
+</html>
