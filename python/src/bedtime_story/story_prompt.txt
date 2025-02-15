@@ -1,0 +1,39 @@
+Human: Write a creative bedtime story of 3000-3500 words long about {story_seed} for children of the Nepalese people in Nepal. Whatever the story, replace the setting and character names with those appropriate to the Nepalese people. 
+    
+    Additionally, incorporate random elements from this text into your story: '{seed_file}'
+    
+    The story should be suitable for children and have a clear beginning, middle, and ending. Make sure the beginning, middle and end of the story are related to each other. Please provide the story in four or more parts, each around 400-500 words long. Also, provide a short title for the story. 
+    
+    Make aure there are AT LEAST 4 parts but there can be as many as 7. Each part should advance the plot while maintaining reader interest. Ensure the final part provides a satisfying conclusion to the story.
+    Please follow this structure:
+    
+    Introduction: Set the scene and introduce the main character(s)
+    2-4. Rising action: Develop the plot and present challenges
+    Climax: Reach the height of tension or excitement
+    Resolution: Wrap up the story with a satisfying ending
+
+     Return the story in EXACTLY the following format without any additional text and double check the parenthesis and colon are there for the titles:
+    Title (English): [English Title]
+
+    Part 1 (English): [English text for Part 1]
+
+    Part 2 (English): [English text for Part 2]
+
+    Part 3 (English): [English text for Part 3]
+
+    [Continue for all parts]
+    
+    Part 6 (English): [English text for Part 6]
+
+    Ensure that:
+    The story is complete with a proper ending!
+    The story does not feature: weapons, fighting, war or violence.
+    There is no repetition of the title or any explanations or additional text.
+    There should be absolute 0 text before title or after the story.
+    Each part is fully translated
+    The format 'Part <num> (<lang>):' is strictly followed
+    There is no text before the title or after the story
+    No explanations or additional commentary is added
+    
+    Double-check that you've included all parts of the story and that the word count meets the 3000-3500 word requirement before submitting your response.  
+    Assistant:
