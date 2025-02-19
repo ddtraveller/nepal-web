@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eastern Philosophy: A Nepalese Perspective - Timeline</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .timeline-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: #2c3e50;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            padding: 20px;
+            position: relative;
+            width: 50%;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .timeline-item:nth-child(even) {
+            margin-left: 50%;
+        }
+        .timeline-item:nth-child(odd) {
+            margin-right: 50%;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .timeline-item:nth-child(odd)::before {
+            right: -10px;
+        }
+        .timeline-item:nth-child(even)::before {
+            left: -10px;
+        }
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="language-toggle">
+        <button id="languageToggle" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+            नेपालीमा हेर्नुहोस्
+        </button>
+    </div>
+
+    <div class="container mx-auto">
+        <h1 id="mainTitle" class="text-4xl font-bold text-center mb-12 text-gray-900">
+            Eastern Philosophy and Religious Evolution
+        </h1>
+        <h2 id="subtitle" class="text-xl text-center mb-12 text-gray-600">
+            A Nepalese Perspective on Our Shared Heritage
+        </h2>
+
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Before 4000 BCE</span>
+                    <span class="ne-text" style="display:none;">४०० पूर्व अघिको काल</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">Early Indus Valley Philosophical Foundations</span>
+                    <span class="ne-text" style="display:none;">प्रारम्भिक सिन्धु घाटी दार्शनिक आधारहरू</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">Development of early spiritual and philosophical concepts in the Indus Valley region. This period saw the emergence of sophisticated indigenous philosophical practices.</span>
+                    <span class="ne-text" style="display:none;">सिन्धु घाटी क्षेत्रमा प्रारम्भिक आध्यात्मिक र दार्शनिक अवधारणाहरूको विकास। यस अवधिमा परिष्कृत स्थानीय दार्शनिक अभ्यासहरूको उदय देखियो।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Key Developments:</span>
+                        <span class="ne-text" style="display:none;">प्रमुख विकासहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Proto-Shaivite practices evidenced by the Pashupati seal</span>
+                            <span class="ne-text" style="display:none;">पशुपति मोहरद्वारा प्रमाणित प्रारम्भिक शैव अभ्यासहरू</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Early meditation and yoga-like practices</span>
+                            <span class="ne-text" style="display:none;">प्रारम्भिक ध्यान र योग जस्ता अभ्यासहरू</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Sophisticated urban ritual centers</span>
+                            <span class="ne-text" style="display:none;">परिष्कृत शहरी अनुष्ठान केन्द्रहरू</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Mother goddess worship traditions</span>
+                            <span class="ne-text" style="display:none;">मातृ देवी पूजा परम्पराहरू</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Sacred bathing practices</span>
+                            <span class="ne-text" style="display:none;">पवित्र स्नान अभ्यासहरू</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Pre-Vedic Period</span>
+                    <span class="ne-text" style="display:none;">वैदिक-पूर्व काल</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">Emergence of Regional Philosophical Traditions</span>
+                    <span class="ne-text" style="display:none;">क्षेत्रीय दार्शनिक परम्पराहरूको उदय</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">Before the systematization of Vedic thought, various sophisticated philosophical and religious traditions existed across the Indian subcontinent, showcasing the rich intellectual landscape of the region.</span>
+                    <span class="ne-text" style="display:none;">वैदिक विचारधाराको व्यवस्थीकरण हुनु अघि, भारतीय उपमहाद्वीपभर विभिन्न परिष्कृत दार्शनिक र धार्मिक परम्पराहरू अस्तित्वमा थिए, जसले क्षेत्रको समृद्ध बौद्धिक परिदृश्यलाई प्रदर्शित गर्दछ।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Philosophical Characteristics:</span>
+                        <span class="ne-text" style="display:none;">दार्शनिक विशेषताहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Development of complex spiritual concepts</span>
+                            <span class="ne-text" style="display:none;">जटिल आध्यात्मिक अवधारणाहरूको विकास</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Emergence of early philosophical inquiry</span>
+                            <span class="ne-text" style="display:none;">प्रारम्भिक दार्शनिक अन्वेषणको उदय</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Sophisticated understanding of metaphysical concepts</span>
+                            <span class="ne-text" style="display:none;">रूपातीत अवधारणाहरूको परिष्कृत बोध</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Rise of Shaivism</span>
+                    <span class="ne-text" style="display:none;">शैव धर्मको उत्थान</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">Hindu Philosophical Branches</span>
+                    <span class="ne-text" style="display:none;">हिन्दू दार्शनिक शाखाहरू</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">Shaivite traditions incorporated early Indus Valley proto-Shaivite practices, developing a rich philosophical and spiritual tradition that integrated yogic and meditation practices.</span>
+                    <span class="ne-text" style="display:none;">शैव परम्पराहरूले प्रारम्भिक सिन्धु घाटीका प्रोटो-शैव अभ्यासहरूलाई समावेश गरी, योग र ध्यान अभ्यासहरूलाई एकीकृत गर्दै एक समृद्ध दार्शनिक र आध्यात्मिक परम्परा विकसित गरे।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Key Shaivite Developments:</span>
+                        <span class="ne-text" style="display:none;">प्रमुख शैव विकासहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Integration of early proto-Shaivite practices</span>
+                            <span class="ne-text" style="display:none;">प्रारम्भिक प्रोटो-शैव अभ्यासहरूको एकीकरण</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Advanced yogic and meditation traditions</span>
+                            <span class="ne-text" style="display:none;">उन्नत योग र ध्यान परम्पराहरू</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Philosophical exploration of consciousness</span>
+                            <span class="ne-text" style="display:none;">चेतनाको दार्शनिक अन्वेषण</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Emergence of Buddhism</span>
+                    <span class="ne-text" style="display:none;">बौद्ध धर्मको उदय</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">The Buddha's Connection to Nepal</span>
+                    <span class="ne-text" style="display:none;">बुद्धको नेपालसँगको सम्बन्ध</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">As the birthplace of the Buddha, Nepal holds a special place in Buddhist history. Lumbini became a critical point of global Buddhist thought, marking a significant philosophical and spiritual milestone.</span>
+                    <span class="ne-text" style="display:none;">बुद्धको जन्मस्थल भएको नाताले नेपालको बौद्ध इतिहासमा विशेष स्थान छ। लुम्बिनी विश्व बौद्ध विचारधाराको एक महत्वपूर्ण बिन्दु बन्यो, जसले एक महत्वपूर्ण दार्शनिक र आध्यात्मिक मील ढुङ्गा चिन्हित गर्यो।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Buddhist Developments:</span>
+                        <span class="ne-text" style="display:none;">बौद्ध विकासहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Establishment of Lumbini as a spiritual center</span>
+                            <span class="ne-text" style="display:none;">लुम्बिनीलाई आध्यात्मिक केन्द्रको रूपमा स्थापना</span>
+                        </li>
+                                                <li>
+                            <span class="en-text">Formation of early Buddhist communities</span>
+                            <span class="ne-text" style="display:none;">प्रारम्भिक बौद्ध समुदायहरूको निर्माण</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Philosophical innovations in understanding consciousness</span>
+                            <span class="ne-text" style="display:none;">चेतनालाई बुझ्ने दार्शनिक नवाचारहरू</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Cultural Exchanges</span>
+                    <span class="ne-text" style="display:none;">सांस्कृतिक आदान-प्रदान</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">Interactions with Tibet and China</span>
+                    <span class="ne-text" style="display:none;">तिब्बत र चीनसँगको अन्तर्क्रिया</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">Nepal's geographical position facilitated rich philosophical and cultural exchanges, particularly with Tibet. The transmission of Buddhist texts and development of unique Himalayan Buddhist practices exemplified this intellectual cross-pollination.</span>
+                    <span class="ne-text" style="display:none;">नेपालको भौगोलिक स्थितिले विशेष गरी तिब्बतसँग समृद्ध दार्शनिक र सांस्कृतिक आदान-प्रदानलाई सहज बनायो। बौद्ध ग्रन्थहरूको प्रसारण र विशिष्ट हिमाली बौद्ध अभ्यासहरूको विकासले यस बौद्धिक अन्तर्क्रियालाई प्रतिनिधित्व गर्यो।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Key Exchanges:</span>
+                        <span class="ne-text" style="display:none;">प्रमुख आदान-प्रदानहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Transmission of Buddhist texts through Nepal</span>
+                            <span class="ne-text" style="display:none;">नेपाल मार्फत बौद्ध ग्रन्थहरूको प्रसारण</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Development of unique Himalayan Buddhist practices</span>
+                            <span class="ne-text" style="display:none;">विशिष्ट हिमाली बौद्ध अभ्यासहरूको विकास</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Philosophical dialogues across cultural boundaries</span>
+                            <span class="ne-text" style="display:none;">सांस्कृतिक सीमाहरू पार गर्ने दार्शनिक संवादहरू</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <h2 class="text-2xl font-semibold mb-4 text-blue-800">
+                    <span class="en-text">Modern Era</span>
+                    <span class="ne-text" style="display:none;">आधुनिक काल</span>
+                </h2>
+                <h3 class="text-xl font-medium mb-3">
+                    <span class="en-text">Contemporary Nepalese Philosophy</span>
+                    <span class="ne-text" style="display:none;">समकालीन नेपाली दर्शन</span>
+                </h3>
+                <p class="mb-4 text-gray-700">
+                    <span class="en-text">Modern Nepal continues to evolve philosophically, creating a dynamic synthesis that integrates traditional wisdom with contemporary challenges and global perspectives.</span>
+                    <span class="ne-text" style="display:none;">आधुनिक नेपाल दार्शनिक रूपमा विकसित हुँदै गएको छ, परम्परागत ज्ञानलाई समकालीन चुनौतीहरू र वैश्विक दृष्टिकोणहरूसँग एकीकृत गर्दै एक गतिशील संश्लेषण सिर्जना गर्दछ।</span>
+                </p>
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2 text-blue-900">
+                        <span class="en-text">Modern Philosophical Characteristics:</span>
+                        <span class="ne-text" style="display:none;">आधुनिक दार्शनिक विशेषताहरू:</span>
+                    </h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <span class="en-text">Integration of traditional wisdom with global perspectives</span>
+                            <span class="ne-text" style="display:none;">परम्परागत ज्ञानलाई वैश्विक दृष्टिकोणहरूसँग एकीकरण</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Philosophical adaptability to contemporary challenges</span>
+                            <span class="ne-text" style="display:none;">समकालीन चुनौतीहरूप्रति दार्शनिक अनुकूलता</span>
+                        </li>
+                        <li>
+                            <span class="en-text">Preservation of cultural heritage while embracing innovation</span>
+                            <span class="ne-text" style="display:none;">नवाचारलाई अपनाउँदै सांस्कृतिक सम्पदाको संरक्षण</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('languageToggle').addEventListener('click', function() {
+            const enTexts = document.querySelectorAll('.en-text');
+            const neTexts = document.querySelectorAll('.ne-text');
+            const mainTitle = document.getElementById('mainTitle');
+            const subtitle = document.getElementById('subtitle');
+
+            enTexts.forEach(el => {
+                el.style.display = el.style.display === 'none' ? 'inline' : 'none';
+            });
+            neTexts.forEach(el => {
+                el.style.display = el.style.display === 'none' ? 'inline' : 'none';
+            });
+
+            // Toggle button text
+            this.textContent = this.textContent === 'नेपालीमा हेर्नुहोस्' ? 'View in English' : 'नेपालीमा हेर्नुहोस्';
+
+            // Toggle main title and subtitle
+            if (mainTitle.textContent === 'Eastern Philosophy and Religious Evolution') {
+                mainTitle.textContent = 'पूर्वीय दर्शन र धार्मिक विकास';
+                subtitle.textContent = 'हाम्रो साझा सम्पदामा नेपाली दृष्टिकोण';
+            } else {
+                mainTitle.textContent = 'Eastern Philosophy and Religious Evolution';
+                subtitle.textContent = 'A Nepalese Perspective on Our Shared Heritage';
+            }
+        });
+    </script>
+</body>
+</html>
