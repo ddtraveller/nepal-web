@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your First HTML Page with CSS and JavaScript</title>
+    <style>
+        /* Tutorial page styling */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .language-section {
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+        }
+        .code-example {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .code-raw {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px 4px 0 0;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .code-raw::before {
+            content: "Code:";
+            display: block;
+            color: #75715e;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .code-result {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+            background-color: white;
+        }
+        .code-result::before {
+            content: "Result:";
+            display: block;
+            color: #75715e;
+            margin-bottom: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .section-divider {
+            border-top: 2px dashed #3498db;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- English Section -->
+        <div class="language-section">
+            <h1>Creating Your First HTML Page with CSS and JavaScript</h1>
+            
+            <h2>1. Basic HTML Structure</h2>
+            <div class="code-example">
+                <div class="code-raw">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Interactive Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;p&gt;This is my first interactive webpage.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+                <div class="code-result">
+                    <h1>Hello, World!</h1>
+                    <p>This is my first interactive webpage.</p>
+                </div>
+            </div>
+
+            <h2>2. Adding CSS Styles</h2>
+            <p>Add the following code inside your &lt;head&gt; section to style your page:</p>
+            
+            <div class="code-example">
+                <div class="code-raw">&lt;style&gt;
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+    
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+    }
+    
+    .highlight {
+        background-color: yellow;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #2980b9;
+    }
+&lt;/style&gt;</div>
+                <div class="code-result">
+                    <style>
+                        .demo-styles h1 {
+                            color: #2c3e50;
+                            text-align: center;
+                        }
+                        .demo-styles .highlight {
+                            background-color: yellow;
+                            padding: 10px;
+                            border-radius: 5px;
+                        }
+                        .demo-styles button {
+                            background-color: #3498db;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        .demo-styles button:hover {
+                            background-color: #2980b9;
+                        }
+                    </style>
+                    <div class="demo-styles">
+                        <h1>Styled Heading</h1>
+                        <p class="highlight">This text has a yellow highlight!</p>
+                        <button>Click Me!</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>3. Adding JavaScript Interactivity</h2>
+            <p>Add this code just before your closing &lt;/body&gt; tag:</p>
+
+            <div class="code-example">
+                <div class="code-raw">&lt;div id="counter"&gt;0&lt;/div&gt;
+&lt;button onclick="incrementCounter()"&gt;Click me!&lt;/button&gt;
+
+&lt;script&gt;
+    let count = 0;
+    function incrementCounter() {
+        count++;
+        document.getElementById('counter').textContent = count;
+        
+        if (count >= 10) {
+            document.getElementById('counter').style.color = 'red';
+        }
+    }
+&lt;/script&gt;</div>
+                <div class="code-result">
+                    <div id="demo-counter">0</div>
+                    <button onclick="incrementDemoCounter()">Click me!</button>
+                    <script>
+                        let demoCount = 0;
+                        function incrementDemoCounter() {
+                            demoCount++;
+                            document.getElementById('demo-counter').textContent = demoCount;
+                            if (demoCount >= 10) {
+                                document.getElementById('demo-counter').style.color = 'red';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <h2>Putting It All Together</h2>
+            <p>Here's your complete interactive webpage:</p>
+
+            <div class="code-example">
+                <div class="code-raw">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Interactive Page&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 { color: #2c3e50; text-align: center; }
+        .highlight { background-color: yellow; padding: 10px; }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;My Interactive Page&lt;/h1&gt;
+    &lt;p class="highlight"&gt;This is a highlighted paragraph!&lt;/p&gt;
+    &lt;div id="counter"&gt;0&lt;/div&gt;
+    &lt;button onclick="incrementCounter()"&gt;Click me!&lt;/button&gt;
+
+    &lt;script&gt;
+        let count = 0;
+        function incrementCounter() {
+            count++;
+            document.getElementById('counter').textContent = count;
+            if (count >= 10) {
+                document.getElementById('counter').style.color = 'red';
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+                <div class="code-result">
+                    <style>
+                        .final-demo {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                            background-color: #f0f0f0;
+                            border-radius: 5px;
+                        }
+                        .final-demo h1 { color: #2c3e50; text-align: center; }
+                        .final-demo .highlight { background-color: yellow; padding: 10px; }
+                        .final-demo button {
+                            background-color: #3498db;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                    </style>
+                    <div class="final-demo">
+                        <h1>My Interactive Page</h1>
+                        <p class="highlight">This is a highlighted paragraph!</p>
+                        <div id="final-counter">0</div>
+                        <button onclick="incrementFinalCounter()">Click me!</button>
+                    </div>
+                    <script>
+                        let finalCount = 0;
+                        function incrementFinalCounter() {
+                            finalCount++;
+                            document.getElementById('final-counter').textContent = finalCount;
+                            if (finalCount >= 10) {
+                                document.getElementById('final-counter').style.color = 'red';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div class="note">
+                Save this code in a file with a .html extension and open it in your browser. Try clicking the button and watch the counter increase!
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Nepali Section -->
+        <div class="language-section">
+            <h1>CSS र JavaScript सहित तपाईंको पहिलो HTML पृष्ठ बनाउने</h1>
+            
+            <h2>१. आधारभूत HTML संरचना</h2>
+            <div class="code-example">
+                <div class="code-raw">&lt;!DOCTYPE html&gt;
+&lt;html lang="ne"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;मेरो इन्टरएक्टिभ पृष्ठ&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;नमस्कार, संसार!&lt;/h1&gt;
+    &lt;p&gt;यो मेरो पहिलो इन्टरएक्टिभ वेबपेज हो।&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+                <div class="code-result">
+                    <h1>नमस्कार, संसार!</h1>
+                    <p>यो मेरो पहिलो इन्टरएक्टिभ वेबपेज हो।</p>
+                </div>
+            </div>
+
+            <h2>२. CSS स्टाइल थप्ने</h2>
+            <p>तपाईंको &lt;head&gt; खण्डमा निम्न कोड थप्नुहोस्:</p>
+            
+            <div class="code-example">
+                <div class="code-raw">&lt;style&gt;
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
+    
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+    }
+    
+    .highlight {
+        background-color: yellow;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    button:hover {
+        background-color: #2980b9;
+    }
+&lt;/style&gt;</div>
+                <div class="code-result">
+                    <style>
+                        .demo-styles-ne h1 {
+                            color: #2c3e50;
+                            text-align: center;
+                        }
+                        .demo-styles-ne .highlight {
+                            background-color: yellow;
+                            padding: 10px;
+                            border-radius: 5px;
+                        }
+                        .demo-styles-ne button {
+                            background-color: #3498db;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                        .demo-styles-ne button:hover {
+                            background-color: #2980b9;
+                        }
+                    </style>
+                    <div class="demo-styles-ne">
+                        <h1>स्टाइल गरिएको शीर्षक</h1>
+                        <p class="highlight">यो पाठमा पहेंलो हाइलाइट छ!</p>
+                        <button>क्लिक गर्नुहोस्!</button>
+                    </div>
+                </div>
+            </div>
+
+            <h2>३. JavaScript इन्टरएक्टिभिटी थप्ने</h2>
+            <p>तपाईंको &lt;/body&gt; ट्याग बन्द गर्नु अघि यो कोड थप्नुहोस्:</p>
+
+            <div class="code-example">
+                <div class="code-raw">&lt;div id="counter"&gt;०&lt;/div&gt;
+&lt;button onclick="incrementCounter()"&gt;क्लिक गर्नुहोस्!&lt;/button&gt;
+
+&lt;script&gt;
+    let count = 0;
+    function incrementCounter() {
+        count++;
+        document.getElementById('counter').textContent = count;
+        
+        if (count >= 10) {
+            document.getElementById('counter').style.color = 'red';
+        }
+    }
+&lt;/script&gt;</div>
+                <div class="code-result">
+                    <div id="demo-counter-ne">०</div>
+                    <button onclick="incrementDemoCounterNe()">क्लिक गर्नुहोस्!</button>
+                    <script>
+                        let demoCountNe = 0;
+                        function incrementDemoCounterNe() {
+                            demoCountNe++;
+                            document.getElementById('demo-counter-ne').textContent = demoCountNe;
+                            if (demoCountNe >= 10) {
+                                document.getElementById('demo-counter-ne').style.color = 'red';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <h2>सबै एकसाथ राख्ने</h2>
+            <p>यहाँ तपाईंको पूर्ण इन्टरएक्टिभ वेबपेज छ:</p>
+
+            <div class="code-example">
+                <div class="code-raw">&lt;!DOCTYPE html&gt;
+&lt;html lang="ne"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;मेरो इन्टरएक्टिभ पृष्ठ&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 { color: #2c3e50; text-align: center; }
+        .highlight { background-color: yellow; padding: 10px; }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;मेरो इन्टरएक्टिभ पृष्ठ&lt;/h1&gt;
+    &lt;p class="highlight"&gt;यो हाइलाइट गरिएको अनुच्छेद हो!&lt;/p&gt;
+    &lt;div id="counter"&gt;०&lt;/div&gt;
+    &lt;button onclick="incrementCounter()"&gt;क्लिक गर्नुहोस्!&lt;/button&gt;
+
+    &lt;script&gt;
+        let count = 0;
+        function incrementCounter() {
+            count++;
+            document.getElementById('counter').textContent = count;
+            if (count >= 10) {
+                document.getElementById('counter').style.color = 'red';
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+                <div class="code-result">
+                    <style>
+                        .final-demo-ne {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                            background-color: #f0f0f0;
+                            border-radius: 5px;
+                        }
+                        .final-demo-ne h1 { color: #2c3e50; text-align: center; }
+                        .final-demo-ne .highlight { background-color: yellow; padding: 10px; }
+                        .final-demo-ne button {
+                            background-color: #3498db;
+                            color: white;
+                            padding: 10px 20px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+                    </style>
+                    <div class="final-demo-ne">
+                        <h1>मेरो इन्टरएक्टिभ पृष्ठ</h1>
+                        <p class="highlight">यो हाइलाइट गरिएको अनुच्छेद हो!</p>
+                        <div id="final-counter-ne">०</div>
+                        <button onclick="incrementFinalCounterNe()">क्लिक गर्नुहोस्!</button>
+                    </div>
+                    <script>
+                        let finalCountNe = 0;
+                        function incrementFinalCounterNe() {
+                            finalCountNe++;
+                            document.getElementById('final-counter-ne').textContent = finalCountNe;
+                            if (finalCountNe >= 10) {
+                                document.getElementById('final-counter-ne').style.color = 'red';
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+
+            <div class="note">
+                यो कोडलाई .html एक्सटेन्सन सहित फाइलमा सेभ गर्नुहोस् र आफ्नो ब्राउजरमा खोल्नुहोस्। बटनमा क्लिक गर्नुहोस् र काउन्टर बढ्दै गएको हेर्नुहोस्!
+            </div>
+        </div>
+    </div>
+</body>
+</html>
