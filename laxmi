@@ -8,6 +8,59 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Nepal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #ff5733;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Welcome to Nepal
+    </header>
+    <div class="container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Nepal.svg" alt="Flag of Nepal">
+        <h2>About Nepal</h2>
+        <p>Nepal, a landlocked country in South Asia, is known for its rich culture, stunning landscapes, and the majestic Himalayas, including Mount Everest.</p>
+        <h2>Attractions</h2>
+        <ul>
+            <li>Mount Everest - The world's highest peak</li>
+            <li>Kathmandu - The vibrant capital city</li>
+            <li>Pokhara - A scenic city with lakes and mountains</li>
+            <li>Lumbini - The birthplace of Buddha</li>
+            <li>Chitwan National Park - A haven for wildlife enthusiasts</li>
+        </ul>
+    </div>
+</body>
+</html>
 
   <header>
     <div class="logo">
