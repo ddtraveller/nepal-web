@@ -345,91 +345,119 @@
 
     // Text generation
 async function generateCharacterText(characterInfo) {
-        if (!keysInitialized) {
-            await initializeKeys();
-        }
-
-        const descriptionPrompt = `Create a character description for a D&D character with the following traits:
-    Race: ${characterInfo.race}
-    Class: ${characterInfo.class}
-    Gender: ${characterInfo.gender}
-    Level: ${characterInfo.level}
-    Strength: ${characterInfo.strength}
-    Dexterity: ${characterInfo.dexterity}
-    Constitution: ${characterInfo.constitution}
-    Intelligence: ${characterInfo.intelligence}
-    Wisdom: ${characterInfo.wisdom}
-    Charisma: ${characterInfo.charisma}
-
-    Write a two paragraph description of their appearance, personality, and background.`;
-
-        const equipmentPrompt = `List appropriate equipment for a level ${characterInfo.level} ${characterInfo.race} ${characterInfo.class}.
-    Include weapons, armor, and adventuring gear that would make sense for their class and level.
-    Format as a simple list.`;
-
-        try {
-            const [descriptionResponse, equipmentResponse] = await Promise.all([
-                fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        inputs: descriptionPrompt,
-                        parameters: {
-                            max_new_tokens: 300,
-                            temperature: 0.7,
-                        }
-                    }),
-                }),
-                fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        inputs: equipmentPrompt,
-                        parameters: {
-                            max_new_tokens: 200,
-                            temperature: 0.7,
-                        }
-                    }),
-                })
-            ]);
-
-            const description = await descriptionResponse.json();
-            const equipment = await equipmentResponse.json();
-
-            // Extract generated text and remove the original prompt
-            const extractGeneratedText = (responseText) => {
-                const fullText = Array.isArray(responseText) 
-                    ? responseText[0].generated_text 
-                    : responseText.generated_text;
-
-                // Remove the original prompt text
-                const promptIndex = fullText.indexOf(descriptionPrompt);
-                const equipmentPromptIndex = fullText.indexOf(equipmentPrompt);
-
-                if (promptIndex !== -1) {
-                    return fullText.slice(promptIndex + descriptionPrompt.length).trim();
-                } else if (equipmentPromptIndex !== -1) {
-                    return fullText.slice(equipmentPromptIndex + equipmentPrompt.length).trim();
-                }
-
-                return fullText.trim();
-            };
-
-            return {
-                description: extractGeneratedText(description),
-                equipment: extractGeneratedText(equipment)
-            };
-        } catch (error) {
-            console.error('Error generating text:', error);
-            throw new Error('Failed to generate character text. Please try again later.');
-        }
+    if (!keysInitialized) {
+        await initializeKeys();
     }
+
+    // Map the unique Nepali races and classes to more common D&D equivalents for text generation
+    // This helps the AI model understand what we're asking for
+    const raceMapping = {
+        'yeti': 'a powerful yeti (similar to a goliath)',
+        'kinnaras': 'a musical kinnaras (similar to an elf)',
+        'human': 'a human',
+        'bon': 'a magical bon (similar to a tiefling)',
+        'dakinis': 'a mystical dakini (similar to a celestial being)'
+    };
+    
+    const classMapping = {
+        'gurkhali': 'a martial warrior (similar to a barbarian)',
+        'gandharva': 'a musical performer (similar to a bard)',
+        'druid': 'a nature magic user (druid)',
+        'fighter': 'a fighter',
+        'monk': 'a disciplined monk',
+        'paladin': 'a holy warrior (paladin)',
+        'ranger': 'a wilderness expert (ranger)',
+        'rogue': 'a stealthy operative (rogue)',
+        'dhami': 'a deity-possessed medium (similar to a cleric)',
+        'jakhris': 'a ritual shaman (similar to a warlock)',
+        'wizard': 'a learned spellcaster (wizard)'
+    };
+
+    // Get the appropriate descriptions based on the character info
+    const raceDescription = raceMapping[characterInfo.race] || characterInfo.race;
+    const classDescription = classMapping[characterInfo.class] || characterInfo.class;
+
+    const descriptionPrompt = `Create a character description for a D&D character with the following traits:
+Race: ${raceDescription}
+Class: ${classDescription}
+Gender: ${characterInfo.gender}
+Level: ${characterInfo.level}
+Strength: ${characterInfo.strength}
+Dexterity: ${characterInfo.dexterity}
+Constitution: ${characterInfo.constitution}
+Intelligence: ${characterInfo.intelligence}
+Wisdom: ${characterInfo.wisdom}
+Charisma: ${characterInfo.charisma}
+
+Write a two paragraph description of their appearance, personality, and background.`;
+
+    const equipmentPrompt = `List appropriate equipment for a level ${characterInfo.level} ${raceDescription} ${classDescription}.
+Include weapons, armor, and adventuring gear that would make sense for their class and level.
+Format as a simple list.`;
+
+    try {
+        const [descriptionResponse, equipmentResponse] = await Promise.all([
+            fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inputs: descriptionPrompt,
+                    parameters: {
+                        max_new_tokens: 300,
+                        temperature: 0.7,
+                    }
+                }),
+            }),
+            fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inputs: equipmentPrompt,
+                    parameters: {
+                        max_new_tokens: 200,
+                        temperature: 0.7,
+                    }
+                }),
+            })
+        ]);
+
+        const description = await descriptionResponse.json();
+        const equipment = await equipmentResponse.json();
+
+        // Extract generated text and remove the original prompt
+        const extractGeneratedText = (responseText) => {
+            const fullText = Array.isArray(responseText) 
+                ? responseText[0].generated_text 
+                : responseText.generated_text;
+
+            // Remove the original prompt text
+            const promptIndex = fullText.indexOf(descriptionPrompt);
+            const equipmentPromptIndex = fullText.indexOf(equipmentPrompt);
+
+            if (promptIndex !== -1) {
+                return fullText.slice(promptIndex + descriptionPrompt.length).trim();
+            } else if (equipmentPromptIndex !== -1) {
+                return fullText.slice(equipmentPromptIndex + equipmentPrompt.length).trim();
+            }
+
+            return fullText.trim();
+        };
+
+        return {
+            description: extractGeneratedText(description),
+            equipment: extractGeneratedText(equipment)
+        };
+    } catch (error) {
+        console.error('Error generating text:', error);
+        throw new Error('Failed to generate character text. Please try again later.');
+    }
+}
 
 // Progress bar utility functions
     function createProgressBar(container) {
@@ -467,108 +495,112 @@ async function generateCharacterText(characterInfo) {
         }
     }
 
-    // Modify generateRandomCharacter to include progress bar
-    async function generateRandomCharacter() {
-        // Get the generate character button
-        const generateBtn = document.querySelector('button[onclick="generateRandomCharacter()"]');
-        const container = generateBtn.closest('.buttons');
+// Modify generateRandomCharacter to fix race field population issue
+async function generateRandomCharacter() {
+    // Get the generate character button
+    const generateBtn = document.querySelector('button[onclick="generateRandomCharacter()"]');
+    const container = generateBtn.closest('.buttons');
 
-        // Create progress bar
-        const { progressBar, progressText, progressContainer } = createProgressBar(container);
+    // Create progress bar
+    const { progressBar, progressText, progressContainer } = createProgressBar(container);
 
-        // Disable button and show progress
-        generateBtn.disabled = true;
-        updateProgressBar(progressBar, 20);
-        progressText.textContent = 'Initializing keys...';
+    // Disable button and show progress
+    generateBtn.disabled = true;
+    updateProgressBar(progressBar, 20);
+    progressText.textContent = 'Initializing keys...';
 
-        try {
-            if (!keysInitialized) {
-                await initializeKeys();
-            }
-            updateProgressBar(progressBar, 40);
-            progressText.textContent = 'Generating character traits...';
-
-            // Generate random race, class, etc.
-            const races = ['elf', 'dwarf', 'human', 'faerie', 'halfling'];
-            const classes = ['gurkhali', 'gandharva', 'cleric', 'druid', 'fighter', 'monk', 
-                           'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
-            const genders = ['male', 'female'];
-
-            const randomRace = races[Math.floor(Math.random() * races.length)];
-            const randomClass = classes[Math.floor(Math.random() * classes.length)];
-            const randomGender = genders[Math.floor(Math.random() * genders.length)];
-            const level = getRandomInt(1, 2);
-
-            // Generate ability scores
-            const strength = rollAbilityScore();
-            const dexterity = rollAbilityScore();
-            const constitution = rollAbilityScore();
-            const intelligence = rollAbilityScore();
-            const wisdom = rollAbilityScore();
-            const charisma = rollAbilityScore();
-
-            updateProgressBar(progressBar, 60);
-            progressText.textContent = 'Generating character description...';
-
-            // Calculate derived stats
-            const constitutionMod = getModifier(constitution);
-            const dexterityMod = getModifier(dexterity);
-            
-            const hp = calculateHP(randomClass, level, constitutionMod);
-            const ac = calculateAC(randomClass, dexterityMod);
-            const initiative = dexterityMod;
-
-            const characterInfo = {
-                race: randomRace,
-                class: randomClass,
-                gender: randomGender,
-                level: level,
-                strength: strength,
-                dexterity: dexterity,
-                constitution: constitution,
-                intelligence: intelligence,
-                wisdom: wisdom,
-                charisma: charisma
-            };
-
-            // Generate AI text for description and equipment
-            updateProgressBar(progressBar, 80);
-            progressText.textContent = 'Generating character details...';
-
-            const generatedText = await generateCharacterText(characterInfo);
-            document.getElementById('characterDescription').value = generatedText.description;
-            document.getElementById('equipment').value = generatedText.equipment;
-
-            // Update form fields
-            document.getElementById('race').value = randomRace;
-            document.getElementById('class').value = randomClass;
-            document.getElementById('gender').value = randomGender;
-            document.getElementById('level').value = level;
-            document.getElementById('strength').value = strength;
-            document.getElementById('dexterity').value = dexterity;
-            document.getElementById('constitution').value = constitution;
-            document.getElementById('intelligence').value = intelligence;
-            document.getElementById('wisdom').value = wisdom;
-            document.getElementById('charisma').value = charisma;
-            document.getElementById('hitPoints').value = hp;
-            document.getElementById('armorClass').value = ac;
-            document.getElementById('initiative').value = initiative;
-
-            updateProgressBar(progressBar, 100);
-            progressText.textContent = 'Character generated successfully!';
-        } catch (error) {
-            console.error(error);
-            alert(error.message);
-            progressText.textContent = 'Generation failed.';
-            updateProgressBar(progressBar, 0);
-        } finally {
-            // Re-enable button and remove progress bar after a short delay
-            setTimeout(() => {
-                generateBtn.disabled = false;
-                removeProgressBar(container);
-            }, 1500);
+    try {
+        if (!keysInitialized) {
+            await initializeKeys();
         }
+        updateProgressBar(progressBar, 40);
+        progressText.textContent = 'Generating character traits...';
+
+        // Use the actual options from the HTML select elements
+        const raceSelect = document.getElementById('race');
+        const classSelect = document.getElementById('class');
+        const genderSelect = document.getElementById('gender');
+        
+        // Get available options from the dropdowns
+        const races = Array.from(raceSelect.options).map(option => option.value);
+        const classes = Array.from(classSelect.options).map(option => option.value);
+        const genders = Array.from(genderSelect.options).map(option => option.value);
+
+        const randomRace = races[Math.floor(Math.random() * races.length)];
+        const randomClass = classes[Math.floor(Math.random() * classes.length)];
+        const randomGender = genders[Math.floor(Math.random() * genders.length)];
+        const level = getRandomInt(1, 5);
+
+        // Generate ability scores
+        const strength = rollAbilityScore();
+        const dexterity = rollAbilityScore();
+        const constitution = rollAbilityScore();
+        const intelligence = rollAbilityScore();
+        const wisdom = rollAbilityScore();
+        const charisma = rollAbilityScore();
+
+        updateProgressBar(progressBar, 60);
+        progressText.textContent = 'Generating character description...';
+
+        // Calculate derived stats
+        const constitutionMod = getModifier(constitution);
+        const dexterityMod = getModifier(dexterity);
+        
+        const hp = calculateHP(randomClass, level, constitutionMod);
+        const ac = calculateAC(randomClass, dexterityMod);
+        const initiative = dexterityMod;
+
+        const characterInfo = {
+            race: randomRace,
+            class: randomClass,
+            gender: randomGender,
+            level: level,
+            strength: strength,
+            dexterity: dexterity,
+            constitution: constitution,
+            intelligence: intelligence,
+            wisdom: wisdom,
+            charisma: charisma
+        };
+
+        // Generate AI text for description and equipment
+        updateProgressBar(progressBar, 80);
+        progressText.textContent = 'Generating character details...';
+
+        const generatedText = await generateCharacterText(characterInfo);
+        document.getElementById('characterDescription').value = generatedText.description;
+        document.getElementById('equipment').value = generatedText.equipment;
+
+        // Update form fields - ensuring we set the values correctly
+        document.getElementById('race').value = randomRace;
+        document.getElementById('class').value = randomClass;
+        document.getElementById('gender').value = randomGender;
+        document.getElementById('level').value = level;
+        document.getElementById('strength').value = strength;
+        document.getElementById('dexterity').value = dexterity;
+        document.getElementById('constitution').value = constitution;
+        document.getElementById('intelligence').value = intelligence;
+        document.getElementById('wisdom').value = wisdom;
+        document.getElementById('charisma').value = charisma;
+        document.getElementById('hitPoints').value = hp;
+        document.getElementById('armorClass').value = ac;
+        document.getElementById('initiative').value = initiative;
+
+        updateProgressBar(progressBar, 100);
+        progressText.textContent = 'Character generated successfully!';
+    } catch (error) {
+        console.error(error);
+        alert(error.message);
+        progressText.textContent = 'Generation failed.';
+        updateProgressBar(progressBar, 0);
+    } finally {
+        // Re-enable button and remove progress bar after a short delay
+        setTimeout(() => {
+            generateBtn.disabled = false;
+            removeProgressBar(container);
+        }, 1500);
     }
+}
 
     // Modify generateAIImage to include progress bar
     async function generateAIImage() {
