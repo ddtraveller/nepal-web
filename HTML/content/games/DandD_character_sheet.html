@@ -132,11 +132,11 @@
             <label class="label">
                 Race / जाति:
                 <select id="race">
-                    <option value="elf">Yeti / यती </option>
-                    <option value="dwarf">Kinnaras / किन्नारस</option>
+                    <option value="yeti">Yeti / यती </option>
+                    <option value="kinnaras">Kinnaras / किन्नारस</option>
                     <option value="human">Human / मानव</option>
-                    <option value="faerie">Bon / बोन</option>
-                    <option value="halfling">Dakinis / डाकिनिस</option>
+                    <option value="bon">Bon / बोन</option>
+                    <option value="dakinis">Dakinis / डाकिनिस</option>
                 </select>
             </label>
         </div>
@@ -154,9 +154,8 @@
                 Class / वर्ग:
                 <select id="class">
                     <option value="gurkhali">Gurkhali / गुरुखली</option>
-                    <option value="gandharva">Gandharva - Bard / गान्ध्रवा</option>
-                    <option value="jhakri">Jhakri / झाक्री</option>
-                    <option value="bonpo">Bon - Po / बोन-पो</option>
+                    <option value="gandharva">Gandharva - gandharva / गान्ध्रवा</option>
+                    <option value="druid">Bon - Po / बोन-पो</option>
                     <option value="fighter">Fighter / फाइटर</option>
                     <option value="monk">Monk / भिक्षु</option>
                     <option value="paladin">Paladin / प्यालाडिन</option>
@@ -290,17 +289,17 @@
 
     function calculateHP(characterClass, level, constitutionMod) {
         const hitDice = {
-            'barbarian': 12,
+            'gurkhali': 12,
             'fighter': 10,
             'paladin': 10,
             'ranger': 10,
             'monk': 8,
             'rogue': 8,
-            'bard': 8,
+            'gandharva': 8,
             'cleric': 8,
             'druid': 8,
             'warlock': 8,
-            'sorcerer': 6,
+            'dhami': 6,
             'wizard': 6
         };
         const baseHP = hitDice[characterClass];
@@ -491,7 +490,7 @@ async function generateCharacterText(characterInfo) {
 
             // Generate random race, class, etc.
             const races = ['elf', 'dwarf', 'human', 'faerie', 'halfling'];
-            const classes = ['barbarian', 'bard', 'cleric', 'druid', 'fighter', 'monk', 
+            const classes = ['gurkhali', 'gandharva', 'cleric', 'druid', 'fighter', 'monk', 
                            'paladin', 'ranger', 'rogue', 'sorcerer', 'warlock', 'wizard'];
             const genders = ['male', 'female'];
 
