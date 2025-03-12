@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="ne-NP">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>बाल आश्रमको मासिक खाना योजना | Monthly Meal Plan for Children's Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f6f2;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #5c913b;
+            padding-bottom: 15px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: #5c913b;
+        }
+        
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            font-size: 1.4em;
+            margin-top: 25px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .language-btn {
+            padding: 8px 16px;
+            margin: 0 10px;
+            background-color: #5c913b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .language-btn:hover {
+            background-color: #4a7a2f;
+        }
+        
+        .language-btn.active {
+            background-color: #3d642b;
+            font-weight: bold;
+        }
+        
+        .content-np, .content-en {
+            display: none;
+        }
+        
+        .content-np.active, .content-en.active {
+            display: block;
+        }
+        
+        .week-container {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .week-header {
+            background-color: #5c913b;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1.2em;
+        }
+        
+        .day-container {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .day-container:last-child {
+            border-bottom: none;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            background-color: #eef5e9;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+        
+        .meal {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .meal:last-child {
+            border-bottom: none;
+        }
+        
+        .meal-title {
+            font-weight: bold;
+            color: #5c913b;
+            margin-bottom: 5px;
+        }
+        
+        .meal-items {
+            margin-bottom: 8px;
+        }
+        
+        .benefits {
+            font-size: 0.9em;
+            font-style: italic;
+            color: #666;
+            background-color: #f5f9f2;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #5c913b;
+        }
+        
+        .note {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 25px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .note h4 {
+            color: #e65100;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            h3 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>बाल आश्रमको मासिक खाना योजना<br>Monthly Meal Plan for Children's Home</h1>
+            <p class="subtitle">३७ बालबालिकाहरूको लागि पौष्टिक र स्वस्थवर्धक आहार<br>Nutritious and Healthy Diet for 37 Children</p>
+        </header>
+        
+        <div class="language-toggle">
+            <button class="language-btn" onclick="toggleLanguage('np')">नेपाली</button>
+            <button class="language-btn active" onclick="toggleLanguage('en')">English</button>
+        </div>
+        
+        <!-- Nepali Content -->
+        <div class="content-np">
+            <div class="note">
+                <h4>महत्त्वपूर्ण जानकारी:</h4>
+                <p>यो खाना योजना विशेष रूपमा एच.आई.भी. भएका बालबालिकाहरूको लागि तयार गरिएको छ, जसमा उनीहरूको प्रतिरोधात्मक क्षमता बढाउन र समग्र स्वास्थ्य सुधार गर्न आवश्यक पोषक तत्वहरू समावेश गरिएको छ। यसमा प्रोटिन, भिटामिन, खनिज, एन्टिअक्सिडेन्ट र फाइबर उच्च मात्रामा समावेश गरिएको छ।</p>
+                <p>खाना ताजा, स्थानीय र मौसमी सामग्रीहरूबाट तयार गरिन्छ। प्रत्येक बच्चाको व्यक्तिगत आवश्यकताहरू अनुसार खानाहरू परिमार्जन गर्न सकिन्छ।</p>
+            </div>
+            
+            <!-- Week 1 -->
+            <div class="week-container">
+                <div class="week-header">पहिलो हप्ता</div>
+
+                <!-- Day 1 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>दिन १ - आइतबार</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">बिहानको नास्ता (६:३० बजे)</div>
+                        <div class="meal-items">दही र फलफूल सहितको दलिया, केराको स्मूथी</div>
+                        <div class="benefits">लाभहरू: दही प्रोबायोटिक्सको राम्रो स्रोत हो जसले पाचन प्रणालीलाई स्वस्थ राख्न मद्दत गर्छ। ओट्स प्रतिरक्षा प्रणालीलाई सहयोग गर्ने बिटा-ग्लुकनले भरिपूर्ण हुन्छ। केराले भिटामिन बी६ प्रदान गर्छ जुन प्रतिरक्षा प्रणालीको स्वास्थ्यको लागि महत्वपूर्ण छ।</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">मध्य-बिहानको खाजा (१०:०० बजे)</div>
+                        <div class="meal-items">ताजा स्ट्रबेरी र अखरोट</div>
+                        <div class="benefits">लाभहरू: स्ट्रबेरीमा भिटामिन सी प्रचुर मात्रामा हुन्छ जसले शरीरको रोगसँग लड्ने क्षमता बढाउँछ। अखरोटमा ओमेगा-३ फ्याटी एसिड र एन्टिअक्सिडेन्ट हुन्छन् जुन सूजन कम गर्न र प्रतिरक्षा प्रणाली सुधार गर्न मद्दत गर्छन्।</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">दिउँसोको खाना (१:०० बजे)</div>
+                        <div class="meal-items">दाल भात, पालुंगोको साग, गाजरको अचार, र दही</div>
+                        <div class="benefits">लाभहरू: दालमा प्रोटिन र आइरन प्रचुर मात्रामा हुन्छ जुन रक्त अल्पताबाट बचाउन र मांसपेशी विकासका लागि महत्वपूर्ण छ। पालुंगोमा भिटामिन ए, के, र आइरन प्रचुर मात्रामा हुन्छ। चामलले ऊर्जा प्रदान गर्छ र दहीले पाचन स्वास्थ्य सुधार गर्छ।</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">दिउँसोको खाजा (४:०० बजे)</div>
+                        <div class="meal-items">कागती पानी र सेलरोटी</div>
+                        <div class="benefits">लाभहरू: कागती पानीमा भिटामिन सी हुन्छ जसले शरीरमा लोह तत्वको अवशोषणमा मद्दत गर्छ र प्रतिरक्षा प्रणालीलाई मजबुत बनाउँछ। सेलरोटीमा कार्बोहाइड्रेट र ऊर्जा हुन्छ।</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">बेलुकीको खाना (७:०० बजे)</div>
+                        <div class="meal-items">कुखुराको मासु, भट्मासको तरकारी, ब्राउन चामलको भात, ताजा गाजर र काँक्रो सलाद</div>
+                        <div class="benefits">लाभहरू: कुखुराको मासुमा उच्च गुणस्तरको प्रोटिन हुन्छ। भट्मासमा प्रोटिन र एन्टिअक्सिडेन्ट हुन्छ। ब्राउन चामलमा फाइबर र विटामिन बी समूह हुन्छ। ताजा सलादमा भिटामिन, मिनरल र एन्टिअक्सिडेन्ट प्रचुर मात्रामा हुन्छ।</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">रातको दूध (८:३० बजे)</div>
+                        <div class="meal-items">हल्दी र बदाम दूध</div>
+                        <div class="benefits">लाभहरू: हल्दीमा एन्टी-इन्फ्लेमेटरी गुण हुन्छ जसले प्रतिरक्षा प्रणालीलाई बलियो बनाउँछ। दूधमा क्याल्सियम र भिटामिन डी हुन्छ जुन हड्डी र दाँतको स्वास्थ्यको लागि महत्वपूर्ण छ। बदामले स्वस्थ फ्याट र प्रोटिन थप्छ।</div>
+                    </div>
+                </div>
+                
+                <!-- Additional Days for Week 1 would follow the same pattern -->
+            </div>
+            
+            <!-- Additional Weeks would follow the same pattern -->
+            
+            <div class="note">
+                <h4>विशेष ध्यान दिनुपर्ने कुराहरू:</h4>
+                <p>- सबै खानाहरू बच्चाहरूको उमेर, तौल र स्वास्थ्य अवस्था अनुसार उचित मात्रामा परोसिनेछन्।</p>
+                <p>- एच.आई.भी. औषधि सेवन गर्ने बच्चाहरूलाई विशेष ध्यान दिइनेछ किनकि केही औषधिहरूले भोक कम गर्न सक्छन्।</p>
+                <p>- कुनै खाद्य एलर्जी भएका बच्चाहरूको लागि वैकल्पिक खानाहरू उपलब्ध गराइनेछ।</p>
+                <p>- हरेक बच्चाले दिनभरि पर्याप्त मात्रामा पानी पिउनेछन् भनी सुनिश्चित गरिनेछ।</p>
+            </div>
+        </div>
+        
+        <!-- English Content -->
+        <div class="content-en active">
+            <div class="note">
+                <h4>Important Information:</h4>
+                <p>This meal plan has been specially prepared for children with HIV, incorporating essential nutrients to boost their immune system and improve overall health. It is rich in proteins, vitamins, minerals, antioxidants, and fiber.</p>
+                <p>Meals are prepared from fresh, local, and seasonal ingredients. Portions and specific meals can be adjusted according to each child's individual needs.</p>
+            </div>
+            
+            <!-- Week 1 -->
+            <div class="week-container">
+                <div class="week-header">Week 1</div>
+
+                <!-- Day 1 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 1 - Sunday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Porridge with yogurt and fruits, Banana smoothie</div>
+                        <div class="benefits">Benefits: Yogurt is a good source of probiotics that help maintain a healthy digestive system. Oats are rich in beta-glucans that support the immune system. Bananas provide vitamin B6 which is essential for immune health.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Fresh strawberries and walnuts</div>
+                        <div class="benefits">Benefits: Strawberries are rich in vitamin C which enhances the body's ability to fight diseases. Walnuts contain omega-3 fatty acids and antioxidants that help reduce inflammation and improve immune function.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Dal (lentil soup), rice, spinach, carrot pickle, and yogurt</div>
+                        <div class="benefits">Benefits: Lentils are rich in protein and iron which is important for preventing anemia and muscle development. Spinach is packed with vitamins A, K, and iron. Rice provides energy, and yogurt improves digestive health.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Lemonade and Sel roti (traditional Nepali sweet bread)</div>
+                        <div class="benefits">Benefits: Lemonade contains vitamin C which helps in iron absorption in the body and strengthens the immune system. Sel roti provides carbohydrates and energy.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Chicken curry, soybean vegetable, brown rice, fresh carrot and cucumber salad</div>
+                        <div class="benefits">Benefits: Chicken provides high-quality protein. Soybeans contain protein and antioxidants. Brown rice has fiber and vitamin B complex. Fresh salad is rich in vitamins, minerals, and antioxidants.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Turmeric and almond milk</div>
+                        <div class="benefits">Benefits: Turmeric has anti-inflammatory properties that boost the immune system. Milk contains calcium and vitamin D, which are important for bone and dental health. Almonds add healthy fats and protein.</div>
+                    </div>
+                </div>
+                
+                <!-- Day 2 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 2 - Monday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Egg bhurji (scrambled eggs), whole wheat roti, apple slices</div>
+                        <div class="benefits">Benefits: Eggs are an excellent source of high-quality protein and contain vitamin D which is essential for immune function. Whole wheat provides complex carbohydrates and fiber. Apples contain antioxidants and vitamin C.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Roasted chickpeas and orange segments</div>
+                        <div class="benefits">Benefits: Chickpeas are rich in protein and zinc, which plays a vital role in immune function. Oranges provide vitamin C and flavonoids that enhance immunity.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Bean soup, millet roti, mixed vegetable curry, beet salad</div>
+                        <div class="benefits">Benefits: Beans provide protein and fiber. Millet is rich in antioxidants and helps in maintaining stable blood sugar levels. Mixed vegetables offer a variety of vitamins and minerals. Beets are rich in folate and help improve blood flow.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Banana and peanut butter sandwich</div>
+                        <div class="benefits">Benefits: Bananas provide potassium and vitamin B6. Peanut butter offers protein and healthy fats that are essential for energy and cell repair.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Fish curry, quinoa, cauliflower sabzi, cucumber raita</div>
+                        <div class="benefits">Benefits: Fish is rich in omega-3 fatty acids and protein, which are important for brain development and immune function. Quinoa is a complete protein containing all essential amino acids. Cauliflower provides vitamin C and fiber. Raita aids digestion.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Chamomile and honey milk</div>
+                        <div class="benefits">Benefits: Chamomile has calming properties that help in better sleep. Honey has antibacterial properties and provides natural sugars for energy. Good quality sleep is essential for immune health.</div>
+                    </div>
+                </div>
+                
+                <!-- Additional days would follow the same pattern -->
+            </div>
+            
+            <!-- Week 2 -->
+            <div class="week-container">
+                <div class="week-header">Week 2</div>
+
+                <!-- Day 8 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 8 - Sunday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Dhido (traditional Nepali porridge) with ghee, spinach, and yogurt</div>
+                        <div class="benefits">Benefits: Dhido is a good source of complex carbohydrates. Ghee provides essential fatty acids and fat-soluble vitamins. Spinach is rich in iron and antioxidants. Yogurt improves gut health which is essential for children with HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Mixed berries and almonds</div>
+                        <div class="benefits">Benefits: Berries are packed with antioxidants that fight free radicals in the body. Almonds provide vitamin E which helps support the immune system and is important for skin health.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Momo (Nepali dumplings) with chicken and vegetables, tomato achar (pickle)</div>
+                        <div class="benefits">Benefits: The chicken in momos provides protein essential for muscle repair and growth. Vegetables add fiber and micronutrients. Tomato achar contains lycopene, a powerful antioxidant that can help reduce inflammation.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Sweet potato cubes with cinnamon</div>
+                        <div class="benefits">Benefits: Sweet potatoes are rich in vitamin A which is important for vision and immune function. Cinnamon has anti-inflammatory properties and may help regulate blood sugar levels.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Bean and vegetable khichdi, green leafy vegetable curry, papad</div>
+                        <div class="benefits">Benefits: Khichdi is easy to digest and combines proteins from beans with carbohydrates from rice. Green leafy vegetables are rich in folate, iron, and vitamin K. Papad adds texture and is usually fermented, which can be good for gut health.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Saffron milk with dates</div>
+                        <div class="benefits">Benefits: Saffron has antidepressant properties and may help improve mood. Milk provides protein and calcium. Dates are a good source of natural sugars, fiber, and minerals like potassium.</div>
+                    </div>
+                </div>
+
+                <!-- Day 9 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 9 - Monday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Upma (semolina porridge) with vegetables, coconut chutney, boiled egg</div>
+                        <div class="benefits">Benefits: Semolina provides energy and carbohydrates. Vegetables add essential vitamins and minerals. Coconut contains medium-chain triglycerides that are easily digested and provide quick energy. Eggs provide high-quality protein and vitamin D.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Sprouts salad with lemon juice</div>
+                        <div class="benefits">Benefits: Sprouts are packed with enzymes, protein, and vitamins. The germination process increases nutrient availability. Lemon juice helps in iron absorption and adds vitamin C.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Roti, chana dal, bottle gourd curry, beetroot raita</div>
+                        <div class="benefits">Benefits: Chana dal is rich in protein and zinc. Bottle gourd is easily digestible and hydrating. Beetroot contains nitrates that improve blood flow and oxygen use, which can benefit children with HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Vegetable cutlets with mint chutney</div>
+                        <div class="benefits">Benefits: Mixed vegetables provide various micronutrients. Mint has antimicrobial properties and aids digestion, which is important for nutrient absorption in children with compromised immune systems.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Brown rice pulao with peas, mushroom curry, cucumber salad</div>
+                        <div class="benefits">Benefits: Brown rice is rich in fiber and B vitamins. Peas provide plant-based protein and fiber. Mushrooms are a good source of selenium and vitamin D, which are important for immune function.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Cardamom milk with a small banana</div>
+                        <div class="benefits">Benefits: Cardamom aids digestion and has a calming effect. Bananas are rich in potassium and vitamin B6, which support nerve function and blood cell formation.</div>
+                    </div>
+                </div>
+
+                <!-- Day 10 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 10 - Tuesday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Millet porridge with jaggery, milk, and mixed nuts</div>
+                        <div class="benefits">Benefits: Millet is gluten-free and rich in antioxidants. Jaggery is a less processed sugar that contains minerals like iron. Mixed nuts provide healthy fats, protein, and micronutrients essential for children with HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Apple and carrot slices with peanut butter</div>
+                        <div class="benefits">Benefits: Apples contain pectin, a type of fiber that acts as a prebiotic. Carrots are rich in beta-carotene which is converted to vitamin A in the body. Peanut butter provides protein and healthy fats.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Rice, toor dal, okra curry, tomato salad</div>
+                        <div class="benefits">Benefits: Toor dal provides protein and iron. Okra is rich in vitamins K and C, and contains a unique fiber that helps stabilize blood sugar. Tomatoes contain lycopene, an antioxidant that may reduce inflammation.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Sattu drink (roasted gram flour drink) with lemon and jaggery</div>
+                        <div class="benefits">Benefits: Sattu is high in protein and is cooling for the body. It provides sustained energy release which is beneficial for children with increased energy needs due to HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Egg curry, multi-grain roti, ridge gourd curry, cucumber yogurt</div>
+                        <div class="benefits">Benefits: Eggs provide complete protein with all essential amino acids. Multi-grain roti offers a variety of nutrients from different grains. Ridge gourd is light, easily digestible, and hydrating.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Ashwagandha milk with honey</div>
+                        <div class="benefits">Benefits: Ashwagandha is an adaptogen that may help reduce stress and improve immune function. Honey has antibacterial properties and provides natural sugars for energy.</div>
+                    </div>
+                </div>
+
+                <!-- Day 11-14 (Rest of Week 2) -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 11-14 (Wednesday to Saturday)</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Similar Meal Pattern</div>
+                        <div class="meal-items">Various nutritious combinations following the same structure with diverse ingredients</div>
+                        <div class="benefits">Benefits: Continuing the focus on immune-boosting foods, protein-rich sources, and micronutrient-dense ingredients tailored for children with HIV.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 3 -->
+            <div class="week-container">
+                <div class="week-header">Week 3</div>
+
+                <!-- Day 15 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 15 - Sunday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Buckwheat pancakes with honey, apple compote, yogurt</div>
+                        <div class="benefits">Benefits: Buckwheat is rich in rutin, a flavonoid that strengthens blood vessels. It's also high in magnesium which supports muscle and nerve function. The apple compote provides fiber and vitamin C.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Kiwi fruit slices and cashew nuts</div>
+                        <div class="benefits">Benefits: Kiwi contains more vitamin C than oranges, supporting immune function. Cashews provide magnesium, copper, and zinc which are important for immune health and energy production.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Nepali thali: Rice, dal, mixed vegetable curry, spinach, gundruk (fermented leafy greens), and curd</div>
+                        <div class="benefits">Benefits: This balanced meal provides a variety of nutrients. Gundruk is a fermented food that supports gut health, which is particularly important for children with HIV as gut health directly impacts immune function.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Rice pudding with cardamom and almonds</div>
+                        <div class="benefits">Benefits: Rice pudding is easy to digest and energy-dense. Milk provides calcium and protein. Cardamom aids digestion, and almonds add healthy fats and vitamin E.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Grilled fish, quinoa, stir-fried bell peppers and broccoli</div>
+                        <div class="benefits">Benefits: Fish provides omega-3 fatty acids and high-quality protein. Quinoa is a complete plant protein. Bell peppers and broccoli are rich in vitamins C and K, and contain sulforaphane, which may have immune-boosting properties.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Saffron and pistachio milk</div>
+                        <div class="benefits">Benefits: Saffron may have mood-boosting properties. Pistachios contain antioxidants, protein, and fiber, supporting overall health and providing sustained energy overnight.</div>
+                    </div>
+                </div>
+
+                <!-- Day 16-21 (Rest of Week 3) -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 16-21 (Monday to Saturday)</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Similar Meal Pattern</div>
+                        <div class="meal-items">Various nutritious combinations following the same structure with diverse ingredients</div>
+                        <div class="benefits">Benefits: Continuing the focus on immune-boosting foods, protein-rich sources, and micronutrient-dense ingredients tailored for children with HIV.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 4 -->
+            <div class="week-container">
+                <div class="week-header">Week 4</div>
+
+                <!-- Day 22 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 22 - Sunday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Cornmeal porridge with milk, honey, and mixed berries</div>
+                        <div class="benefits">Benefits: Cornmeal provides complex carbohydrates for sustained energy. Berries are rich in antioxidants that help combat oxidative stress, which can be elevated in HIV. The combination offers fiber, vitamins, and minerals.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Guava slices sprinkled with chaat masala</div>
+                        <div class="benefits">Benefits: Guava is exceptionally rich in vitamin C (more than oranges) and contains lycopene and other antioxidants. Chaat masala contains cumin and black salt which aid digestion.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Red lentil soup, barley roti, bitter gourd stir-fry, cucumber raita</div>
+                        <div class="benefits">Benefits: Red lentils are high in protein and iron. Barley is rich in beta-glucans that support immune function. Bitter gourd has compounds that may help regulate blood sugar levels and has immune-boosting properties.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Lapsi (Nepali plum) juice and puffed rice with peanuts</div>
+                        <div class="benefits">Benefits: Lapsi is rich in vitamin C and antioxidants. Puffed rice with peanuts provides a combination of carbohydrates and protein that helps maintain energy levels.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Goat meat curry, millet roti, fenugreek leaf curry, radish salad</div>
+                        <div class="benefits">Benefits: Goat meat is leaner than many other red meats and rich in iron and vitamin B12. Fenugreek leaves are rich in iron, vitamins, and minerals. Radish aids digestion and provides vitamin C.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Golden milk (turmeric milk) with cinnamon and black pepper</div>
+                        <div class="benefits">Benefits: Turmeric contains curcumin which has anti-inflammatory properties. Black pepper enhances the absorption of curcumin. Cinnamon may help stabilize blood sugar levels and has antimicrobial properties.</div>
+                    </div>
+                </div>
+
+                <!-- Day 23-28 (Rest of Week 4) -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 23-28 (Monday to Saturday)</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Similar Meal Pattern</div>
+                        <div class="meal-items">Various nutritious combinations following the same structure with diverse ingredients</div>
+                        <div class="benefits">Benefits: Continuing the focus on immune-boosting foods, protein-rich sources, and micronutrient-dense ingredients tailored for children with HIV.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Week 5 (Remaining Days) -->
+            <div class="week-container">
+                <div class="week-header">Week 5 (Remaining Days)</div>
+
+                <!-- Day 29 -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 29 - Sunday</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Nepali style aloo paratha (potato stuffed flatbread), curd, mixed fruit bowl</div>
+                        <div class="benefits">Benefits: Potato provides energy and vitamin C. Whole wheat in the paratha offers complex carbohydrates and fiber. Curd aids digestion, and the mixed fruit bowl provides a variety of vitamins and antioxidants.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack (10:00 AM)</div>
+                        <div class="meal-items">Boiled corn with lemon and salt, sliced cucumber</div>
+                        <div class="benefits">Benefits: Corn provides fiber, antioxidants, and energy. Cucumber is hydrating and contains silica which is good for connective tissue health.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Lunch (1:00 PM)</div>
+                        <div class="meal-items">Rice, fish curry, pumpkin curry, cucumber and tomato salad</div>
+                        <div class="benefits">Benefits: Fish provides omega-3 fatty acids and protein. Pumpkin is rich in beta-carotene, which the body converts to vitamin A. The salad adds fresh enzymes and vitamins.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Afternoon Snack (4:00 PM)</div>
+                        <div class="meal-items">Homemade energy bars with dates, nuts, and seeds</div>
+                        <div class="benefits">Benefits: This nutrient-dense snack provides healthy fats, protein, and natural sugars. The combination supports sustained energy levels, which is important for children with increased metabolic needs due to HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Dinner (7:00 PM)</div>
+                        <div class="meal-items">Brown rice, black gram dal, cauliflower and pea curry, carrot raita</div>
+                        <div class="benefits">Benefits: Black gram is rich in protein and iron. The combination of vegetables provides a variety of nutrients. Carrots in the raita add beta-carotene and sweetness.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Bedtime Milk (8:30 PM)</div>
+                        <div class="meal-items">Warm milk with poppy seeds and honey</div>
+                        <div class="benefits">Benefits: Poppy seeds contain calcium, magnesium, and zinc. They may also have mild sedative effects that can help with sleep, which is crucial for immune function and recovery.</div>
+                    </div>
+                </div>
+
+                <!-- Day 30-31 (Final Days) -->
+                <div class="day-container">
+                    <div class="day-header">
+                        <span>Day 30-31 (Final Days)</span>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Breakfast (6:30 AM)</div>
+                        <div class="meal-items">Special breakfast options including chiwda (beaten rice) with yogurt and fruits, besan chilla (gram flour pancakes) with chutney</div>
+                        <div class="benefits">Benefits: These options provide good amounts of protein, complex carbohydrates, and micronutrients essential for children with HIV.</div>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-title">Mid-Morning Snack to Dinner</div>
+                        <div class="meal-items">Varied nutritious options following the established pattern</div>
+                        <div class="benefits">Benefits: Continuing the focus on immune-supporting nutrients, adequate protein, energy, and micronutrients specifically important for children with HIV.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                <h4>Special Considerations:</h4>
+                <p>- All meals will be served in appropriate portions according to the children's age, weight, and health condition.</p>
+                <p>- Children on HIV medication will be given special attention as some medications can reduce appetite.</p>
+                <p>- Alternative meals will be provided for children with any food allergies.</p>
+                <p>- Each child will be ensured to drink adequate water throughout the day.</p>
+            </div>
+            
+            <div class="note">
+                <h4>Nutritional Focus for HIV-Positive Children:</h4>
+                <p>1. <strong>Protein:</strong> Higher protein intake is essential for maintaining muscle mass and supporting the immune system.</p>
+                <p>2. <strong>Micronutrients:</strong> Focus on vitamins A, B-complex (especially B6 and B12), C, E, and minerals like zinc, selenium, and iron which are crucial for immune function.</p>
+                <p>3. <strong>Energy:</strong> Higher caloric intake may be needed to combat weight loss associated with HIV.</p>
+                <p>4. <strong>Hydration:</strong> Adequate fluid intake is important to support medication effectiveness and overall health.</p>
+                <p>5. <strong>Food Safety:</strong> All meals are prepared with strict hygiene standards to prevent foodborne illnesses.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>यो खाना योजना बालबालिकाहरूको पोषण र स्वास्थ्य अवस्थालाई ध्यानमा राखेर बनाइएको हो।<br>This meal plan has been created with consideration for the nutritional and health needs of the children.</p>
+        </footer>
+    </div>
+    
+    <script>
+        function toggleLanguage(lang) {
+            const npContent = document.querySelector('.content-np');
+            const enContent = document.querySelector('.content-en');
+            const npBtn = document.querySelector('.language-btn:nth-child(1)');
+            const enBtn = document.querySelector('.language-btn:nth-child(2)');
+            
+            if (lang === 'np') {
+                npContent.classList.add('active');
+                enContent.classList.remove('active');
+                npBtn.classList.add('active');
+                enBtn.classList.remove('active');
+            } else {
+                enContent.classList.add('active');
+                npContent.classList.remove('active');
+                enBtn.classList.add('active');
+                npBtn.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
