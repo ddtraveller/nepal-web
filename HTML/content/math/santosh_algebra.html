@@ -10,7 +10,17 @@
         h3 { color: red; }
         h4 { color: orange; }
         p { color: black; }
+        ul li { color: black; }
     </style>
+    <script>
+        function changeListColors() {
+            const items = document.querySelectorAll('ul li');
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            items.forEach(item => {
+                item.style.color = randomColor;
+            });
+        }
+    </script>
 </head>
 <body>
     <p>Holi is a vibrant and joyful festival celebrated primarily in India and Nepal, but it has gained popularity worldwide. Known as the Festival of Colors, it marks the arrival of spring and the victory of good over evil. Holi typically falls in March, on the full moon day of the Hindu month of Phalguna.</p>
@@ -39,5 +49,7 @@
         <li>Banana</li>
         <li>Orange</li>
     </ul>
+    
+    <button onclick="changeListColors()">Change List Colors</button>
 </body>
 </html>
