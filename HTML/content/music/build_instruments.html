@@ -76,8 +76,8 @@
                 </thead>
                 <tbody id="guestList"></tbody>
             </table>
-            <button onclick="saveGuests()">Save</button>
-            <button onclick="loadGuests()">Load</button>
+            <button id="saveBtn">Save</button>
+            <button id="loadBtn">Load</button>
         </div>
     </div>
     <div class="footer">&copy; 2025 Hotel Guest Tracker</div>
@@ -102,16 +102,20 @@
                 tbody.innerHTML += row;
             });
         }
-        function saveGuests() {
+        document.getElementById('saveBtn').addEventListener('click', function() {
             localStorage.setItem('guests', JSON.stringify(guests));
-        }
-        function loadGuests() {
+            alert('Guest list saved successfully!');
+        });
+        document.getElementById('loadBtn').addEventListener('click', function() {
             let data = localStorage.getItem('guests');
             if (data) {
                 guests = JSON.parse(data);
                 updateTable();
+                alert('Guest list loaded successfully!');
+            } else {
+                alert('No guest data found!');
             }
-        }
+        });
     </script>
 </body>
 </html>
