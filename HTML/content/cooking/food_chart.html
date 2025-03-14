@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ne-NP">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Foods for Nepali Children / नेपाली बालबालिकाहरूको लागि स्वस्थ खानाहरू</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f7f2;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background-color: #5c3d2e;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        
+        h2 {
+            margin-top: 10px;
+            font-size: 1.6em;
+            font-weight: normal;
+        }
+        
+        .food-category {
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .category-header {
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        .foods-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .food-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .food-name {
+            text-align: center;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .food-content {
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .food-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .food-icon {
+            font-size: 1.8em;
+            margin-right: 10px;
+        }
+        
+        .food-description {
+            margin-bottom: 10px;
+        }
+        
+        .language-toggle {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .language-toggle button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #5c3d2e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .language-toggle button:hover {
+            background-color: #7d5a50;
+        }
+        
+        .nepali {
+            display: none;
+        }
+        
+        .english {
+            display: block;
+        }
+
+        /* Category Colors */
+        .grains { background-color: #E6B325; }
+        .proteins { background-color: #D95E32; }
+        .vegetables { background-color: #7FB069; }
+        .fruits { background-color: #FF6B6B; }
+        .dairy { background-color: #33A1FD; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Healthy Foods for Nepali Children</h1>
+        <h2>नेपाली बालबालिकाहरूको लागि स्वस्थ खानाहरू</h2>
+    </div>
+    
+    <div class="language-toggle">
+        <button onclick="toggleLanguage('english')">English</button>
+        <button onclick="toggleLanguage('nepali')">नेपाली</button>
+    </div>
+    
+    <!-- GRAINS SECTION -->
+    <div class="food-category">
+        <div class="category-header grains">
+            <span class="english">Grains and Cereals</span>
+            <span class="nepali">अन्न र खाद्यान्नहरू</span>
+        </div>
+        <div class="foods-container">
+            <!-- Rice -->
+            <div class="food-item">
+                <div class="food-name grains">
+                    <span class="english">Rice (Bhat)</span>
+                    <span class="nepali">भात</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🍚</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Rice provides energy and carbohydrates necessary for growing children. Brown rice contains more fiber and nutrients than white rice.</p>
+                        <p><strong>Benefits:</strong> Energy source, easy to digest, and pairs well with many nutritious foods.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>भात बढ्दो बालबालिकाहरूको लागि आवश्यक ऊर्जा र कार्बोहाइड्रेट प्रदान गर्दछ। कालो चामलमा सेतो चामल भन्दा बढी फाइबर र पोषक तत्वहरू हुन्छन्।</p>
+                        <p><strong>फाइदाहरू:</strong> ऊर्जाको स्रोत, पचाउन सजिलो, र धेरै पौष्टिक खानाहरूसँग मिल्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Dhido -->
+            <div class="food-item">
+                <div class="food-name grains">
+                    <span class="english">Dhido</span>
+                    <span class="nepali">ढिंडो</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥣</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Dhido is a traditional Nepali food made from millet, buckwheat, or corn flour. It's rich in minerals and fiber.</p>
+                        <p><strong>Benefits:</strong> High in fiber, contains essential minerals like iron and magnesium, and promotes digestive health.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>ढिंडो कोदो, फापर वा मकैको पिठोबाट बनाइएको पारम्परिक नेपाली खाना हो। यो खनिज र फाइबरले भरिपूर्ण छ।</p>
+                        <p><strong>फाइदाहरू:</strong> फाइबरमा उच्च, फलाम र म्याग्नेसियम जस्ता आवश्यक खनिजहरू समावेश, र पाचन स्वास्थ्य बढाउँछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Roti -->
+            <div class="food-item">
+                <div class="food-name grains">
+                    <span class="english">Roti</span>
+                    <span class="nepali">रोटी</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🫓</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Whole wheat roti provides complex carbohydrates and fiber. It's a healthier alternative to white bread.</p>
+                        <p><strong>Benefits:</strong> Contains B vitamins, fiber, and minerals; keeps children full for longer periods.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>गहुँको रोटीले जटिल कार्बोहाइड्रेट र फाइबर प्रदान गर्दछ। यो सेतो रोटीको तुलनामा स्वस्थ विकल्प हो।</p>
+                        <p><strong>फाइदाहरू:</strong> बी भिटामिन, फाइबर, र खनिजहरू समावेश गर्दछ; बालबालिकाहरूलाई लामो समयसम्म भरिपूर्ण राख्छ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PROTEINS SECTION -->
+    <div class="food-category">
+        <div class="category-header proteins">
+            <span class="english">Proteins</span>
+            <span class="nepali">प्रोटिनहरू</span>
+        </div>
+        <div class="foods-container">
+            <!-- Dal -->
+            <div class="food-item">
+                <div class="food-name proteins">
+                    <span class="english">Lentils (Dal)</span>
+                    <span class="nepali">दाल</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🍲</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Lentils are an excellent source of plant-based protein and iron, essential for growing children.</p>
+                        <p><strong>Benefits:</strong> High in protein, iron, and fiber; helps in muscle development and prevents anemia.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>दाल वनस्पति-आधारित प्रोटिन र फलामको उत्कृष्ट स्रोत हो, जुन बढ्दो बालबालिकाहरूको लागि आवश्यक छ।</p>
+                        <p><strong>फाइदाहरू:</strong> प्रोटिन, फलाम, र फाइबरमा उच्च; मांसपेशी विकासमा मद्दत गर्दछ र रक्तअल्पता रोक्छ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Eggs -->
+            <div class="food-item">
+                <div class="food-name proteins">
+                    <span class="english">Eggs</span>
+                    <span class="nepali">अण्डा</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥚</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Eggs are packed with high-quality protein and essential nutrients like vitamin D and choline.</p>
+                        <p><strong>Benefits:</strong> Complete protein source, supports brain development, and helps in building immunity.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>अण्डामा उच्च-गुणस्तरको प्रोटिन र भिटामिन डी र कोलिन जस्ता आवश्यक पोषक तत्वहरू प्याक गरिएको छ।</p>
+                        <p><strong>फाइदाहरू:</strong> पूर्ण प्रोटिन स्रोत, मस्तिष्क विकासलाई समर्थन गर्दछ, र प्रतिरक्षा निर्माण गर्न मद्दत गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kwati -->
+            <div class="food-item">
+                <div class="food-name proteins">
+                    <span class="english">Kwati (Mixed Sprouted Beans)</span>
+                    <span class="nepali">क्वाटी</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🌱</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Kwati is a nutritious soup made from nine different sprouted beans, rich in protein and micronutrients.</p>
+                        <p><strong>Benefits:</strong> Enhanced nutrition from sprouting process, easy to digest, and provides diverse nutrients.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>क्वाटी नौ फरक अंकुरित गेडागुडीहरूबाट बनाइएको पौष्टिक सूप हो, जुन प्रोटिन र सूक्ष्म पोषक तत्वहरूले भरिपूर्ण छ।</p>
+                        <p><strong>फाइदाहरू:</strong> अंकुरण प्रक्रियाबाट बढाइएको पोषण, पचाउन सजिलो, र विविध पोषक तत्वहरू प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- VEGETABLES SECTION -->
+    <div class="food-category">
+        <div class="category-header vegetables">
+            <span class="english">Vegetables</span>
+            <span class="nepali">तरकारीहरू</span>
+        </div>
+        <div class="foods-container">
+            <!-- Saag -->
+            <div class="food-item">
+                <div class="food-name vegetables">
+                    <span class="english">Green Leafy Vegetables (Saag)</span>
+                    <span class="nepali">साग</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥬</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Spinach, mustard greens, and other leafy greens are rich in iron, calcium, and vitamins.</p>
+                        <p><strong>Benefits:</strong> Prevents anemia, strengthens bones, and supports overall growth and development.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>पालुंगो, रायो, र अन्य हरियो पात भएका तरकारीहरू फलाम, क्याल्सियम, र भिटामिनहरूले भरिपूर्ण छन्।</p>
+                        <p><strong>फाइदाहरू:</strong> रक्तअल्पता रोक्छ, हड्डीहरू बलियो बनाउँछ, र समग्र वृद्धि र विकासलाई समर्थन गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cauli/Broccoli -->
+            <div class="food-item">
+                <div class="food-name vegetables">
+                    <span class="english">Cauliflower and Broccoli</span>
+                    <span class="nepali">काउली र ब्रोकाउली</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥦</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>These cruciferous vegetables are packed with vitamins C and K, fiber, and antioxidants.</p>
+                        <p><strong>Benefits:</strong> Boosts immunity, supports detoxification, and provides essential nutrients for growth.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>यी क्रुसिफेरस तरकारीहरूमा भिटामिन सी र के, फाइबर, र एन्टिअक्सिडेन्टहरू प्याक गरिएको छ।</p>
+                        <p><strong>फाइदाहरू:</strong> प्रतिरक्षा बढाउँछ, डिटक्सिफिकेशनलाई समर्थन गर्दछ, र वृद्धिको लागि आवश्यक पोषक तत्वहरू प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gundruk -->
+            <div class="food-item">
+                <div class="food-name vegetables">
+                    <span class="english">Gundruk (Fermented Greens)</span>
+                    <span class="nepali">गुन्द्रुक</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥗</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Gundruk is a traditional fermented leafy green, rich in probiotics and preserved nutrients.</p>
+                        <p><strong>Benefits:</strong> Supports gut health, contains beneficial bacteria, and provides vitamin C even in winter months.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>गुन्द्रुक पारम्परिक किण्वित हरियो पात हो, जुन प्रोबायोटिक्स र संरक्षित पोषक तत्वहरूले भरिपूर्ण छ।</p>
+                        <p><strong>फाइदाहरू:</strong> पेट स्वास्थ्यलाई समर्थन गर्दछ, फाइदाजनक ब्याक्टेरिया समावेश गर्दछ, र हिउँदका महिनाहरूमा पनि भिटामिन सी प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FRUITS SECTION -->
+    <div class="food-category">
+        <div class="category-header fruits">
+            <span class="english">Fruits</span>
+            <span class="nepali">फलफूलहरू</span>
+        </div>
+        <div class="foods-container">
+            <!-- Lapsi -->
+            <div class="food-item">
+                <div class="food-name fruits">
+                    <span class="english">Lapsi (Nepali Hog Plum)</span>
+                    <span class="nepali">लप्सी</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🍈</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Lapsi is rich in vitamin C and antioxidants. It helps boost immunity and aids digestion.</p>
+                        <p><strong>Benefits:</strong> High in vitamin C, contains natural antioxidants, and supports immune function.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>लप्सी भिटामिन सी र एन्टिअक्सिडेन्टहरूले भरिपूर्ण छ। यसले प्रतिरक्षा बढाउन र पाचनमा मद्दत गर्दछ।</p>
+                        <p><strong>फाइदाहरू:</strong> भिटामिन सीमा उच्च, प्राकृतिक एन्टिअक्सिडेन्टहरू समावेश, र प्रतिरक्षा कार्यलाई समर्थन गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kiwi -->
+            <div class="food-item">
+                <div class="food-name fruits">
+                    <span class="english">Kiwi</span>
+                    <span class="nepali">किवी</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥝</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Kiwis grown in Nepali hills are packed with vitamin C, fiber, and potassium.</p>
+                        <p><strong>Benefits:</strong> Excellent for digestive health, supports immune system, and promotes healthy skin.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>नेपाली पहाडमा उब्जिएका किवीहरू भिटामिन सी, फाइबर, र पोटासियमले भरिपूर्ण छन्।</p>
+                        <p><strong>फाइदाहरू:</strong> पाचन स्वास्थ्यको लागि उत्कृष्ट, प्रतिरक्षा प्रणालीलाई समर्थन गर्दछ, र स्वस्थ छालालाई बढावा दिन्छ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Oranges -->
+            <div class="food-item">
+                <div class="food-name fruits">
+                    <span class="english">Junar (Nepali Sweet Orange)</span>
+                    <span class="nepali">जुनार</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🍊</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Junar, grown in the hills of Nepal, is rich in vitamin C and essential for immune health.</p>
+                        <p><strong>Benefits:</strong> Boosts immunity, helps fight infections, and supports overall health.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>नेपालको पहाडमा उब्जिएको जुनार, भिटामिन सीले भरिपूर्ण छ र प्रतिरक्षा स्वास्थ्यको लागि आवश्यक छ।</p>
+                        <p><strong>फाइदाहरू:</strong> प्रतिरक्षा बढाउँछ, संक्रमणहरूसँग लड्न मद्दत गर्दछ, र समग्र स्वास्थ्यलाई समर्थन गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SEEDS AND NUTS SECTION -->
+    <div class="food-category">
+        <div class="category-header seeds">
+            <span class="english">Seeds and Nuts</span>
+            <span class="nepali">बीज र नट्स</span>
+        </div>
+        <div class="foods-container">
+            <!-- Chia Seeds -->
+            <div class="food-item">
+                <div class="food-name seeds">
+                    <span class="english">Chia Seeds</span>
+                    <span class="nepali">चिया बीज</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🌱</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Chia seeds are packed with omega-3 fatty acids, fiber, protein, and various micronutrients.</p>
+                        <p><strong>Benefits:</strong> Supports brain development, improves digestion, and provides sustained energy for active children.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>चिया बीजहरू ओमेगा-३ फ्याटी एसिड, फाइबर, प्रोटिन, र विभिन्न सूक्ष्म पोषक तत्वहरूले भरिपूर्ण छन्।</p>
+                        <p><strong>फाइदाहरू:</strong> मस्तिष्क विकासलाई समर्थन गर्दछ, पाचन सुधार्छ, र सक्रिय बालबालिकाहरूको लागि दिगो ऊर्जा प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Almonds -->
+            <div class="food-item">
+                <div class="food-name seeds">
+                    <span class="english">Almonds</span>
+                    <span class="nepali">बदाम</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥜</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Almonds are rich in healthy fats, vitamin E, protein, and magnesium - all essential for growing children.</p>
+                        <p><strong>Benefits:</strong> Supports brain function, promotes healthy skin, and provides energy for daily activities.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>बदाम स्वस्थ बोसो, भिटामिन ई, प्रोटिन, र म्याग्नेसियममा समृद्ध छ - सबै बढ्दो बालबालिकाहरूको लागि आवश्यक छ।</p>
+                        <p><strong>फाइदाहरू:</strong> मस्तिष्क कार्यलाई समर्थन गर्दछ, स्वस्थ छालालाई बढावा दिन्छ, र दैनिक गतिविधिहरूको लागि ऊर्जा प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flax Seeds -->
+            <div class="food-item">
+                <div class="food-name seeds">
+                    <span class="english">Flax Seeds</span>
+                    <span class="nepali">अलसीको बीज</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🌰</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Flax seeds are high in omega-3 fatty acids, lignans, and fiber that support overall health.</p>
+                        <p><strong>Benefits:</strong> Aids digestive health, supports brain development, and contains anti-inflammatory properties.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>अलसीको बीजहरू ओमेगा-३ फ्याटी एसिड, लिग्नान, र फाइबरमा उच्च छन् जसले समग्र स्वास्थ्यलाई समर्थन गर्दछ।</p>
+                        <p><strong>फाइदाहरू:</strong> पाचन स्वास्थ्यमा मद्दत गर्दछ, मस्तिष्क विकासलाई समर्थन गर्दछ, र सूजन-विरोधी गुणहरू समावेश गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pumpkin Seeds -->
+            <div class="food-item">
+                <div class="food-name seeds">
+                    <span class="english">Pumpkin Seeds</span>
+                    <span class="nepali">फर्सीको बीज</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🎃</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Pumpkin seeds are rich in zinc, magnesium, healthy fats, and plant-based protein.</p>
+                        <p><strong>Benefits:</strong> Supports immune function, promotes healthy sleep, and aids in muscle development.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>फर्सीको बीजहरू जिंक, म्याग्नेसियम, स्वस्थ बोसो, र वनस्पति-आधारित प्रोटिनमा समृद्ध छन्।</p>
+                        <p><strong>फाइदाहरू:</strong> प्रतिरक्षा कार्यलाई समर्थन गर्दछ, स्वस्थ निद्रालाई बढावा दिन्छ, र मांसपेशी विकासमा मद्दत गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DAIRY SECTION -->
+    <div class="food-category">
+        <div class="category-header dairy">
+            <span class="english">Dairy Products</span>
+            <span class="nepali">दुग्ध उत्पादनहरू</span>
+        </div>
+        <div class="foods-container">
+            <!-- Dahi -->
+            <div class="food-item">
+                <div class="food-name dairy">
+                    <span class="english">Yogurt (Dahi)</span>
+                    <span class="nepali">दही</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥛</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Yogurt is rich in calcium, protein, and probiotics that support gut health and immunity.</p>
+                        <p><strong>Benefits:</strong> Strengthens bones and teeth, improves digestion, and helps maintain a healthy gut microbiome.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>दही क्याल्सियम, प्रोटिन, र प्रोबायोटिक्समा समृद्ध छ जसले पेट स्वास्थ्य र प्रतिरक्षालाई समर्थन गर्दछ।</p>
+                        <p><strong>फाइदाहरू:</strong> हड्डी र दाँतहरू बलियो बनाउँछ, पाचन सुधार गर्दछ, र स्वस्थ पेट माइक्रोबायोम कायम राख्न मद्दत गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milk -->
+            <div class="food-item">
+                <div class="food-name dairy">
+                    <span class="english">Milk (Dudh)</span>
+                    <span class="nepali">दूध</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥛</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Milk is an excellent source of calcium, protein, and vitamin D, essential for growing children.</p>
+                        <p><strong>Benefits:</strong> Crucial for bone development, helps in muscle growth, and provides complete nutrition.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>दूध क्याल्सियम, प्रोटिन, र भिटामिन डीको उत्कृष्ट स्रोत हो, जुन बढ्दो बालबालिकाहरूको लागि आवश्यक छ।</p>
+                        <p><strong>फाइदाहरू:</strong> हड्डी विकासको लागि महत्वपूर्ण, मांसपेशी वृद्धिमा मद्दत गर्दछ, र पूर्ण पोषण प्रदान गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mohi -->
+            <div class="food-item">
+                <div class="food-name dairy">
+                    <span class="english">Buttermilk (Mohi)</span>
+                    <span class="nepali">मोही</span>
+                </div>
+                <div class="food-content">
+                    <div class="food-title">
+                        <span class="food-icon">🥛</span>
+                    </div>
+                    <div class="food-description english">
+                        <p>Buttermilk is a refreshing drink that aids digestion and provides calcium, protein, and B vitamins.</p>
+                        <p><strong>Benefits:</strong> Cooling property, supports digestion, and hydrates while providing nutrients.</p>
+                    </div>
+                    <div class="food-description nepali">
+                        <p>मोही एक ताजा पेय हो जसले पाचनमा मद्दत गर्दछ र क्याल्सियम, प्रोटिन, र बी भिटामिनहरू प्रदान गर्दछ।</p>
+                        <p><strong>फाइदाहरू:</strong> शीतल गुण, पाचनलाई समर्थन गर्दछ, र पोषक तत्वहरू प्रदान गर्दै हाइड्रेट गर्दछ।</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleLanguage(language) {
+            const english = document.querySelectorAll('.english');
+            const nepali = document.querySelectorAll('.nepali');
+            
+            if (language === 'english') {
+                english.forEach(el => el.style.display = 'block');
+                nepali.forEach(el => el.style.display = 'none');
+            } else {
+                english.forEach(el => el.style.display = 'none');
+                nepali.forEach(el => el.style.display = 'block');
+            }
+        }
+    </script>
+</body>
+</html>
