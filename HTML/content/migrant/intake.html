@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrant Children Data Form | प्रवासी बालबालिकाको तथ्याङ्क फारम</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .language-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .language-btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .language-btn.active {
+            background-color: #2980b9;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        .form-header {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            border-radius: 4px 4px 0 0;
+            font-weight: bold;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .form-row:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        input[type="text"], input[type="date"], input[type="number"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background-color: #27ae60;
+        }
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .instructions {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #3498db;
+            border-radius: 4px;
+        }
+        .nepali, .english {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="language-toggle">
+            <button class="language-btn" onclick="toggleLanguage('english')">English</button>
+            <button class="language-btn" onclick="toggleLanguage('nepali')">नेपाली</button>
+        </div>
+
+        <!-- English Content -->
+        <div id="english" class="english">
+            <h1>Migrant Children Data Collection Form</h1>
+            
+            <div class="instructions">
+                <h3>Instructions:</h3>
+                <p>This form is designed to collect data about migrant children. Please fill in all the required details.</p>
+                <p>Use the "Add Child" button to add multiple children. When finished, click "Save as CSV" to download the data.</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-header">
+                    <div>Child Name</div>
+                    <div>Date of Birth</div>
+                    <div>Birth Certificate</div>
+                    <div>Class</div>
+                    <div>Parents' Names</div>
+                    <div>Occupations</div>
+                    <div>Total Family Members</div>
+                    <div>Citizenship</div>
+                    <div>Remarks</div>
+                </div>
+                <div id="form-rows-en">
+                    <!-- Form rows will be added here -->
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn" onclick="addRow('en')">Add Child</button>
+                <button class="btn" onclick="saveAsCSV('en')">Save as CSV</button>
+                <button class="btn" onclick="document.getElementById('csv-upload-en').click()">Load CSV</button>
+                <input type="file" id="csv-upload-en" accept=".csv" style="display: none;" onchange="loadCSV(this, 'en')">
+            </div>
+        </div>
+
+        <!-- Nepali Content -->
+        <div id="nepali" class="nepali">
+            <h1>प्रवासी बालबालिकाको तथ्याङ्क संकलन फारम</h1>
+            
+            <div class="instructions">
+                <h3>निर्देशनहरू:</h3>
+                <p>यो फारम प्रवासी बालबालिकाको तथ्याङ्क संकलन गर्न डिजाइन गरिएको छ। कृपया सबै आवश्यक विवरणहरू भर्नुहोस्।</p>
+                <p>धेरै बालबालिकाहरू थप्न "बच्चा थप्नुहोस्" बटन प्रयोग गर्नुहोस्। सकिएपछि, डाटा डाउनलोड गर्न "CSV को रूपमा बचत गर्नुहोस्" क्लिक गर्नुहोस्।</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="form-header">
+                    <div>बच्चाको नाम</div>
+                    <div>जन्म मिति</div>
+                    <div>जन्म प्रमाणपत्र</div>
+                    <div>कक्षा</div>
+                    <div>अभिभावकहरूको नाम</div>
+                    <div>पेशाहरू</div>
+                    <div>कुल परिवार सदस्यहरू</div>
+                    <div>नागरिकता</div>
+                    <div>टिप्पणीहरू</div>
+                </div>
+                <div id="form-rows-np">
+                    <!-- Form rows will be added here -->
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn" onclick="addRow('np')">बच्चा थप्नुहोस्</button>
+                <button class="btn" onclick="saveAsCSV('np')">CSV को रूपमा बचत गर्नुहोस्</button>
+                <button class="btn" onclick="document.getElementById('csv-upload-np').click()">CSV लोड गर्नुहोस्</button>
+                <input type="file" id="csv-upload-np" accept=".csv" style="display: none;" onchange="loadCSV(this, 'np')">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the page with English as default
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleLanguage('english');
+            addRow('en');
+            addRow('np');
+        });
+
+        // Toggle between languages
+        function toggleLanguage(lang) {
+            const english = document.getElementById('english');
+            const nepali = document.getElementById('nepali');
+            const buttons = document.querySelectorAll('.language-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (lang === 'english') {
+                english.style.display = 'block';
+                nepali.style.display = 'none';
+                buttons[0].classList.add('active');
+            } else {
+                english.style.display = 'none';
+                nepali.style.display = 'block';
+                buttons[1].classList.add('active');
+            }
+        }
+
+        // Add a new row to the form
+        function addRow(lang) {
+            const container = document.getElementById(lang === 'en' ? 'form-rows-en' : 'form-rows-np');
+            const rowId = Date.now(); // Unique ID for the row
+            
+            const row = document.createElement('div');
+            row.className = 'form-row';
+            row.id = `row-${rowId}`;
+            
+            row.innerHTML = `
+                <div><input type="text" name="childName" placeholder="${lang === 'en' ? 'Child Name' : 'बच्चाको नाम'}" required></div>
+                <div><input type="date" name="dob" required></div>
+                <div><input type="checkbox" name="birthCertificate"></div>
+                <div><input type="text" name="class" placeholder="${lang === 'en' ? 'Class' : 'कक्षा'}"></div>
+                <div><input type="text" name="parentsNames" placeholder="${lang === 'en' ? 'Parents Names' : 'अभिभावकहरूको नाम'}"></div>
+                <div><input type="text" name="occupations" placeholder="${lang === 'en' ? 'Occupations' : 'पेशाहरू'}"></div>
+                <div><input type="number" name="familyMembers" min="1" placeholder="${lang === 'en' ? 'Total' : 'कुल'}"></div>
+                <div><input type="checkbox" name="citizenship"></div>
+                <div><input type="text" name="remarks" placeholder="${lang === 'en' ? 'Remarks' : 'टिप्पणीहरू'}"></div>
+            `;
+            
+            container.appendChild(row);
+        }
+
+        // Save the form data as CSV
+        function saveAsCSV(lang) {
+            const container = document.getElementById(lang === 'en' ? 'form-rows-en' : 'form-rows-np');
+            const rows = container.querySelectorAll('.form-row');
+            
+            if (rows.length === 0) {
+                alert(lang === 'en' ? 'No data to save!' : 'बचत गर्न कुनै डाटा छैन!');
+                return;
+            }
+            
+            // Create header
+            let csvContent = lang === 'en' ? 
+                "Child Name,Date of Birth,Birth Certificate,Class,Parents Names,Occupations,Total Family Members,Citizenship,Remarks\n" :
+                "बच्चाको नाम,जन्म मिति,जन्म प्रमाणपत्र,कक्षा,अभिभावकहरूको नाम,पेशाहरू,कुल परिवार सदस्यहरू,नागरिकता,टिप्पणीहरू\n";
+            
+            // Add data rows
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const rowData = [];
+                
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox') {
+                        rowData.push(input.checked ? 'Yes' : 'No');
+                    } else {
+                        // Escape commas in the input
+                        let value = input.value;
+                        if (value.includes(',')) {
+                            value = `"${value}"`;
+                        }
+                        rowData.push(value);
+                    }
+                });
+                
+                csvContent += rowData.join(',') + '\n';
+            });
+            
+            // Create and download CSV file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `migrant_children_data_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Load data from a CSV file
+        function loadCSV(fileInput, lang) {
+            const file = fileInput.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contents = e.target.result;
+                const lines = contents.split(/\r?\n/);
+                
+                if (lines.length < 2) {
+                    alert(lang === 'en' ? 'CSV file is empty or invalid!' : 'CSV फाइल खाली वा अमान्य छ!');
+                    return;
+                }
+                
+                // Clear existing rows
+                const container = document.getElementById(lang === 'en' ? 'form-rows-en' : 'form-rows-np');
+                container.innerHTML = '';
+                
+                // Process each data row (skip header)
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    // Handle quoted values with commas inside
+                    const values = [];
+                    let inQuote = false;
+                    let currentValue = '';
+                    
+                    for (let j = 0; j < lines[i].length; j++) {
+                        const char = lines[i][j];
+                        
+                        if (char === '"') {
+                            inQuote = !inQuote;
+                        } else if (char === ',' && !inQuote) {
+                            values.push(currentValue);
+                            currentValue = '';
+                        } else {
+                            currentValue += char;
+                        }
+                    }
+                    
+                    values.push(currentValue); // Push the last value
+                    
+                    if (values.length >= 9) {
+                        // Create a new row
+                        const rowId = Date.now() + i;
+                        const row = document.createElement('div');
+                        row.className = 'form-row';
+                        row.id = `row-${rowId}`;
+                        
+                        row.innerHTML = `
+                            <div><input type="text" name="childName" value="${values[0]}" required></div>
+                            <div><input type="date" name="dob" value="${formatDateForInput(values[1])}" required></div>
+                            <div><input type="checkbox" name="birthCertificate" ${values[2].toLowerCase() === 'yes' ? 'checked' : ''}></div>
+                            <div><input type="text" name="class" value="${values[3]}"></div>
+                            <div><input type="text" name="parentsNames" value="${values[4]}"></div>
+                            <div><input type="text" name="occupations" value="${values[5]}"></div>
+                            <div><input type="number" name="familyMembers" min="1" value="${values[6]}"></div>
+                            <div><input type="checkbox" name="citizenship" ${values[7].toLowerCase() === 'yes' ? 'checked' : ''}></div>
+                            <div><input type="text" name="remarks" value="${values[8]}"></div>
+                        `;
+                        
+                        container.appendChild(row);
+                    }
+                }
+                
+                // Reset file input
+                fileInput.value = '';
+                
+                alert(lang === 'en' ? 
+                    `Successfully loaded ${container.children.length} records!` : 
+                    `सफलतापूर्वक ${container.children.length} रेकर्डहरू लोड गरियो!`);
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Helper function to format date string for date input
+        function formatDateForInput(dateStr) {
+            if (!dateStr) return '';
+            
+            // Try to parse the date string
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                // If unable to parse, try common formats
+                const parts = dateStr.split(/[\/.-]/);
+                if (parts.length === 3) {
+                    // Assume day/month/year, month/day/year, or year-month-day
+                    const formatDate = new Date();
+                    
+                    if (parts[0].length === 4) {
+                        // Likely YYYY-MM-DD format
+                        formatDate.setFullYear(parseInt(parts[0]));
+                        formatDate.setMonth(parseInt(parts[1]) - 1);
+                        formatDate.setDate(parseInt(parts[2]));
+                    } else if (parts[2].length === 4) {
+                        // Likely DD/MM/YYYY or MM/DD/YYYY format
+                        formatDate.setFullYear(parseInt(parts[2]));
+                        // Assume MM/DD for simplicity
+                        formatDate.setMonth(parseInt(parts[0]) - 1);
+                        formatDate.setDate(parseInt(parts[1]));
+                    }
+                    
+                    date = formatDate;
+                }
+            }
+            
+            if (!isNaN(date.getTime())) {
+                // Format date as YYYY-MM-DD for input value
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            return dateStr; // Return original if parsing failed
+        }
+    </script>
+</body>
+</html>
