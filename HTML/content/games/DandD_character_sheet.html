@@ -1,171 +1,4 @@
-// Load Character with combat stats
-    function loadCharacter() {
-        // Create a file input for loading from JSON
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.json';
-        fileInput.style.display = 'none';
-        
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const character = JSON.parse(event.target.result);
-                    
-                    // Populate the basic fields
-                    document.getElementById('characterName').value = character.name || '';
-                    document.getElementById('race').value = character.race || 'human';
-                    document.getElementById('gender').value = character.gender || 'male';
-                    document.getElementById('class').value = character.class || 'fighter';
-                    document.getElementById('level').value = character.level || 1;
-                    document.getElementById('strength').value = character.strength || 10;
-                    document.getElementById('dexterity').value = character.dexterity || 10;
-                    document.getElementById('constitution').value = character.constitution || 10;
-                    document.getElementById('intelligence').value = character.intelligence || 10;
-                    document.getElementById('wisdom').value = character.wisdom || 10;
-                    document.getElementById('charisma').value = character.charisma || 10;
-                    document.getElementById('hitPoints').value = character.hitPoints || 10;
-                    document.getElementById('armorClass').value = character.armorClass || 10;
-                    document.getElementById('initiative').value = character.initiative || 0;
-                    document.getElementById('equipment').value = character.equipment || '';
-                    document.getElementById('characterDescription').value = character.characterDescription || '';
-                    
-                    // Load weapon type if available
-                    if (character.weaponType) {
-                        document.getElementById('weaponType').value = character.weaponType;
-                    }
-                    
-                    // If character has an image, load it
-                    if (character.imageData) {
-                        const container = document.getElementById('characterImageContainer');
-                        container.innerHTML = `<img src="${character.imageData}" alt="Character Image">`;
-                    }
-                    
-                    // Update combat stats based on loaded data
-                    updateCombatStats();
-                    
-                    alert('Character loaded successfully! / पात्र सफलतापूर्वक लोड गरियो!');
-                } catch (error) {
-                    console.error('Error loading character:', error);
-                    alert('Failed to load character file! / पात्र फाइल लोड गर्न असफल भयो!');
-                }
-            };
-            
-            reader.readAsText(file);
-        });
-        
-        document.body.appendChild(fileInput);
-        fileInput.click();
-        document.body.removeChild(fileInput);
-    }
-
-    // Initialize keys when page loads and set up the combat stats
-    window.onload = function() {
-        initializeKeys().catch(error => {
-            console.error('Failed to initialize keys:', error);
-        });
-        
-        // Initialize combat stats on page load
-        updateCombatStats();
-        
-        // Add event listeners to all inputs that might affect combat stats
-        document.getElementById('strength').addEventListener('change', updateCombatStats);
-        document.getElementById('dexterity').addEventListener('change', updateCombatStats);
-        document.getElementById('constitution').addEventListener('change', updateCombatStats);
-        document.getElementById('level').addEventListener('change', updateCombatStats);
-        document.getElementById('weaponType').addEventListener('change', updateCombatStats);
-        document.getElementById('armorClass').addEventListener('change', updateCombatStats);
-    };
-</script>
-</body>
-</html>    // Image Upload
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const container = document.getElementById('characterImageContainer');
-                container.innerHTML = `<img src="${e.target.result}" alt="Character Image">`;
-                localStorage.setItem('characterImage', e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    // Save Character with combat stats
-    function saveCharacter() {
-        // Check if character name is provided
-        const characterName = document.getElementById('characterName').value.trim();
-        if (!characterName) {
-            alert('Please enter a character name before saving! / कृपया सेभ गर्नु अघि पात्रको नाम प्रविष्ट गर्नुहोस्!');
-            document.getElementById('characterName').focus();
-            return;
-        }
-        
-        // Get combat stats from the display
-        const attackValue = document.getElementById('attackValue').textContent;
-        const defenseValue = document.getElementById('defenseValue').textContent;
-        const damageValue = document.getElementById('damageValue').textContent;
-        const absorptionValue = document.getElementById('absorptionValue').textContent;
-        
-        const character = {
-            name: document.getElementById('characterName').value,
-            race: document.getElementById('race').value,
-            gender: document.getElementById('gender').value,
-            class: document.getElementById('class').value,
-            level: document.getElementById('level').value,
-            strength: document.getElementById('strength').value,
-            dexterity: document.getElementById('dexterity').value,
-            constitution: document.getElementById('constitution').value,
-            intelligence: document.getElementById('intelligence').value,
-            wisdom: document.getElementById('wisdom').value,
-            charisma: document.getElementById('charisma').value,
-            hitPoints: document.getElementById('hitPoints').value,
-            armorClass: document.getElementById('armorClass').value,
-            initiative: document.getElementById('initiative').value,
-            equipment: document.getElementById('equipment').value,
-            characterDescription: document.getElementById('characterDescription').value,
-            // Add combat stats
-            weaponType: document.getElementById('weaponType').value,
-            attackValue: attackValue,
-            defenseValue: defenseValue,
-            damageValue: damageValue,
-            absorptionValue: absorptionValue
-        };
-
-        // Get character image if it exists
-        const imageContainer = document.getElementById('characterImageContainer');
-        const characterImage = imageContainer.querySelector('img');
-        if (characterImage) {
-            character.imageData = characterImage.src;
-        }
-
-        // Create blob from character data
-        const characterBlob = new Blob([JSON.stringify(character, null, 2)], { type: 'application/json' });
-        
-        // Generate filename using character name or default name
-        const filename = character.name ? 
-            `${character.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json` : 
-            'dnd_character.json';
-
-        // Create download link
-        const downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(characterBlob);
-        downloadLink.download = filename;
-        
-        // Trigger download
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        
-        // Clean up
-        URL.revokeObjectURL(downloadLink.href);
-        
-        alert('Character saved to file! / पात्र फाइलमा सेभ गरियो!');
-    }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -282,35 +115,6 @@
         button:hover {
             background-color: #45a049;
         }
-        /* Combat stats styles */
-        .combat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .combat-stat {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            text-align: center;
-            background-color: #f9f9f9;
-        }
-        .combat-stat h3 {
-            margin-top: 0;
-            color: #555;
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        .combat-stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 5px 0;
-            color: #333;
-        }
-        .weapon-selector {
-            margin-bottom: 15px;
-        }
     </style>
 </head>
 <body>
@@ -366,7 +170,7 @@
         <div class="field">
             <label class="label">
                 Level / स्तर:
-                <input type="number" id="level" min="1" max="20" value="1" onchange="updateCombatStats()">
+                <input type="number" id="level" min="1" max="20" value="1">
             </label>
         </div>
     </div>
@@ -377,37 +181,37 @@
             <div class="ability-score">
                 <label class="label">
                     Strength / बल
-                    <input type="number" id="strength" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="strength" min="1" max="20" value="10">
                 </label>
             </div>
             <div class="ability-score">
                 <label class="label">
                     Dexterity / चतुर्य
-                    <input type="number" id="dexterity" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="dexterity" min="1" max="20" value="10">
                 </label>
             </div>
             <div class="ability-score">
                 <label class="label">
                     Constitution / संविधान
-                    <input type="number" id="constitution" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="constitution" min="1" max="20" value="10">
                 </label>
             </div>
             <div class="ability-score">
                 <label class="label">
                     Intelligence / बुद्धि
-                    <input type="number" id="intelligence" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="intelligence" min="1" max="20" value="10">
                 </label>
             </div>
             <div class="ability-score">
                 <label class="label">
                     Wisdom / ज्ञान
-                    <input type="number" id="wisdom" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="wisdom" min="1" max="20" value="10">
                 </label>
             </div>
             <div class="ability-score">
                 <label class="label">
                     Charisma / करिश्मा
-                    <input type="number" id="charisma" min="1" max="20" value="10" onchange="updateCombatStats()">
+                    <input type="number" id="charisma" min="1" max="20" value="10">
                 </label>
             </div>
         </div>
@@ -432,43 +236,6 @@
                 Initiative / पहल:
                 <input type="number" id="initiative" value="0">
             </label>
-        </div>
-        <div class="field weapon-selector">
-            <label class="label">
-                Weapon / हतियार:
-                <select id="weaponType" onchange="updateCombatStats()">
-                    <option value="unarmed">Unarmed / निहत्था</option>
-                    <option value="dagger">Dagger / छुरा</option>
-                    <option value="shortsword">Short Sword / छोटो तरवार</option>
-                    <option value="longsword">Long Sword / लामो तरवार</option>
-                    <option value="kukri">Kukri / खुकुरी</option>
-                    <option value="bow">Bow / धनुष</option>
-                    <option value="spear">Spear / भाला</option>
-                    <option value="staff">Staff / लाठी</option>
-                    <option value="warhammer">Warhammer / युद्ध हथौडा</option>
-                    <option value="maul">Maul / विशाल गदा</option>
-                </select>
-            </label>
-        </div>
-        
-        <h3>Combat Statistics / युद्ध आँकडा</h3>
-        <div class="combat-grid">
-            <div class="combat-stat">
-                <h3>Attack / आक्रमण</h3>
-                <div id="attackValue" class="combat-stat-value">+0 + 2d6</div>
-            </div>
-            <div class="combat-stat">
-                <h3>Defense / बचाव</h3>
-                <div id="defenseValue" class="combat-stat-value">+0 + 2d6</div>
-            </div>
-            <div class="combat-stat">
-                <h3>Damage / क्षति</h3>
-                <div id="damageValue" class="combat-stat-value">0</div>
-            </div>
-            <div class="combat-stat">
-                <h3>Damage Absorption / क्षति अवशोषण</h3>
-                <div id="absorptionValue" class="combat-stat-value">0</div>
-            </div>
         </div>
     </div>
 
@@ -535,76 +302,13 @@
             'dhami': 6,
             'wizard': 6
         };
-        const baseHP = hitDice[characterClass] || 8; // Default to 8 if class not found
+        const baseHP = hitDice[characterClass];
         return baseHP + constitutionMod + 
                ((level - 1) * (Math.floor(baseHP/2) + 1 + constitutionMod));
     }
 
     function calculateAC(characterClass, dexterityMod) {
         return 10 + dexterityMod;
-    }
-
-    // Weapon damage dice definitions
-    const weaponDamage = {
-        'unarmed': '1d3',
-        'dagger': '1d4',
-        'shortsword': '1d6',
-        'longsword': '1d8',
-        'kukri': '1d6',
-        'bow': '1d8',
-        'spear': '1d6',
-        'staff': '1d6',
-        'warhammer': '1d8 + 1d4',
-        'maul': '1d10 + 1d6'
-    };
-
-    // Proficiency bonus based on level
-    function getProficiencyBonus(level) {
-        if (level <= 4) return 2;
-        if (level <= 8) return 3;
-        if (level <= 12) return 4;
-        if (level <= 16) return 5;
-        return 6;
-    }
-
-    // Function to update combat stats
-    function updateCombatStats() {
-        const strengthScore = parseInt(document.getElementById('strength').value) || 10;
-        const dexterityScore = parseInt(document.getElementById('dexterity').value) || 10;
-        const constitutionScore = parseInt(document.getElementById('constitution').value) || 10;
-        const level = parseInt(document.getElementById('level').value) || 1;
-        
-        const strengthMod = getModifier(strengthScore);
-        const dexterityMod = getModifier(dexterityScore);
-        const constitutionMod = getModifier(constitutionScore);
-        
-        const proficiencyBonus = getProficiencyBonus(level);
-        
-        // Get selected weapon
-        const weaponType = document.getElementById('weaponType').value;
-        
-        // Calculate attack bonus
-        // For melee weapons, use strength; for ranged weapons (bow), use dexterity
-        const isRanged = weaponType === 'bow';
-        const attackMod = isRanged ? dexterityMod : strengthMod;
-        const attackBonus = attackMod + proficiencyBonus;
-        
-        // Calculate AC and Defense value
-        const totalAC = parseInt(document.getElementById('armorClass').value) || 10;
-        
-        // Get weapon damage dice
-        const damageFormula = weaponDamage[weaponType] || '1d3';
-        const damageAddition = isRanged ? dexterityMod : strengthMod;
-        
-        // Calculate damage absorption from constitution
-        const damageAbsorption = constitutionMod;
-        
-        // Update the displayed values
-        document.getElementById('attackValue').textContent = `+${attackBonus} + 2d6`;
-        document.getElementById('defenseValue').textContent = `+${totalAC} + 2d6`;
-        document.getElementById('damageValue').textContent = 
-            `${damageFormula} + ${damageAddition > 0 ? '+' + damageAddition : damageAddition}`;
-        document.getElementById('absorptionValue').textContent = damageAbsorption;
     }
 
     // API key initialization
@@ -791,7 +495,7 @@ Format as a simple list.`;
         }
     }
 
-// Modified generateRandomCharacter to include combat stats update
+// Modify generateRandomCharacter to fix race field population issue
 async function generateRandomCharacter() {
     // Get the generate character button
     const generateBtn = document.querySelector('button[onclick="generateRandomCharacter()"]');
@@ -816,18 +520,15 @@ async function generateRandomCharacter() {
         const raceSelect = document.getElementById('race');
         const classSelect = document.getElementById('class');
         const genderSelect = document.getElementById('gender');
-        const weaponSelect = document.getElementById('weaponType');
         
         // Get available options from the dropdowns
         const races = Array.from(raceSelect.options).map(option => option.value);
         const classes = Array.from(classSelect.options).map(option => option.value);
         const genders = Array.from(genderSelect.options).map(option => option.value);
-        const weapons = Array.from(weaponSelect.options).map(option => option.value);
 
         const randomRace = races[Math.floor(Math.random() * races.length)];
         const randomClass = classes[Math.floor(Math.random() * classes.length)];
         const randomGender = genders[Math.floor(Math.random() * genders.length)];
-        const randomWeapon = weapons[Math.floor(Math.random() * weapons.length)];
         const level = getRandomInt(1, 5);
 
         // Generate ability scores
@@ -884,10 +585,6 @@ async function generateRandomCharacter() {
         document.getElementById('hitPoints').value = hp;
         document.getElementById('armorClass').value = ac;
         document.getElementById('initiative').value = initiative;
-        document.getElementById('weaponType').value = randomWeapon;
-        
-        // Update combat statistics based on generated character
-        updateCombatStats();
 
         updateProgressBar(progressBar, 100);
         progressText.textContent = 'Character generated successfully!';
@@ -905,13 +602,12 @@ async function generateRandomCharacter() {
     }
 }
 
-    // Modify generateAIImage to include weapon in prompt
+    // Modify generateAIImage to include progress bar
     async function generateAIImage() {
         const description = document.getElementById('characterDescription').value;
         const race = document.getElementById('race').value;
         const characterClass = document.getElementById('class').value;
         const gender = document.getElementById('gender').value;
-        const weaponType = document.getElementById('weaponType').value;
         
         if (!description) {
             alert('Please add a character description first! / पहिले पात्र विवरण थप्नुहोस्!');
@@ -939,7 +635,7 @@ async function generateRandomCharacter() {
 
             // Truncate and simplify the prompt to meet API constraints
             const truncatedDescription = description.length > 500 ? description.substring(0, 500) : description;
-            const prompt = `Fantasy RPG character. ${race} ${characterClass} ${gender} with ${weaponType}. ${truncatedDescription}. Detailed portrait, digital art.`;
+            const prompt = `Fantasy RPG character. ${race} ${characterClass} ${gender}. ${truncatedDescription}. Detailed portrait, digital art.`;
             
             updateProgressBar(progressBar, 60);
             progressText.textContent = 'Generating image...';
@@ -998,23 +694,120 @@ async function generateRandomCharacter() {
         }
     }
 
-    // Initialize keys when page loads and set up the combat stats
+    // Image Upload
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const container = document.getElementById('characterImageContainer');
+                container.innerHTML = `<img src="${e.target.result}" alt="Character Image">`;
+                localStorage.setItem('characterImage', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+// Save Character
+    function saveCharacter() {
+        // Check if character name is provided
+        const characterName = document.getElementById('characterName').value.trim();
+        if (!characterName) {
+            alert('Please enter a character name before saving! / कृपया सेभ गर्नु अघि पात्रको नाम प्रविष्ट गर्नुहोस्!');
+            document.getElementById('characterName').focus();
+            return;
+        }
+        const character = {
+            name: document.getElementById('characterName').value,
+            race: document.getElementById('race').value,
+            gender: document.getElementById('gender').value,
+            class: document.getElementById('class').value,
+            level: document.getElementById('level').value,
+            strength: document.getElementById('strength').value,
+            dexterity: document.getElementById('dexterity').value,
+            constitution: document.getElementById('constitution').value,
+            intelligence: document.getElementById('intelligence').value,
+            wisdom: document.getElementById('wisdom').value,
+            charisma: document.getElementById('charisma').value,
+            hitPoints: document.getElementById('hitPoints').value,
+            armorClass: document.getElementById('armorClass').value,
+            initiative: document.getElementById('initiative').value,
+            equipment: document.getElementById('equipment').value,
+            characterDescription: document.getElementById('characterDescription').value
+        };
+
+        // Get character image if it exists
+        const imageContainer = document.getElementById('characterImageContainer');
+        const characterImage = imageContainer.querySelector('img');
+        if (characterImage) {
+            character.imageData = characterImage.src;
+        }
+
+        // Create blob from character data
+        const characterBlob = new Blob([JSON.stringify(character, null, 2)], { type: 'application/json' });
+        
+        // Generate filename using character name or default name
+        const filename = character.name ? 
+            `${character.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json` : 
+            'dnd_character.json';
+
+        // Create download link
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(characterBlob);
+        downloadLink.download = filename;
+        
+        // Trigger download
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        // Clean up
+        URL.revokeObjectURL(downloadLink.href);
+        
+        //alert('Character saved to file! / पात्र फाइलमा सेभ गरियो!');
+    }
+
+    // Load Character
+    function loadCharacter() {
+        const characterString = localStorage.getItem('dndCharacter');
+        if (!characterString) {
+            alert('No saved character found! / सेभ गरिएको पात्र फेला परेन!');
+            return;
+        }
+
+        const character = JSON.parse(characterString);
+        document.getElementById('characterName').value = character.name;
+        document.getElementById('race').value = character.race;
+        document.getElementById('gender').value = character.gender;
+        document.getElementById('class').value = character.class;
+        document.getElementById('level').value = character.level;
+        document.getElementById('strength').value = character.strength;
+        document.getElementById('dexterity').value = character.dexterity;
+        document.getElementById('constitution').value = character.constitution;
+        document.getElementById('intelligence').value = character.intelligence;
+        document.getElementById('wisdom').value = character.wisdom;
+        document.getElementById('charisma').value = character.charisma;
+        document.getElementById('hitPoints').value = character.hitPoints;
+        document.getElementById('armorClass').value = character.armorClass;
+        document.getElementById('initiative').value = character.initiative;
+        document.getElementById('equipment').value = character.equipment;
+        document.getElementById('characterDescription').value = character.characterDescription;
+
+        const savedImage = localStorage.getItem('characterImage');
+        if (savedImage) {
+            const container = document.getElementById('characterImageContainer');
+            container.innerHTML = `<img src="${savedImage}" alt="Character Image">`;
+        }
+
+        alert('Character loaded! / पात्र लोड गरियो!');
+    }
+
+    // Initialize keys when page loads
     window.onload = function() {
         initializeKeys().catch(error => {
             console.error('Failed to initialize keys:', error);
         });
-        
-        // Initialize combat stats on page load
-        updateCombatStats();
-        
-        // Add event listeners to all inputs that might affect combat stats
-        document.getElementById('strength').addEventListener('change', updateCombatStats);
-        document.getElementById('dexterity').addEventListener('change', updateCombatStats);
-        document.getElementById('constitution').addEventListener('change', updateCombatStats);
-        document.getElementById('level').addEventListener('change', updateCombatStats);
-        document.getElementById('weaponType').addEventListener('change', updateCombatStats);
-        document.getElementById('armorClass').addEventListener('change', updateCombatStats);
     };
-</script>
+    </script>
 </body>
 </html>
