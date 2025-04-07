@@ -1,404 +1,115 @@
-html>
+<!DOCTYPE html>
 <html lang="ne">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algebra | बीजगणित</title>
-    <style>
-        h1 { color: blue; }
-        h2 { color: green; }
-        h3 { color: red; }
-        h4 { color: orange; }
-        h5 { color: purple; }
-        p, ul li { color: #34b973; }    
-      <body style="background:yello">
-    </style>
-    <script>
-        function changeListColors() {
-            const items = document.querySelectorAll('ul li');
-            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-            items.forEach(item => {
-                item.style.color = randomColor;
-            });
-            
-A third-party OAuth application (W3Schools) with user:email scopes was recently authorized to access your account.
-Visit https://github.com/settings/connections/applications/7d304be23fde467bd231 for more information.
-
-To see this and other security events for your account, visit https://github.com/settings/security-log
-
-If you run into problems, please contact support by visiting https://github.com/contact
-
-Thanks,
-The GitHub Team
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Examples and Math Concepts</title>
 </head>
 <body>
-    <h1>What color am I?</h1>
-    <h2>Green</h2>
-    <h3>Red</h3>
-    <h4>Orange</h4>
-    <h5>Purple</h5>
-<a href="https://www.w3schools.com">https://www.w3schools.com</a>
-    <p><a href="https://www.google.com">google</a></p>
-    <p><a href="https://openai.com/chatgpt">chatGPT</a></p>
-    <p><a href="https://github.com/"> github</a></p>
-    <p><a href="https://nepal-web/edit/math/santosh_algebra.html</p>
-    <p><a href="https://github.com/">zzzzzzzz</a></p>
-<p><a href="https://nepal-web.net/math/santosh_algebra.html">sst raja has very hanxan in the this world</a></p>
-    <a href="https://www.w3schools.com">Visit W3Schools.com!</a>
-
-    <a href="https://openai.com/chatgpt">chatGPT</a>
-    <a href="https://openai.com/chatgpt">chatGPT</a>
-    <p></p><a href="https://openai.com/chatgpt" target="_new">chatGPT</a></p>
-    <a href="https://openai.com/chatgpt">chatGPT</a>
-    <a href="https://openai.com/chatgpt">chatGPT</a>
-    <a href="https://openai.com/youtube">youtube</a>
-    
-    
-    
-    
-    <ul>
-        <li>Apple</li>
-        <li>Banana</li>
-        <li>Orange</li>
-        <li>rad</li>
-    </ul>### HTML का मूलभूत विशेषताहरू (Basic Features of HTML)  
-
-HTML (HyperText Markup Language) वेब पृष्ठहरूको संरचना बनाउन प्रयोग गरिन्छ। यसमा विभिन्न ट्यागहरू (tags) हुन्छन् जसले सामग्री (content) लाई व्यवस्थित गर्छ। प्रत्येक HTML विशेषतासँग एउटा उदाहरण प्रस्तुत गरिएको छ, जसले तपाईंलाई बुझ्न सजिलो बनाउँछ।  
-
-
-
-## 1. **संरचना र लेआउट (Structure and Layout)**  
-HTML ले वेब पृष्ठको आधारभूत संरचना प्रदान गर्छ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<!DOCTYPE htm
-<html>
-    <canvas id="myCanvas" width="300" height="150"></canvas>
-
-<head>
-    <title>मेरो पहिलो वेबपेज</title>
-</head>
-<body>
-    <h1>मेरो वेबसाइटमा स्वागत छ</h1>
-    <p>यो मेरो वेबपेजको बारेमा जानकारी दिने अनुच्छेद हो।</p>
-    <div>यो सामग्री व्यवस्थापन गर्न प्रयोग गरिएको एउटा भाग हो।</div>
-</body>
-</html>
-
-👉 वेबपेजको मुख्य भाग निर्धारण गर्छ।  
-
----
-
-## 2. **हाइपरलिङ्क (Hyperlinks - <a> Tag)**  
-HTML ले वेब पृष्ठहरूलाई आपसमा जोड्न प्रयोग गरिन्छ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<a href="https://www.google.com">गुगलमा जानुहोस्</a>
-
-👉 यस लिंकमा क्लिक गर्दा गुगल खुल्नेछ।  
-
----
-
-## 3. **मल्टिमिडिया समर्थन (Multimedia Support)**  
-HTML ले छवि, अडियो, र भिडियो समर्थन गर्छ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<img src="image.jpg" alt="उदाहरण छवि" width="300">
-
-<audio controls>
-    <source src="audio.mp3" type="audio/mpeg">
-</audio>
-
-<video width="320" height="240" controls>
-    <source src="video.mp4" type="video/mp4">
-</video>
-
-👉 वेबपृष्ठमा छवि, अडियो र भिडियो राख्न सकिन्छ।  
-
----
-
-## 4. **फारम र इनपुट (Forms and Input)**  
-HTML फारम प्रयोगकर्ताबाट डेटा संकलन गर्न प्रयोग गरिन्छ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<form action="/submit" method="post">
-    नाम: <input type="text" name="name"><br>
-    इमेल: <input type="email" name="email"><br>
-    <button type="submit">पेश गर्नुहोस्</button>
-</form>
-
-👉 प्रयोगकर्ताले आफ्नो नाम र इमेल प्रविष्ट गर्न सक्छ।  
-
----
-
-## 5. **अर्थपूर्ण तत्वहरू (Semantic Elements)**  
-HTML मा header, section, footer जस्ता तत्वहरूले वेबपृष्ठलाई व्यवस्थित बनाउँछ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<header>
-    <h1>वेबसाइट शीर्षक</h1>
-</header>
-<section>
-    <h2>हाम्रोबारे</h2>
-    <p>हामी उत्कृष्ट सेवा प्रदान गर्छौं।</p>
-</section>
-<footer>
-    <p>सम्पर्क: example@email.com</p>
-</footer>
 
-👉 वेबपृष्ठलाई सजिलै पढ्न सकिन्छ।  
-
----
-
-## 6. **CSS र JavaScript एकीकरण (CSS and JavaScript Integration)**  
-HTML लाई CSS ले सुन्दर बनाउँछ र JavaScript ले अन्तरक्रियात्मक (interactive) बनाउँछ।  
-
-🔹 **CSS Example (उदाहरण)**  
-html
-<style>
-    body { background-color: lightblue; }
-    h1 { color: darkblue; }
-</style>
-
-👉 पृष्ठको पृष्ठभूमि निलो रंगमा बदलिन्छ।  
-
-🔹 **JavaScript Example (उदाहरण)**  
-html
-<script>
-    function sayHello() {
-        alert("नमस्ते, स्वागत छ!");
-    }
-</script>
-
-<button onclick="sayHello()">क्लिक गर्नुहोस्</button>
-
-👉 बटनमा क्लिक गर्दा सन्देश देखिन्छ।  
-
----
-
-## 7. **उत्तरदायी डिजाइन (Responsive Design)**  
-HTML मा meta viewport ले वेबपृष्ठलाई मोबाइलमैत्री बनाउँछ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-
-👉 वेबपृष्ठ मोबाइल उपकरणहरूमा राम्रो देखिन्छ।  
-
----
-
-## 8. **तालिका र सूची (Tables and Lists)**  
-HTML तालिकाहरू डेटा व्यवस्थित गर्न र सूचीहरू वस्तुहरू देखाउन प्रयोग गरिन्छ।  
-
-🔹 **Table Example (तालिका उदाहरण)**  
-html
-<table border="1">
-    <tr>
-        <th>नाम</th>
-        <th>उमेर</th>
-    </tr>
-    <tr>
-        <td>राम</td>
-        <td>२५</td>
-    </tr>
-</table>
-
-👉 तालिकाले डेटा देखाउँछ।  
-
-🔹 **List Example (सूची उदाहरण)**  
-html
-<ul>
-    <li>स्याउ</li>
-    <li>केरा</li>
-</ul>
-
-👉 बुलेट सूची देखिन्छ।  
-
----
-
-## 9. **मेटाडाटा र SEO (Metadata and SEO)**  
-HTML मा <meta> ट्यागले खोजी इञ्जिनको लागि महत्त्वपूर्ण जानकारी दिन्छ।  
-
-🔹 **Example (उदाहरण)**  
-html
-<head>
-    <meta name="description" content="यो एउटा उत्कृष्ट वेबसाइट हो।">
-    <meta name="keywords" content="HTML, CSS, JavaScript">
-    <meta name="author" content="राम कुमार">
-</head>
-
-👉 खोजी इञ्जिनले वेबपृष्ठलाई राम्रोसँग सूचीकृत गर्छ।  
-
----
-
-## 10. **खुला मानक (Open Standard)**  
-HTML सबै ब्राउजरहरूले समर्थन गर्छन् र W3C द्वारा अपडेट गरिन्छ।  
-
-👉 HTML हर समय अद्यावधिक भइरहन्छ र सबै ब्राउजरमा काम गर्छ।  
-
----
-
-### **निष्कर्ष (Conclusion)**  
-HTML वेब विकासको आधार हो। यसले वेबपृष्ठको संरचना, लिंक, मल्टिमिडिया, फारम, डिजाइन, र उत्तरदायीता नियन्त्रण गर्न मद्दत गर्छ। यदि तपाईं HTML सिक्दै हुनुहुन्छ भने, यी उदाहरणहरू अभ्यास गर्नुस्। 😊  
-
-👉 **के तपाईंलाई कुनै विशेष विषय विस्तृत रूपमा चाहिन्छ?** 🚀/>
-
-    <button onclick="changeListColors()">Change List Colors</button>
-
-    <h2>Profit and Loss in Math</h2>
-    <p>
-        Profit and Loss are basic financial concepts used in business and everyday transactions. They help determine whether a business or individual gains or loses money in a transaction.
-    </p>
-    <h3>Profit</h3>
-    <p>
-        When the selling price (SP) of an item is greater than its cost price (CP), the seller makes a profit.
-    </p>
-    <p><strong>Formula:</strong></p>
-    <p>Profit = Selling Price - Cost Price</p>
-    <p><strong>Profit Percentage:</strong></p>
-    <p>Profit% = (Profit / Cost Price) × 100</p>
-
-    <h3>Loss</h3>
-    <p>
-        When the selling price (SP) of an item is less than its cost price (CP), the seller incurs a loss.
-    </p>
-    <p><strong>Formula:</strong></p>
-    <p>Loss = Cost Price - Selling Price</p>
-    <p><strong>Loss Percentage:</strong></p>
-    <p>Loss% = (Loss / Cost Price) × 100</p>
-
-    <h3>Selling Price and Cost Price Formulas</h3>
-    <p>Selling Price when profit is given:</p>
-    <p>SP = CP + Profit</p>
-    <p>Selling Price when loss is given:</p>
-    <p>SP = CP - Loss</p>
-    <p>PLUSSPACESGET CERTIFIEDFOR TEACHERSFOR BUSINESSCONTACT US
-Top Tutorials
-HTML Tutorial
-CSS Tutorial
-JavaScript Tutorial
-How To Tutorial
-SQL Tutorial
-Python Tutorial
-W3.CSS Tutorial
-Bootstrap Tutorial
-PHP Tutorial
-Java Tutorial
-C++ Tutorial
-jQuery Tutorial
-Top References
-HTML Reference
-CSS Reference
-JavaScript Reference
-SQL Reference
-Python Reference
-W3.CSS Reference
-Bootstrap Reference
-PHP Reference
-HTML Colors
-Java Reference
-Angular Reference
-jQuery Reference
-Top Examples
-HTML Examples
-CSS Examples
-JavaScript Examples
-How To Examples
-SQL Examples
-Python Examples
-W3.CSS Examples
-Bootstrap Examples
-PHP Examples
-Java Examples
-XML Examples
-jQuery Examples
-Get Certified
-HTML Certificate
-CSS Certificate
-JavaScript Certificate
-Front End Certificate
-SQL Certificate
-Python Certificate
-PHP Certificate
-jQuery Certificate
-Java Certificate
-C++ Certificate
-C# Certificate
-XML Certificate
-     FORUM ABOUT ACADEMY
-W3Schools is optimized for learning and training. Examples might be simplified to improve reading and learning. Tutorials, references, and examples are constantly reviewed to avoid errors, but we cannot warrant full correctness of all content. While using W3Schools, you agree to have read and accepted our terms of use, cookie and privacy policy.
-
-Copyright 1999-2025 by Refsnes Data. All Rights Reserved. W3Schools is Powered by W3.CSS.Understanding Systems of Equations
-Linear Systems (रैखिक प्रणाली)
-English: A system of linear equations can have:
-
-One solution (lines intersect at a point)
-No solution (parallel lines)
-Infinite solutions (same line)
-नेपाली: रैखिक समीकरणको प्रणालीमा हुन सक्छ:
-
-एउटा समाधान (रेखाहरू एउटा बिन्दुमा काट्छन्)
-कुनै समाधान छैन (समानान्तर रेखाहरू)
-अनन्त समाधानहरू (एउटै रेखा)
-Solution Methods (समाधान विधिहरू)
-English: Systems can be solved by:
-
-Graphical method (finding intersection)
-Substitution method
-Elimination method
-नेपाली: प्रणालीहरू यसरी समाधान गर्न सकिन्छ:
-
-ग्राफीय विधि (काट्ने बिन्दु खोज्ने)
-प्रतिस्थापन विधि
-विलोपन विधि
-Comprehensive Overview of Systems of Equations
-English
-Systems of equations represent mathematical situations where multiple equations must be satisfied simultaneously. These systems are fundamental to both theoretical mathematics and practical applications across various fields. In the simplest case, a system of two linear equations in two variables (x and y) represents two lines in a coordinate plane. The solution to such a system is the point (or points) where these lines intersect, representing values that satisfy both equations simultaneously.
-
-The nature of solutions in linear systems falls into three categories: unique solution (one intersection point), no solution (parallel lines), or infinitely many solutions (identical lines). This classification is determined by the coefficients of the equations and reflects the geometric relationship between the lines they represent. The determinant of the coefficient matrix plays a crucial role in determining the solution type: a non-zero determinant indicates a unique solution, while a zero determinant suggests either no solution or infinitely many solutions.
-
-Real-world applications of systems of equations are vast and varied. In economics, they model supply-demand relationships and market equilibrium. In physics, they describe force balances and motion equations. Engineering uses them for circuit analysis and structural design. The power of systems of equations lies in their ability to model complex relationships and find optimal solutions to real-world problems, making them an essential tool in mathematics and its applications.
-
-नेपाली
-समीकरण प्रणालीहरूले एकैसाथ सन्तुष्ट गर्नुपर्ने बहु समीकरणहरू भएको गणितीय परिस्थितिहरूलाई प्रतिनिधित्व गर्छन्। यी प्रणालीहरू सैद्धान्तिक गणित र विभिन्न क्षेत्रहरूमा व्यावहारिक अनुप्रयोगहरूको लागि आधारभूत छन्। सबैभन्दा सरल अवस्थामा, दुई चरहरू (x र y) भएको दुई रैखिक समीकरणहरूको प्रणालीले निर्देशांक तलमा दुई रेखाहरूलाई प्रतिनिधित्व गर्छ। यस्तो प्रणालीको समाधान ती रेखाहरू काटिने बिन्दु (वा बिन्दुहरू) हो, जसले दुवै समीकरणहरूलाई एकैसाथ सन्तुष्ट गर्ने मानहरूलाई प्रतिनिधित्व गर्छ।
-
-रैखिक प्रणालीहरूमा समाधानको प्रकृति तीन वर्गमा पर्छ: एकल समाधान (एउटा काट्ने बिन्दु), समाधान छैन (समानान्तर रेखाहरू), वा अनन्त धेरै समाधानहरू (एउटै रेखाहरू)। यो वर्गीकरण समीकरणहरूका गुणांकहरूद्वारा निर्धारित हुन्छ र तिनीहरूले प्रतिनिधित्व गर्ने रेखाहरू बीचको ज्यामितीय सम्बन्धलाई प्रतिबिम्बित गर्छ। गुणांक म्याट्रिक्सको डिटर्मिनेन्टले समाधानको प्रकार निर्धारण गर्नमा महत्वपूर्ण भूमिका खेल्छ: शून्य नभएको डिटर्मिनेन्टले एकल समाधान संकेत गर्छ, जबकि शून्य डिटर्मिनेन्टले या त कुनै समाधान छैन वा अनन्त धेरै समाधानहरू छन् भन्ने सुझाव दिन्छ।
-
-समीकरण प्रणालीहरूका वास्तविक जगतका अनुप्रयोगहरू विशाल र विविध छन्। अर्थशास्त्रमा, तिनीहरूले आपूर्ति-माग सम्बन्धहरू र बजार सन्तुलनलाई मोडल गर्छन्। भौतिक विज्ञानमा, तिनीहरूले बल सन्तुलन र गति समीकरणहरूको वर्णन गर्छन्। इन्जिनियरिङले तिनीहरूलाई सर्किट विश्लेषण र संरचनात्मक डिजाइनको लागि प्रयोग गर्छ। समीकरण प्रणालीहरूको शक्ति जटिल सम्बन्धहरूलाई मोडल गर्न र वास्तविक समस्याहरूको इष्टतम समाधान फेला पार्न सक्ने क्षमतामा निहित छ, जसले तिनीहरूलाई गणित र यसका अनुप्रयोगहरूमा एक आवश्यक उपकरण बनाउँछ।
-</p>
+  <h1>What color am I?</h1>
+  <ul>
+    <li style="color: green;">Green</li>
+    <li style="color: red;">Red</li>
+    <li style="color: orange;">Orange</li>
+    <li style="color: purple;">Purple</li>
+  </ul>
+
+  <h2>Useful Links</h2>
+  <ul>
+    <li><a href="https://www.w3schools.com" target="_blank">W3Schools</a></li>
+    <li><a href="https://www.google.com" target="_blank">Google</a></li>
+    <li><a href="https://chat.openai.com" target="_blank">ChatGPT</a></li>
+    <li><a href="https://github.com" target="_blank">GitHub</a></li>
+    <li><a href="https://youtube.com" target="_blank">YouTube</a></li>
+  </ul>
+
+  <p><strong>sst raja</strong> is very handsome in this world.</p>
+
+  <h2>HTML का मूलभूत विशेषताहरू (Basic Features of HTML)</h2>
+  <ol>
+    <li><strong>संरचना र लेआउट (Structure and Layout)</strong>
+      <p>HTML ले वेब पृष्ठको आधारभूत संरचना प्रदान गर्छ।</p>
+      <code>&lt;section&gt;मेरो वेबसाइटमा स्वागत छ&lt;/section&gt;</code>
+    </li>
+
+    <li><strong>हाइपरलिङ्क (Hyperlinks)</strong>
+      <p>HTML ले वेब पृष्ठहरूलाई आपसमा जोड्न प्रयोग गरिन्छ।</p>
+      <code>&lt;a href="https://www.google.com"&gt;गुगलमा जानुहोस्&lt;/a&gt;</code>
+    </li>
+
+    <li><strong>मल्टिमिडिया समर्थन (Multimedia Support)</strong>
+      <p>HTML ले छवि, अडियो, र भिडियो समर्थन गर्छ।</p>
+      <code>&lt;img src="example.jpg" alt="उदाहरण छवि"&gt;</code>
+    </li>
+
+    <li><strong>फारम र इनपुट (Forms and Input)</strong>
+      <form>
+        नाम: <input type="text" name="name"><br>
+        इमेल: <input type="email" name="email"><br>
+        <input type="submit" value="पेश गर्नुहोस्">
+      </form>
+    </li>
+
+    <li><strong>अर्थपूर्ण तत्वहरू (Semantic Elements)</strong>
+      <code>
+        &lt;header&gt;वेबसाइट शीर्षक&lt;/header&gt;<br>
+        &lt;section&gt;हामी उत्कृष्ट सेवा प्रदान गर्छौं।&lt;/section&gt;<br>
+        &lt;footer&gt;सम्पर्क: example@email.com&lt;/footer&gt;
+      </code>
+    </li>
+
+    <li><strong>CSS र JavaScript एकीकरण (CSS and JavaScript Integration)</strong>
+      <p>CSS ले पृष्ठलाई सुन्दर बनाउँछ, JavaScript ले अन्तरक्रियात्मकता थप्छ।</p>
+    </li>
+
+    <li><strong>उत्तरदायी डिजाइन (Responsive Design)</strong>
+      <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>
+    </li>
+
+    <li><strong>तालिका र सूची (Tables and Lists)</strong>
+      <table border="1">
+        <tr><th>नाम</th><th>उमेर</th></tr>
+        <tr><td>राम</td><td>२५</td></tr>
+      </table>
+
+      <ul>
+        <li>स्याउ</li>
+        <li>केरा</li>
+      </ul>
+    </li>
+
+    <li><strong>मेटाडाटा र SEO (Metadata and SEO)</strong>
+      <code>&lt;meta name="description" content="This is an HTML tutorial"&gt;</code>
+    </li>
+
+    <li><strong>खुला मानक (Open Standard)</strong>
+      <p>HTML सबै ब्राउजरहरूमा काम गर्छ।</p>
+    </li>
+  </ol>
+
+  <h2>Profit and Loss in Math</h2>
+  <h3>Profit</h3>
+  <p>Profit = Selling Price - Cost Price</p>
+  <p>Profit% = (Profit / Cost Price) × 100</p>
+
+  <h3>Loss</h3>
+  <p>Loss = Cost Price - Selling Price</p>
+  <p>Loss% = (Loss / Cost Price) × 100</p>
+
+  <h3>Selling Price Formulas</h3>
+  <ul>
+    <li>SP = CP + Profit</li>
+    <li>SP = CP - Loss</li>
+  </ul>
+
+  <h2>Understanding Systems of Equations</h2>
+  <p>English: A system of linear equations can have one solution, no solution, or infinitely many solutions.</p>
+  <p>नेपाली: रैखिक समीकरणको प्रणालीमा हुन सक्छ: एउटा समाधान, कुनै समाधान छैन, वा अनन्त समाधानहरू।</p>
 
 </body>
 </html>
-
-
-ChatGPT said:
-Here’s a cleaned-up and fixed version of your HTML file. I corrected the following issues:
-
-Fixed broken links - One of your <a> tags had an unclosed quote.
-
-Corrected unclosed/malformed tags - Fixed the improperly closed <p> and <a> tags.
-
-Fixed duplicate/misplaced content - Moved misplaced text outside of <ul> and <p> tags.
-
-Fixed malformed HTML - Example section had an unclosed <html> tag (<!DOCTYPE htm> corrected).
-
-Ensured proper nesting of elements - Removed improperly nested elements within paragraphs and lists.
-
-Here's the improved version:
-
-Fixed Html
-
-Answer in chat instead
-It looks like you've uploaded an HTML file. Let me know if you need further improvements, modifications, or explanations about the changes made! 😊
+Would you like this as a downloadable .html file or want me to add more styling with CSS?
 
 
 
@@ -406,16 +117,5 @@ It looks like you've uploaded an HTML file. Let me know if you need further impr
 
 
 
-
-
-
-
-Search
-
-Reason
-
-
-ChatGPT can make mistakes. Check important info.
-?
 
 
