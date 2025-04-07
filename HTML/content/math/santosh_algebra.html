@@ -1,4 +1,28 @@
-<body style="background-color: lightgreen; color: blue;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fixed HTML Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This is an HTML tutorial">
+    <style>
+        body {
+            background-color: blue;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table, th, td {
+            border: 1px solid white;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        a {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
 
     <h1>What color am I?</h1>
     <h2>Green</h2>
@@ -8,16 +32,17 @@
 
     <h2>Useful Links</h2>
     <ul>
-        <li>W3Schools</li>
-        <li>Google</li>
-        <li>ChatGPT</li>
-        <li>GitHub</li>
-        <li>YouTube</li>
+        <li><a href="https://www.w3schools.com">W3Schools</a></li>
+        <li><a href="https://www.google.com">Google</a></li>
+        <li><a href="https://chat.openai.com">ChatGPT</a></li>
+        <li><a href="https://github.com">GitHub</a></li>
+        <li><a href="https://youtube.com">YouTube</a></li>
     </ul>
 
     <p>sst raja is very handsome in this world.</p>
 
     <h2>HTML का मूलभूत विशेषताहरू (Basic Features of HTML)</h2>
+
     <h3>संरचना र लेआउट (Structure and Layout)</h3>
     <p>HTML ले वेब पृष्ठको आधारभूत संरचना प्रदान गर्छ।</p>
 
@@ -27,11 +52,13 @@
     <a href="https://www.google.com">गुगलमा जानुहोस्</a>
 
     <h3>मल्टिमिडिया समर्थन (Multimedia Support)</h3>
-    <img src="example.jpg" alt="उदाहरण छवि">
+    <img src="example.jpg" alt="उदाहरण छवि" width="200">
 
     <h3>फारम र इनपुट (Forms and Input)</h3>
-    नाम: <input type="text"><br>
-    इमेल: <input type="email"><br>
+    <form>
+        नाम: <input type="text" name="name"><br><br>
+        इमेल: <input type="email" name="email"><br>
+    </form>
 
     <h3>अर्थपूर्ण तत्वहरू (Semantic Elements)</h3>
     <header>वेबसाइट शीर्षक</header>
@@ -42,25 +69,29 @@
     <p>CSS ले पृष्ठलाई सुन्दर बनाउँछ, JavaScript ले अन्तरक्रियात्मकता थप्छ।</p>
 
     <h3>उत्तरदायी डिजाइन (Responsive Design)</h3>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <h3>तालिका र सूची (Tables and Lists)</h3>
-    <table border="1">
-        <tr><th>नाम</th><th>उमेर</th></tr>
-        <tr><td>राम</td><td>२५</td></tr>
+    <table>
+        <tr>
+            <th>नाम</th>
+            <th>उमेर</th>
+        </tr>
+        <tr>
+            <td>राम</td>
+            <td>२५</td>
+        </tr>
     </table>
+
     <ul>
         <li>स्याउ</li>
         <li>केरा</li>
     </ul>
 
-    <h3>मेटाडाटा र SEO (Metadata and SEO)</h3>
-    <meta name="description" content="This is an HTML tutorial">
-
     <h3>खुला मानक (Open Standard)</h3>
     <p>HTML सबै ब्राउजरहरूमा काम गर्छ।</p>
 
     <h2>Profit and Loss in Math</h2>
+
     <h3>Profit</h3>
     <p>Profit = Selling Price - Cost Price</p>
     <p>Profit% = (Profit / Cost Price) × 100</p>
@@ -78,3 +109,4 @@
     <p>नेपाली: रैखिक समीकरणको प्रणालीमा हुन सक्छ: एउटा समाधान, कुनै समाधान छैन, वा अनन्त समाधानहरू।</p>
 
 </body>
+</html>
