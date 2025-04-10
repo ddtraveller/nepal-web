@@ -1,29 +1,149 @@
-import numpy
-import matplotlib.pyplot
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Possible & HTML Education</title>
+  <style>
+    body {
+      background: linear-gradient(to right, red, yellow);
+      color: black;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
-# Load data
-data = numpy.loadtxt(fname='inflammation-01.csv', delimiter=',')
-# Make Figure
-fig = matplotlib.pyplot.figure(figsize=(5.0, 7.0))
+    h1, h2, h3 {
+      color: black;
+    }
 
-# Create subplots in 3 rows and 1 column
-axes1 = fig.add_subplot(3, 1, 1)
-axes2 = fig.add_subplot(3, 1, 2)
-axes3 = fig.add_subplot(3, 1, 3)
+    section {
+      margin-bottom: 30px;
+      background-color: rgba(255, 255, 255, 0.8); /* light background behind text */
+      padding: 15px;
+      border-radius: 10px;
+    }
 
-# Plot and label the average, max, and min of the data
-axes1.set_ylabel('average')
-axes1.plot(data.mean(axis=0))
+    ul {
+      list-style: square;
+      margin-left: 20px;
+    }
 
-axes2.set_ylabel('max')
-axes2.plot(data.max(axis=0))
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
 
-axes3.set_ylabel('min')
-axes3.plot(data.min(axis=0))
+  <section>
+    <h2>What Color Am I?</h2>
+    <ul>
+      <li>Green</li>
+      <li>Red</li>
+      <li>Orange</li>
+      <li>Purple</li>
+    </ul>
 
-fig.tight_layout()
+    <h2>Useful Links</h2>
+    <ul>
+      <li><a href="https://www.w3schools.com">W3Schools</a></li>
+      <li><a href="https://www.google.com">Google</a></li>
+      <li><a href="https://chat.openai.com">ChatGPT</a></li>
+      <li><a href="https://github.com">GitHub</a></li>
+      <li><a href="https://youtube.com">YouTube</a></li>
+    </ul>
 
-matplotlib.pyplot.savefig("plot.png")
+    <p><strong>sst raja is very handsome in this world.</strong></p>
+  </section>
 
-# Code adapted from Software Carpentry. Check out the full lesson here:
-# http://swcarpentry.github.io/python-novice-inflammation/01-numpy.html
+  <section>
+    <h2>HTML का मूलभूत विशेषताहरू (Basic Features of HTML)</h2>
+    <ul>
+      <li>संरचना र लेआउट: HTML ले वेब पृष्ठको आधारभूत संरचना प्रदान गर्छ।</li>
+      <li>हाइपरलिङ्क: <a href="https://www.google.com">गुगलमा जानुहोस्</a></li>
+      <li>मल्टिमिडिया समर्थन: <img src="example.jpg" alt="उदाहरण छवि" /></li>
+      <li>फारम र इनपुट:
+        <br>नाम: <input type="text" />
+        <br>इमेल: <input type="email" />
+      </li>
+      <li>अर्थपूर्ण तत्वहरू:
+        <header>वेबसाइट शीर्षक</header>
+        <section>हामी उत्कृष्ट सेवा प्रदान गर्छौं।</section>
+        <footer>सम्पर्क: example@email.com</footer>
+      </li>
+      <li>CSS र JavaScript एकीकरण</li>
+      <li>उत्तरदायी डिजाइन: <meta name="viewport" content="width=device-width, initial-scale=1.0" /></li>
+      <li>तालिका र सूची:</li>
+    </ul>
+
+    <table>
+      <tr><th>नाम</th><th>उमेर</th></tr>
+      <tr><td>राम</td><td>२५</td></tr>
+    </table>
+
+    <ul>
+      <li>स्याउ</li>
+      <li>केरा</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Profit and Loss in Math</h2>
+    <p><strong>Profit</strong> = Selling Price - Cost Price</p>
+    <p>Profit% = (Profit / Cost Price) × 100</p>
+    <p><strong>Loss</strong> = Cost Price - Selling Price</p>
+    <p>Loss% = (Loss / Cost Price) × 100</p>
+    <p>SP = CP + Profit</p>
+    <p>SP = CP - Loss</p>
+  </section>
+
+  <section>
+    <h2>Understanding Systems of Equations</h2>
+    <p><strong>English:</strong> A system of linear equations can have one solution, no solution, or infinitely many solutions.</p>
+    <p><strong>नेपाली:</strong> रैखिक समीकरणको प्रणालीमा हुन सक्छ: एउटा समाधान, कुनै समाधान छैन, वा अनन्त समाधानहरू।</p>
+  </section>
+
+  <section>
+    <h2>Vision Statement: Project Possible</h2>
+    <p>Empowering and supporting migrant families in Kathmandu through education, health, and early childhood development.</p>
+
+    <h3>Understanding Nepal's Internal Migration</h3>
+    <ul>
+      <li>Migrants: From Bajura & Kalikot, mostly farmers and marginalized communities</li>
+      <li>Push Factors: Poor education, healthcare, agriculture, climate change</li>
+    </ul>
+
+    <h3>Regional Context</h3>
+    <p><strong>Bajura District</strong>: Poorest (HDI 0.364)</p>
+    <p><strong>Kalikot District</strong>: Second poorest (HDI 0.374)</p>
+
+    <h3>Initiative 1: Educational Support Program</h3>
+    <ul>
+      <li>Supports 100 children</li>
+      <li>Provides uniforms, shoes, backpacks, bottles, stationery</li>
+    </ul>
+
+    <h3>Initiative 2: Women's Health Support</h3>
+    <ul>
+      <li>Hygiene kits and menstrual health education for 200+ women monthly</li>
+      <li>Pap smears and awareness events</li>
+    </ul>
+
+    <h3>Initiative 3: Early Childhood Development Center</h3>
+    <ul>
+      <li>Safe space for children 2–5 years old</li>
+      <li>English program, learning tools, meals, parent sessions</li>
+    </ul>
+
+    <h3>Long-Term Impact</h3>
+    <ul>
+      <li>Breaks poverty cycle</li>
+      <li>Improves health & education outcomes</li>
+      <li>Preserves culture while helping urban integration</li>
+    </ul>
+  </section>
+
+</body>
+</html>
